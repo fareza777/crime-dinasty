@@ -1,0 +1,696 @@
+[
+  {
+    "id": "rain_on_orchard",
+    "title": "Rain on Orchard Street",
+    "body": "Orchard Street at 2 a.m. is a rumor with gutters. A man you almost recognize offers cash to walk a sealed envelope to a door that does not have a number. The rain is already taking notes.",
+    "category": "life",
+    "tags": [
+      "street",
+      "origin"
+    ],
+    "weight": 22,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 24,
+    "art": "street",
+    "choices": [
+      {
+        "id": "carry",
+        "text": "Carry it and keep your eyes forward",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "paid",
+            "weight": 100,
+            "title": "Quiet delivery",
+            "body": "The envelope changes hands under a saint painted on brick. Nobody thanks you. Crowe would have called it practice.",
+            "log": "Made a quiet street delivery.",
+            "stats": {
+              "money": 350,
+              "reputation": 1
+            },
+            "addFlags": [
+              "did_first_score"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Refuse and go home",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "home",
+            "weight": 100,
+            "title": "Dry sheets",
+            "body": "You leave the rain and its questions outside. The rent still waits in the morning.",
+            "log": "Turned down a street errand.",
+            "stats": {
+              "stress": -1,
+              "health": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "peek",
+        "text": "Let curiosity win",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "seen",
+            "weight": 100,
+            "title": "Wrong kind of curious",
+            "body": "A lookout catches the movement. You get away, but the street has a new story about you.",
+            "log": "Drew heat by snooping.",
+            "stats": {
+              "heat": 5,
+              "stress": 2
+            },
+            "addFlags": [
+              "known_on_street"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "late_shift_diner",
+    "title": "The Late Shift",
+    "body": "You work the counter at a diner that never closes, pouring coffee for dockhands and courthouse clerks. A stranger leaves a generous tip and an invitation to talk after closing.",
+    "category": "life",
+    "tags": [
+      "work",
+      "street"
+    ],
+    "weight": 18,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 24,
+    "art": "home",
+    "choices": [
+      {
+        "id": "talk",
+        "text": "Hear the stranger out",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "contact",
+            "weight": 100,
+            "title": "A name in the margin",
+            "body": "The stranger asks what you want from Ravenport. Your honest answer buys a number and a future possibility.",
+            "log": "Made a neighborhood contact.",
+            "stats": {
+              "charisma": 2,
+              "reputation": 1
+            },
+            "addFlags": [
+              "known_on_street"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "clock",
+        "text": "Clock out and disappear",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "rest",
+            "weight": 100,
+            "title": "An ordinary night",
+            "body": "You walk home beneath the viaduct with your pay intact and your name unspoken.",
+            "log": "Kept a low profile.",
+            "stats": {
+              "stress": -2,
+              "money": 90
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "roofline_choice",
+    "title": "The Roofline",
+    "body": "From the roof of your building, Ravenport looks like a promise written in sodium light. The city feels close enough to hold, though it never comes without a price.",
+    "category": "life",
+    "tags": [
+      "neighborhood"
+    ],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 30,
+    "art": "skyline",
+    "choices": [
+      {
+        "id": "plan",
+        "text": "Write down a plan",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "focus",
+            "weight": 100,
+            "title": "A longer view",
+            "body": "You make a list of what stability would require. It is not glamorous, but it keeps you from drifting.",
+            "log": "Made a plan for the future.",
+            "stats": {
+              "intelligence": 2,
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "roam",
+        "text": "Go looking for a louder night",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "buzz",
+            "weight": 100,
+            "title": "Streetlight fever",
+            "body": "By dawn you know three new faces and owe two small favors.",
+            "log": "Chased the city after dark.",
+            "stats": {
+              "reputation": 2,
+              "heat": 2
+            },
+            "addFlags": [
+              "known_on_street"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "wait",
+        "text": "Watch and wait",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "patience",
+            "weight": 100,
+            "title": "Still water",
+            "body": "You let the city reveal itself at its own pace.",
+            "log": "Waited for the right opening.",
+            "stats": {
+              "intelligence": 1,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Patient"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "clinic_warning",
+    "title": "Clinic Warning",
+    "body": "A clinic nurse notices the way you keep rubbing your shoulder and tells you pain does not become harmless because you ignore it. Outside, a job offer buzzes on your phone.",
+    "category": "life",
+    "tags": [
+      "health"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 19,
+    "maxAge": 70,
+    "art": "home",
+    "choices": [
+      {
+        "id": "care",
+        "text": "Take the appointment",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "treated",
+            "weight": 100,
+            "title": "Tended to",
+            "body": "The nurse works carefully and sends you home with a warning you actually hear.",
+            "log": "Took care of an injury.",
+            "stats": {
+              "health": 5,
+              "money": -180,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "job",
+        "text": "Take the job instead",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "worse",
+            "weight": 100,
+            "title": "Working through it",
+            "body": "You pocket the phone and push ahead. The ache sharpens by nightfall.",
+            "log": "Ignored a health warning for work.",
+            "stats": {
+              "money": 450,
+              "health": -7,
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "neighborhood_wake",
+    "title": "A Wake on Bellwether",
+    "body": "A neighborhood elder is laid to rest while rain taps the tent over the mourners. People who never agree on anything stand shoulder to shoulder for one quiet hour.",
+    "category": "life",
+    "tags": [
+      "community"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "stay",
+        "text": "Stay to help clean up",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "respect",
+            "weight": 100,
+            "title": "Hands after the service",
+            "body": "You stack chairs and listen more than you talk. Ravenport remembers who shows up when there is nothing to gain.",
+            "log": "Helped the neighborhood at a wake.",
+            "stats": {
+              "reputation": 3,
+              "loyalty": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Leave before the speeches",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "distance",
+            "weight": 100,
+            "title": "Outside the circle",
+            "body": "You slip away without causing a scene, but the silence follows you home.",
+            "log": "Kept distance from a neighborhood wake.",
+            "stats": {
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "donate",
+        "text": "Cover the flowers",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "grace",
+            "weight": 100,
+            "title": "A quiet kindness",
+            "body": "The florist receives an anonymous payment. The family never knows it was you, which makes it matter more.",
+            "log": "Quietly supported a grieving family.",
+            "stats": {
+              "money": -500,
+              "reputation": 4
+            },
+            "addFlags": [
+              "legacy_speech"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "minMoney": 500,
+          "traitsAny": [
+            "Compassionate"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "burnout_season",
+    "title": "Burnout Season",
+    "body": "Three sleepless weeks blur into one long argument with yourself. The city keeps offering reasons to stay awake, but your reflection looks older than it should.",
+    "category": "life",
+    "tags": [
+      "stress"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 70,
+    "art": "home",
+    "choices": [
+      {
+        "id": "rest",
+        "text": "Take a week away from the noise",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "reset",
+            "weight": 100,
+            "title": "A reset",
+            "body": "You lock the phone in a drawer and sleep until the alarms stop sounding like threats.",
+            "log": "Took time to recover.",
+            "stats": {
+              "stress": -7,
+              "health": 3,
+              "reputation": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "push",
+        "text": "Push through",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "fray",
+            "weight": 100,
+            "title": "Threads coming loose",
+            "body": "You keep moving on pure nerve. It works until it does not.",
+            "log": "Pushed through exhaustion.",
+            "stats": {
+              "nerve": 2,
+              "stress": 6,
+              "health": -3
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "old_friend_postcard",
+    "title": "Postcard from Baltimore",
+    "body": "An old friend sends a postcard from another harbor town, all sunrise and cheap optimism. They ask if Ravenport is still holding you too tightly.",
+    "category": "life",
+    "tags": [
+      "memory"
+    ],
+    "weight": 5,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 20,
+    "maxAge": 55,
+    "art": "home",
+    "choices": [
+      {
+        "id": "reply",
+        "text": "Write back honestly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "anchor",
+            "weight": 100,
+            "title": "A line to elsewhere",
+            "body": "You admit what you miss and what you refuse to miss. The reply feels like opening a window.",
+            "log": "Reconnected with an old friend.",
+            "stats": {
+              "stress": -3,
+              "charisma": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "burn",
+        "text": "Burn it in the sink",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "ash",
+            "weight": 100,
+            "title": "No return address",
+            "body": "The card curls into ash. You tell yourself the past should stay past.",
+            "log": "Cut off an old connection.",
+            "stats": {
+              "nerve": 1,
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "civic_meeting",
+    "title": "Civic Meeting",
+    "body": "At a community meeting, planners promise brighter sidewalks while everyone counts who is not in the room. A microphone opens for public comment.",
+    "category": "life",
+    "tags": [
+      "city"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 25,
+    "maxAge": 75,
+    "art": "office",
+    "choices": [
+      {
+        "id": "speak",
+        "text": "Speak for the block",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "voice",
+            "weight": 100,
+            "title": "On the record",
+            "body": "Your words are plain and specific. A few people nod as though you have finally said something they needed to hear.",
+            "log": "Spoke at a civic meeting.",
+            "stats": {
+              "charisma": 2,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "observe",
+        "text": "Listen from the back",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "notes",
+            "weight": 100,
+            "title": "Useful silence",
+            "body": "You learn who smiles at whom, and who leaves together.",
+            "log": "Observed city politics.",
+            "stats": {
+              "intelligence": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "leverage",
+        "text": "Offer a private introduction",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "angle",
+            "weight": 100,
+            "title": "An ambitious angle",
+            "body": "A planner takes your card. The arrangement could become useful, or expensive.",
+            "log": "Sought influence at city hall.",
+            "stats": {
+              "reputation": 3,
+              "heat": 2
+            },
+            "addFlags": [
+              "construction_bid"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Ambitious",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "doctor_retirement",
+    "title": "A Doctor Says Enough",
+    "body": "Your doctor closes the chart and says your body has carried enough Ravenport weather. The words land harder now that you have people who depend on your future.",
+    "category": "life",
+    "tags": [
+      "aging",
+      "health"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 45,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "change",
+        "text": "Change your pace",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "slower",
+            "weight": 100,
+            "title": "A slower rhythm",
+            "body": "You miss some invitations and keep more mornings. The city does not forgive you, but your body begins to.",
+            "log": "Changed pace for health.",
+            "stats": {
+              "health": 6,
+              "stress": -5
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Laugh it off",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "warning",
+            "weight": 100,
+            "title": "Another warning ignored",
+            "body": "You make a joke and leave before the concern can settle.",
+            "log": "Dismissed a health warning.",
+            "stats": {
+              "nerve": 1,
+              "health": -8,
+              "stress": 3
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "quiet_exit",
+    "title": "The Quiet Exit",
+    "body": "The harbor fog rolls in soft enough to hide old grudges. You have seen enough to know that leaving on your own terms is its own kind of victory.",
+    "category": "life",
+    "tags": [
+      "aging",
+      "legacy"
+    ],
+    "weight": 4,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 55,
+    "maxAge": 90,
+    "art": "skyline",
+    "choices": [
+      {
+        "id": "retire",
+        "text": "Step away from the life",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "retired",
+            "weight": 100,
+            "title": "Lights out",
+            "body": "You hand off what can be handed off and choose the small peace you once mocked.",
+            "log": "Retired from Ravenport life.",
+            "stats": {
+              "stress": -8,
+              "reputation": 2
+            },
+            "addFlags": [
+              "legitimate_turn"
+            ],
+            "removeFlags": [],
+            "retire": true
+          }
+        ]
+      },
+      {
+        "id": "stay",
+        "text": "Stay in the game",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "stayed",
+            "weight": 100,
+            "title": "One more season",
+            "body": "You tell the city you are not finished. It answers with another ringing phone.",
+            "log": "Stayed active in Ravenport.",
+            "stats": {
+              "nerve": 2,
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  }
+]

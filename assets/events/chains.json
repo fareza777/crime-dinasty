@@ -1,0 +1,2190 @@
+[
+  {
+    "id": "glassridge_tip",
+    "title": "A Light Above Glassridge",
+    "body": "A quiet dockhand says a Glassridge penthouse will be empty for one rain-heavy night. The tip is thin, but the view from that hill has tempted better people than you.",
+    "category": "chain",
+    "tags": [
+      "glassridge",
+      "chain"
+    ],
+    "weight": 20,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 20,
+    "maxAge": 65,
+    "art": "skyline",
+    "choices": [
+      {
+        "id": "follow",
+        "text": "Follow the lead",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "lead",
+            "weight": 100,
+            "title": "The lead is real",
+            "body": "You confirm just enough to make the possibility dangerous.",
+            "log": "Followed the Glassridge lead.",
+            "stats": {
+              "intelligence": 2,
+              "reputation": 2
+            },
+            "addFlags": [
+              "glassridge_lead"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "glassridge_prep",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Let the hill keep its secrets",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "decline",
+            "weight": 100,
+            "title": "Lights stay distant",
+            "body": "You watch Glassridge glitter without adding your shadow to it.",
+            "log": "Declined the Glassridge lead.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ],
+    "chain": "glassridge",
+    "chainStage": 1
+  },
+  {
+    "id": "glassridge_prep",
+    "title": "Glassridge Prep",
+    "body": "Your crew gathers in a borrowed office while rain turns the windows black. Everyone understands the lead could make a name or make a grave mistake.",
+    "category": "chain",
+    "tags": [
+      "glassridge",
+      "crew"
+    ],
+    "weight": 30,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "heist",
+    "choices": [
+      {
+        "id": "prepare",
+        "text": "Prepare carefully",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "ready",
+            "weight": 100,
+            "title": "Ready enough",
+            "body": "You set expectations, exits, and limits without pretending the night is safe.",
+            "log": "Prepared for the Glassridge job.",
+            "stats": {
+              "intelligence": 3
+            },
+            "addFlags": [
+              "heist_planned"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "glassridge_night",
+              "yearsAhead": 1
+            },
+            "crewLoyaltyDelta": 2
+          }
+        ]
+      },
+      {
+        "id": "cancel",
+        "text": "Cancel the plan",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "cancel",
+            "weight": 100,
+            "title": "No night job",
+            "body": "The crew is disappointed, but nobody is explaining themselves to a judge tomorrow.",
+            "log": "Cancelled the Glassridge plan.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": [
+              "glassridge_lead"
+            ],
+            "crewLoyaltyDelta": -1
+          }
+        ]
+      },
+      {
+        "id": "rush",
+        "text": "Demand action now",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "rush",
+            "weight": 100,
+            "title": "Rushed planning",
+            "body": "The crew follows your urgency, not your wisdom.",
+            "log": "Rushed Glassridge planning.",
+            "stats": {
+              "nerve": 2,
+              "stress": 4,
+              "heat": 4
+            },
+            "addFlags": [
+              "heist_planned"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "glassridge_night",
+              "yearsAhead": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Ambitious"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "glassridge_lead",
+        "has_crew"
+      ]
+    },
+    "chain": "glassridge",
+    "chainStage": 2
+  },
+  {
+    "id": "glassridge_night",
+    "title": "Glassridge Night",
+    "body": "The hill is swallowed by rain and every window holds a distorted reflection. The job goes louder than anyone promised, and the city below feels suddenly very far away.",
+    "category": "chain",
+    "tags": [
+      "glassridge",
+      "heist"
+    ],
+    "weight": 40,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "heist",
+    "choices": [
+      {
+        "id": "finish",
+        "text": "Finish and leave",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "haul",
+            "weight": 100,
+            "title": "Through the rain",
+            "body": "You get out with a haul and a story Ravenport will reshape by morning.",
+            "log": "Completed the Glassridge job.",
+            "stats": {
+              "money": 24000,
+              "heat": 14,
+              "reputation": 8,
+              "stress": 5
+            },
+            "addFlags": [
+              "glassridge_done",
+              "heist_done",
+              "made_name"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "glassridge_fallout",
+              "yearsAhead": 1
+            }
+          },
+          {
+            "id": "arrested",
+            "weight": 28,
+            "title": "Lights on the hill",
+            "body": "A siren finds the road before you do. The score becomes evidence.",
+            "log": "Arrested after the Glassridge job.",
+            "stats": {
+              "heat": 20,
+              "stress": 8
+            },
+            "addFlags": [
+              "glassridge_done",
+              "da_file"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 5,
+            "queueEvent": {
+              "eventId": "glassridge_fallout",
+              "yearsAhead": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "abort",
+        "text": "Abort when it turns loud",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "escape",
+            "weight": 100,
+            "title": "Empty-handed escape",
+            "body": "You leave the promise behind and keep the people beside you breathing.",
+            "log": "Aborted the Glassridge job.",
+            "stats": {
+              "heat": 6,
+              "stress": 3
+            },
+            "addFlags": [
+              "glassridge_done"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "glassridge_fallout",
+              "yearsAhead": 1
+            },
+            "crewLoyaltyDelta": 2
+          }
+        ]
+      },
+      {
+        "id": "charge",
+        "text": "Charge into the noise",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "hurt",
+            "weight": 100,
+            "title": "A brutal exit",
+            "body": "You force the night forward and pay in blood and attention.",
+            "log": "Was badly injured in the Glassridge job.",
+            "stats": {
+              "money": 11000,
+              "heat": 22,
+              "health": -25,
+              "stress": 8
+            },
+            "addFlags": [
+              "glassridge_done",
+              "heat_spike"
+            ],
+            "removeFlags": [],
+            "injury": true,
+            "queueEvent": {
+              "eventId": "glassridge_fallout",
+              "yearsAhead": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Violent"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "heist_planned"
+      ]
+    },
+    "chain": "glassridge",
+    "chainStage": 3
+  },
+  {
+    "id": "glassridge_fallout",
+    "title": "Glassridge Fallout",
+    "body": "After Glassridge, strangers recognize you in places they should not. Money changes hands, old friends speak cautiously, and every favor now comes with a memory.",
+    "category": "chain",
+    "tags": [
+      "glassridge",
+      "fallout"
+    ],
+    "weight": 30,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "skyline",
+    "choices": [
+      {
+        "id": "share",
+        "text": "Share the gains fairly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "share",
+            "weight": 100,
+            "title": "Names held close",
+            "body": "The crew believes the victory belongs to all of you, which buys a rare kind of calm.",
+            "log": "Shared Glassridge gains fairly.",
+            "stats": {
+              "money": -6000,
+              "reputation": 3
+            },
+            "addFlags": [
+              "loyal_crew"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 6
+          }
+        ]
+      },
+      {
+        "id": "keep",
+        "text": "Keep the larger share",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "keep",
+            "weight": 100,
+            "title": "A lonely crown",
+            "body": "The money is yours, but the glances around you have changed.",
+            "log": "Kept the larger Glassridge share.",
+            "stats": {
+              "money": 9000,
+              "stress": 3
+            },
+            "addFlags": [
+              "betrayed_once"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -5
+          }
+        ]
+      },
+      {
+        "id": "launder",
+        "text": "Put the money toward legitimate work",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "turn",
+            "weight": 100,
+            "title": "A different foundation",
+            "body": "You put the windfall into something that might survive the story of how it arrived.",
+            "log": "Turned Glassridge money toward business.",
+            "stats": {
+              "money": -10000,
+              "assets": 12000,
+              "reputation": 3
+            },
+            "addFlags": [
+              "legitimate_turn"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Ambitious",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "glassridge_done"
+      ]
+    },
+    "chain": "glassridge",
+    "chainStage": 4
+  },
+  {
+    "id": "harbor_crown_spark",
+    "title": "Harbor Crown: First Tide",
+    "body": "The Calderas start squeezing dockside friends who have been speaking your name. The port feels like it belongs to the family until you notice how many workers resent being told so.",
+    "category": "chain",
+    "tags": [
+      "harbor",
+      "calderas"
+    ],
+    "weight": 15,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "organize",
+        "text": "Organize the docks",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "stand",
+            "weight": 100,
+            "title": "A stand at the water",
+            "body": "People choose a side quietly, then all at once.",
+            "log": "Organized resistance at the docks.",
+            "stats": {
+              "reputation": 5,
+              "heat": 6
+            },
+            "addFlags": [
+              "harbor_crown",
+              "caldera_war",
+              "turf_docks"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "harbor_crown_storm",
+              "yearsAhead": 1
+            },
+            "rivalDelta": {
+              "calderas": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "yield",
+        "text": "Yield the docks",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "yield",
+            "weight": 100,
+            "title": "Tide recedes",
+            "body": "You avoid a war and surrender a little ground.",
+            "log": "Yielded dock influence to the Calderas.",
+            "stats": {
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "rally",
+        "text": "Give a bold rallying speech",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "rally",
+            "weight": 100,
+            "title": "The crowd answers",
+            "body": "Your nerve turns frustration into movement.",
+            "log": "Rallied dockworkers against the Calderas.",
+            "stats": {
+              "charisma": 4,
+              "reputation": 6,
+              "heat": 8
+            },
+            "addFlags": [
+              "harbor_crown",
+              "caldera_war",
+              "turf_docks"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "harbor_crown_storm",
+              "yearsAhead": 1
+            },
+            "rivalDelta": {
+              "calderas": 6
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Ambitious",
+            "Charming"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "docks_interest"
+      ]
+    },
+    "chain": "harbor_crown",
+    "chainStage": 1
+  },
+  {
+    "id": "harbor_crown_storm",
+    "title": "Harbor Crown: Storm Tide",
+    "body": "A strike, a sabotage rumor, and a police patrol converge on the same gray morning. The Calderas expect you to panic before the workers do.",
+    "category": "chain",
+    "tags": [
+      "harbor",
+      "calderas"
+    ],
+    "weight": 30,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "hold",
+        "text": "Hold the line peacefully",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "hold",
+            "weight": 100,
+            "title": "The line holds",
+            "body": "You keep people together long enough for the Caldera pressure to crack.",
+            "log": "Held the docks through a Caldera push.",
+            "stats": {
+              "reputation": 7,
+              "heat": 7
+            },
+            "addFlags": [
+              "harbor_held"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "harbor_crown_reckoning",
+              "yearsAhead": 1
+            },
+            "rivalDelta": {
+              "calderas": 5
+            },
+            "crewLoyaltyDelta": 3
+          }
+        ]
+      },
+      {
+        "id": "deal",
+        "text": "Seek a truce",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "truce",
+            "weight": 100,
+            "title": "Saltwater truce",
+            "body": "The deal is temporary, but it stops today from becoming a catastrophe.",
+            "log": "Sought a Caldera truce at the docks.",
+            "stats": {
+              "charisma": 3,
+              "stress": -2
+            },
+            "addFlags": [
+              "rooke_deal"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "harbor_crown_reckoning",
+              "yearsAhead": 1
+            },
+            "rivalDelta": {
+              "calderas": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "strike",
+        "text": "Answer force with force",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "injury",
+            "weight": 100,
+            "title": "Storm violence",
+            "body": "The docks become a scene nobody can control. You survive, but Ravenport collects the cost.",
+            "log": "Escalated the Harbor Crown conflict.",
+            "stats": {
+              "heat": 18,
+              "health": -16,
+              "reputation": 4
+            },
+            "addFlags": [
+              "harbor_held",
+              "heat_spike"
+            ],
+            "removeFlags": [],
+            "injury": true,
+            "queueEvent": {
+              "eventId": "harbor_crown_reckoning",
+              "yearsAhead": 1
+            },
+            "rivalDelta": {
+              "calderas": 8
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Violent",
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "harbor_crown"
+      ]
+    },
+    "chain": "harbor_crown",
+    "chainStage": 2
+  },
+  {
+    "id": "harbor_crown_reckoning",
+    "title": "Harbor Crown: Reckoning",
+    "body": "The Calderas ask for one last meeting at the harbor as fog erases the far shore. Whoever leaves with the workers’ trust will own more than territory.",
+    "category": "chain",
+    "tags": [
+      "harbor",
+      "legacy"
+    ],
+    "weight": 25,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "settle",
+        "text": "Settle terms with dignity",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "settle",
+            "weight": 100,
+            "title": "Crown shared",
+            "body": "You win recognition without pretending the water belongs to anyone forever.",
+            "log": "Settled the Harbor Crown dispute.",
+            "stats": {
+              "reputation": 8,
+              "charisma": 3,
+              "heat": -5
+            },
+            "addFlags": [
+              "harbor_held",
+              "turf_docks"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -5
+            }
+          }
+        ]
+      },
+      {
+        "id": "claim",
+        "text": "Claim the harbor outright",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "claim",
+            "weight": 100,
+            "title": "Harbor crown",
+            "body": "The city starts calling the waterfront yours, for better and worse.",
+            "log": "Claimed the Harbor Crown.",
+            "stats": {
+              "reputation": 10,
+              "heat": 10,
+              "assets": 5000
+            },
+            "addFlags": [
+              "harbor_crown",
+              "harbor_held",
+              "turf_docks"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": 7
+            }
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Walk away from the crown",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "A different victory",
+            "body": "You refuse to build a throne from exhausted people.",
+            "log": "Walked away from Harbor Crown.",
+            "stats": {
+              "stress": -4,
+              "loyalty": 3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "caldera_war"
+            ],
+            "rivalDelta": {
+              "calderas": -3
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "harbor_crown"
+      ]
+    },
+    "chain": "harbor_crown",
+    "chainStage": 3
+  },
+  {
+    "id": "da_file_opening",
+    "title": "The DA File Opens",
+    "body": "Your lawyer calls before sunrise: the district attorney has opened a file with your name on it. The city you know becomes a map of possible witnesses.",
+    "category": "chain",
+    "tags": [
+      "da",
+      "chain"
+    ],
+    "weight": 12,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 21,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "lawyer",
+        "text": "Retain serious counsel",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "counsel",
+            "weight": 100,
+            "title": "Counsel retained",
+            "body": "You put a professional wall between panic and the state.",
+            "log": "Retained counsel for the DA file.",
+            "stats": {
+              "money": -3500,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "da_file",
+              "lawyered"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_discovery",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "wait",
+        "text": "Wait for facts",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "Facts arrive anyway",
+            "body": "You save your money but lose the first move.",
+            "log": "Waited after DA file opened.",
+            "stats": {
+              "stress": 4
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_discovery",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Try to bury the worry",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "worse",
+            "weight": 100,
+            "title": "Worry buried badly",
+            "body": "The case grows while you tell yourself it cannot.",
+            "log": "Ignored an opening DA file.",
+            "stats": {
+              "heat": 8,
+              "stress": 6
+            },
+            "addFlags": [
+              "da_file",
+              "heat_spike"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_discovery",
+              "yearsAhead": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "chain": "da_file",
+    "chainStage": 1
+  },
+  {
+    "id": "da_file_discovery",
+    "title": "The DA File: Discovery",
+    "body": "Boxes of documents arrive, each page a version of your life written by someone who wants a conviction. Your lawyer circles a few lines in red.",
+    "category": "chain",
+    "tags": [
+      "da",
+      "court"
+    ],
+    "weight": 25,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "review",
+        "text": "Review every page",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "review",
+            "weight": 100,
+            "title": "Pattern found",
+            "body": "A contradiction gives the defense somewhere to stand.",
+            "log": "Reviewed DA discovery closely.",
+            "stats": {
+              "intelligence": 4,
+              "stress": 2
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_crossroads",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "delegate",
+        "text": "Let counsel handle it",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "delegate",
+            "weight": 100,
+            "title": "Trust counsel",
+            "body": "You spare yourself the details and surrender some control.",
+            "log": "Delegated DA discovery to counsel.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_crossroads",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "pressure",
+        "text": "Pressure a witness",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "damage",
+            "weight": 100,
+            "title": "Fresh trouble",
+            "body": "The attempt becomes a new concern for the prosecution.",
+            "log": "Made a damaging witness pressure attempt.",
+            "stats": {
+              "heat": 14,
+              "stress": 5
+            },
+            "addFlags": [
+              "da_file",
+              "snitch_risk"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_crossroads",
+              "yearsAhead": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Violent",
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    },
+    "chain": "da_file",
+    "chainStage": 2
+  },
+  {
+    "id": "da_file_crossroads",
+    "title": "The DA File: Crossroads",
+    "body": "The prosecutor offers a narrow deal while your lawyer says the case is not as strong as it once looked. No choice feels clean; each one simply leads to a different kind of memory.",
+    "category": "chain",
+    "tags": [
+      "da",
+      "trial"
+    ],
+    "weight": 25,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "deal",
+        "text": "Take the deal",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "deal",
+            "weight": 100,
+            "title": "Years counted",
+            "body": "You choose certainty and prepare to lose time, not yourself.",
+            "log": "Took a DA plea deal.",
+            "stats": {
+              "stress": 4,
+              "heat": -5
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 3,
+            "queueEvent": {
+              "eventId": "da_file_resolution",
+              "yearsAhead": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "trial",
+        "text": "Go to trial",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "trial",
+            "weight": 100,
+            "title": "Case tested",
+            "body": "The courtroom becomes the place where strangers argue about who you are.",
+            "log": "Took the DA case to trial.",
+            "stats": {
+              "money": -4500,
+              "stress": 7,
+              "reputation": 2
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_resolution",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "cooperate",
+        "text": "Cooperate with the state",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "turn",
+            "weight": 100,
+            "title": "A terrible bargain",
+            "body": "You gain a way out and lose a piece of your old world.",
+            "log": "Turned state’s evidence.",
+            "stats": {
+              "heat": -8,
+              "stress": 8,
+              "reputation": -6
+            },
+            "addFlags": [
+              "turned_state",
+              "da_file"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "da_file_resolution",
+              "yearsAhead": 2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Paranoid"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    },
+    "chain": "da_file",
+    "chainStage": 3
+  },
+  {
+    "id": "da_file_resolution",
+    "title": "The DA File: Resolution",
+    "body": "Years after the first call, a final order waits in a courtroom hallway. The building has not changed, but you have.",
+    "category": "chain",
+    "tags": [
+      "da",
+      "resolution"
+    ],
+    "weight": 20,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Accept the result",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "closed",
+            "weight": 100,
+            "title": "File closed",
+            "body": "Whatever the cost, the file stops deciding your every morning.",
+            "log": "DA file reached resolution.",
+            "stats": {
+              "heat": -12,
+              "stress": -5
+            },
+            "addFlags": [
+              "da_closed"
+            ],
+            "removeFlags": [
+              "da_file",
+              "heat_spike"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "appeal",
+        "text": "Appeal if sentenced",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "appeal",
+            "weight": 100,
+            "title": "One more door",
+            "body": "You refuse to let the last ruling be the last word.",
+            "log": "Appealed the DA resolution.",
+            "stats": {
+              "money": -2200,
+              "stress": 3
+            },
+            "addFlags": [
+              "appealed",
+              "da_closed"
+            ],
+            "removeFlags": [
+              "da_file"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "learn",
+        "text": "Turn it into a new life",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "turn",
+            "weight": 100,
+            "title": "Life redirected",
+            "body": "You leave the courthouse with no illusions and one better intention.",
+            "log": "Redirected life after DA case.",
+            "stats": {
+              "reputation": 3,
+              "stress": -4
+            },
+            "addFlags": [
+              "da_closed",
+              "legitimate_turn"
+            ],
+            "removeFlags": [
+              "da_file"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    },
+    "chain": "da_file",
+    "chainStage": 4
+  },
+  {
+    "id": "blood_ledger_hire",
+    "title": "Blood Ledger: The Accountant",
+    "body": "The accountant arrives with a leather folder and a look that makes numbers feel judgmental. They can clean the books, but clean books create their own trail.",
+    "category": "chain",
+    "tags": [
+      "accountant",
+      "chain"
+    ],
+    "weight": 8,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 25,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "hire",
+        "text": "Hire them",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "hire",
+            "weight": 100,
+            "title": "Books opened",
+            "body": "You give a stranger access to the truth behind your money.",
+            "log": "Hired the Blood Ledger accountant.",
+            "stats": {
+              "money": -2600,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "accountant_hired"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "blood_ledger_irregularity",
+              "yearsAhead": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Keep the books closed",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "closed",
+            "weight": 100,
+            "title": "No new eyes",
+            "body": "You keep your privacy and your disarray.",
+            "log": "Declined the Blood Ledger accountant.",
+            "stats": {
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ],
+    "chain": "blood_ledger",
+    "chainStage": 1
+  },
+  {
+    "id": "blood_ledger_irregularity",
+    "title": "Blood Ledger: Irregularity",
+    "body": "The accountant finds a recurring irregularity that could be error, theft, or a signal from someone inside your circle. Their voice stays calm; yours does not.",
+    "category": "chain",
+    "tags": [
+      "accountant",
+      "betrayal"
+    ],
+    "weight": 20,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "investigate",
+        "text": "Investigate together",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "found",
+            "weight": 100,
+            "title": "The missing pattern",
+            "body": "You trace the problem without accusing the wrong person.",
+            "log": "Investigated a ledger irregularity.",
+            "stats": {
+              "intelligence": 4,
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "blood_ledger_verdict",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "blame",
+        "text": "Blame the accountant",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "rot",
+            "weight": 100,
+            "title": "Trust breaks",
+            "body": "They leave with a stiff expression and knowledge you wish they did not carry.",
+            "log": "Accused the accountant without proof.",
+            "stats": {
+              "stress": 4
+            },
+            "addFlags": [
+              "accountant_rot"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "blood_ledger_verdict",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "trap",
+        "text": "Set a quiet test",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "proof",
+            "weight": 100,
+            "title": "Proof found",
+            "body": "The test reveals an outside pressure on the accountant, not their greed.",
+            "log": "Tested an accountant discreetly.",
+            "stats": {
+              "intelligence": 5
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "blood_ledger_verdict",
+              "yearsAhead": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Paranoid"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "accountant_hired"
+      ]
+    },
+    "chain": "blood_ledger",
+    "chainStage": 2
+  },
+  {
+    "id": "blood_ledger_verdict",
+    "title": "Blood Ledger: Verdict",
+    "body": "The ledger closes on an explanation, but not necessarily a clean one. The accountant waits across the desk to learn whether you still see them as an ally.",
+    "category": "chain",
+    "tags": [
+      "accountant",
+      "legacy"
+    ],
+    "weight": 18,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "trust",
+        "text": "Keep them and set boundaries",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "trust",
+            "weight": 100,
+            "title": "Books steady",
+            "body": "You choose oversight over paranoia and preserve a useful partnership.",
+            "log": "Kept the accountant with safeguards.",
+            "stats": {
+              "intelligence": 2,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "accountant_rot"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fire",
+        "text": "End the relationship",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "fire",
+            "weight": 100,
+            "title": "Books change hands",
+            "body": "You pay for transition and live with the unresolved question.",
+            "log": "Fired the accountant.",
+            "stats": {
+              "money": -1800,
+              "stress": 1
+            },
+            "addFlags": [
+              "accountant_rot"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "cover",
+        "text": "Ask them to hide the problem",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "cover",
+            "weight": 100,
+            "title": "A dangerous favor",
+            "body": "They agree reluctantly, and the books become another secret with teeth.",
+            "log": "Asked accountant to conceal an irregularity.",
+            "stats": {
+              "heat": 5,
+              "stress": 3
+            },
+            "addFlags": [
+              "accountant_rot",
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Greedy",
+            "Cunning"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "accountant_hired"
+      ]
+    },
+    "chain": "blood_ledger",
+    "chainStage": 3
+  },
+  {
+    "id": "family_fracture_seed",
+    "title": "Family Fracture: First Question",
+    "body": "Your teenage child asks why certain adults lower their voices when you enter. There is no safe lie left, only kinder and crueler truths.",
+    "category": "chain",
+    "tags": [
+      "family",
+      "chain"
+    ],
+    "weight": 7,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "truth",
+        "text": "Tell a careful truth",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "truth",
+            "weight": 100,
+            "title": "A seed of trust",
+            "body": "They do not like the answer, but they believe you meant it.",
+            "log": "Told a child a careful truth.",
+            "stats": {
+              "loyalty": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "family_fracture_choice",
+              "yearsAhead": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "lie",
+        "text": "Tell a clean lie",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "lie",
+            "weight": 100,
+            "title": "A seed of distance",
+            "body": "They accept it for now, and start looking elsewhere for answers.",
+            "log": "Lied to a child about your life.",
+            "stats": {
+              "stress": 2
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "family_fracture_choice",
+              "yearsAhead": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "protect",
+        "text": "Tell them they deserve better",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "protect",
+            "weight": 100,
+            "title": "A different promise",
+            "body": "You make a promise to protect their future from your past.",
+            "log": "Promised a child a better path.",
+            "stats": {
+              "loyalty": 4
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "family_fracture_choice",
+              "yearsAhead": 4
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Loyal",
+            "Compassionate"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "hasChildren": true
+    },
+    "chain": "family_fracture",
+    "chainStage": 1
+  },
+  {
+    "id": "family_fracture_choice",
+    "title": "Family Fracture: The Offer",
+    "body": "Now grown, your child brings you three offers: a scholarship, a role beside you, and a message from someone who wants to use your family name against you.",
+    "category": "chain",
+    "tags": [
+      "family",
+      "legacy"
+    ],
+    "weight": 22,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "school",
+        "text": "Back the scholarship",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "school",
+            "weight": 100,
+            "title": "A lawful door",
+            "body": "You pay what you can and make clear they owe you nothing for it.",
+            "log": "Backed a child’s scholarship.",
+            "stats": {
+              "money": -5000,
+              "loyalty": 5,
+              "reputation": 2
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": [
+              "kid_rival"
+            ],
+            "queueEvent": {
+              "eventId": "family_fracture_echo",
+              "yearsAhead": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "family",
+        "text": "Bring them close",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "close",
+            "weight": 100,
+            "title": "Near the flame",
+            "body": "They step into your orbit with open eyes and a complicated smile.",
+            "log": "Brought adult child into family orbit.",
+            "stats": {
+              "reputation": 4,
+              "stress": 3
+            },
+            "addFlags": [
+              "has_heir_child"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "family_fracture_echo",
+              "yearsAhead": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "rival",
+        "text": "Let them take the rival meeting",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "rival",
+            "weight": 100,
+            "title": "A dangerous door",
+            "body": "You cannot control the choice once they make it, only what you do next.",
+            "log": "Allowed child to meet a rival.",
+            "stats": {
+              "stress": 6,
+              "reputation": -2
+            },
+            "addFlags": [
+              "kid_rival",
+              "family_rift"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "family_fracture_echo",
+              "yearsAhead": 2
+            },
+            "rivalDelta": {
+              "marrow": 2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Greedy"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_heir_child"
+      ],
+      "minChildrenAdult": 1
+    },
+    "chain": "family_fracture",
+    "chainStage": 2
+  },
+  {
+    "id": "family_fracture_echo",
+    "title": "Family Fracture: Echo",
+    "body": "Years later, your child’s choice has become a shape in every family gathering. A letter arrives asking for one private conversation, without witnesses.",
+    "category": "chain",
+    "tags": [
+      "family",
+      "repair"
+    ],
+    "weight": 18,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "meet",
+        "text": "Meet with open hands",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "meet",
+            "weight": 100,
+            "title": "A conversation begins",
+            "body": "The two of you say difficult things and leave a little less alone.",
+            "log": "Met child to repair a family rift.",
+            "stats": {
+              "loyalty": 4,
+              "stress": -4
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "family_rift",
+              "kid_rival"
+            ],
+            "queueEvent": {
+              "eventId": "family_fracture_legacy",
+              "yearsAhead": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "distance",
+        "text": "Keep your distance",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "distance",
+            "weight": 100,
+            "title": "Distance hardens",
+            "body": "The letter stays unanswered until the paper feels older than the wound.",
+            "log": "Kept distance from adult child.",
+            "stats": {
+              "stress": 3
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "family_fracture_legacy",
+              "yearsAhead": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "apologize",
+        "text": "Apologize without conditions",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "apology",
+            "weight": 100,
+            "title": "A bridge offered",
+            "body": "You refuse to make forgiveness another transaction.",
+            "log": "Offered unconditional apology to child.",
+            "stats": {
+              "loyalty": 6,
+              "charisma": 2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "family_rift",
+              "kid_rival"
+            ],
+            "queueEvent": {
+              "eventId": "family_fracture_legacy",
+              "yearsAhead": 3
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Loyal"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_heir_child"
+      ]
+    },
+    "chain": "family_fracture",
+    "chainStage": 3
+  },
+  {
+    "id": "family_fracture_legacy",
+    "title": "Family Fracture: Legacy",
+    "body": "At a family table years from now, the younger generation watches how you and your child greet one another. The lesson is not in the words; it is in what survives them.",
+    "category": "chain",
+    "tags": [
+      "family",
+      "legacy"
+    ],
+    "weight": 15,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "repair",
+        "text": "Name the repair",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "repair",
+            "weight": 100,
+            "title": "Legacy softened",
+            "body": "You speak plainly about mistakes and the work of coming back.",
+            "log": "Named family repair as your legacy.",
+            "stats": {
+              "reputation": 4,
+              "loyalty": 5
+            },
+            "addFlags": [
+              "legacy_speech"
+            ],
+            "removeFlags": [
+              "family_rift"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "control",
+        "text": "Demand loyalty",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "control",
+            "weight": 100,
+            "title": "A narrower inheritance",
+            "body": "The room obeys your voice, but nobody mistakes obedience for love.",
+            "log": "Demanded family loyalty.",
+            "stats": {
+              "reputation": 2,
+              "loyalty": -4
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "release",
+        "text": "Give them freedom",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "release",
+            "weight": 100,
+            "title": "Legacy released",
+            "body": "You tell them the family name is not a sentence.",
+            "log": "Released the next generation from your shadow.",
+            "stats": {
+              "loyalty": 6,
+              "stress": -3
+            },
+            "addFlags": [
+              "kid_legal",
+              "legacy_speech"
+            ],
+            "removeFlags": [
+              "family_rift"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_heir_child"
+      ]
+    },
+    "chain": "family_fracture",
+    "chainStage": 4
+  },
+  {
+    "id": "wedding_circuit_courtship",
+    "title": "Wedding Circuit: Courtship",
+    "body": "You meet someone who laughs at Ravenport’s false glamour and sees the fatigue behind yours. They ask for coffee in daylight, which feels more dangerous than any midnight invitation.",
+    "category": "chain",
+    "tags": [
+      "romance",
+      "chain"
+    ],
+    "weight": 7,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 21,
+    "maxAge": 75,
+    "art": "club",
+    "choices": [
+      {
+        "id": "coffee",
+        "text": "Say yes to coffee",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "court",
+            "weight": 100,
+            "title": "Daylight honesty",
+            "body": "You talk until the café stacks chairs around you.",
+            "log": "Began a serious courtship.",
+            "stats": {
+              "charisma": 3,
+              "stress": -2
+            },
+            "addFlags": [
+              "courted"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "wedding_circuit_families",
+              "yearsAhead": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "avoid",
+        "text": "Avoid attachment",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "avoid",
+            "weight": 100,
+            "title": "Phone silent",
+            "body": "You keep the city at arm’s length by keeping everyone there.",
+            "log": "Avoided a serious courtship.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "charm",
+        "text": "Plan a memorable date",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "spark",
+            "weight": 100,
+            "title": "A real spark",
+            "body": "Your charm lands because it is paired with attention.",
+            "log": "Made a memorable courtship gesture.",
+            "stats": {
+              "money": -600,
+              "charisma": 5
+            },
+            "addFlags": [
+              "courted"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "wedding_circuit_families",
+              "yearsAhead": 2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming"
+          ]
+        }
+      }
+    ],
+    "chain": "wedding_circuit",
+    "chainStage": 1
+  },
+  {
+    "id": "wedding_circuit_families",
+    "title": "Wedding Circuit: Families",
+    "body": "Both families gather for dinner and immediately find reasons to worry about one another. You can make the evening a contest, or make it a beginning.",
+    "category": "chain",
+    "tags": [
+      "romance",
+      "family"
+    ],
+    "weight": 18,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "bridge",
+        "text": "Build a bridge",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "bridge",
+            "weight": 100,
+            "title": "Dinner survives",
+            "body": "You tell a story that lets everyone laugh before they harden.",
+            "log": "Bridged two families at dinner.",
+            "stats": {
+              "charisma": 4,
+              "loyalty": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "wedding_circuit_vows",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "defend",
+        "text": "Defend your side",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "clash",
+            "weight": 100,
+            "title": "Dinner fractures",
+            "body": "Old loyalties turn a meal into an argument nobody wins.",
+            "log": "Escalated family tension before wedding.",
+            "stats": {
+              "stress": 4
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "wedding_circuit_vows",
+              "yearsAhead": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "listen",
+        "text": "Let everyone speak",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "listen",
+            "weight": 100,
+            "title": "Patience at table",
+            "body": "The sharpest voices soften when they are not interrupted.",
+            "log": "Patiently heard both families.",
+            "stats": {
+              "loyalty": 3,
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "queueEvent": {
+              "eventId": "wedding_circuit_vows",
+              "yearsAhead": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Patient",
+            "Compassionate"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "courted"
+      ]
+    },
+    "chain": "wedding_circuit",
+    "chainStage": 2
+  },
+  {
+    "id": "wedding_circuit_vows",
+    "title": "Wedding Circuit: Vows",
+    "body": "The city looks almost gentle from the courthouse steps. The person beside you asks whether you are ready to promise something Ravenport cannot guarantee.",
+    "category": "chain",
+    "tags": [
+      "wedding",
+      "family"
+    ],
+    "weight": 15,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "vows",
+        "text": "Make the vows",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "married",
+            "weight": 100,
+            "title": "Vows kept",
+            "body": "You say yes with your whole, imperfect history standing behind you.",
+            "log": "Married in Ravenport.",
+            "stats": {
+              "loyalty": 5,
+              "stress": -2
+            },
+            "addFlags": [
+              "married"
+            ],
+            "removeFlags": [],
+            "marry": true,
+            "queueEvent": {
+              "eventId": "newborn_night",
+              "yearsAhead": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "wait",
+        "text": "Ask for more time",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "More time",
+            "body": "You choose honesty over a promise made from fear.",
+            "log": "Delayed marriage vows.",
+            "stats": {
+              "charisma": 1,
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "elopement",
+        "text": "Elope quietly",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "quiet",
+            "weight": 100,
+            "title": "Quiet vows",
+            "body": "You make the commitment without an audience to complicate it.",
+            "log": "Eloped in Ravenport.",
+            "stats": {
+              "loyalty": 4,
+              "stress": -1
+            },
+            "addFlags": [
+              "married"
+            ],
+            "removeFlags": [],
+            "marry": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "courted"
+      ]
+    },
+    "chain": "wedding_circuit",
+    "chainStage": 3
+  }
+]

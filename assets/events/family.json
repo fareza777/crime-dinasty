@@ -1,0 +1,883 @@
+[
+  {
+    "id": "sibling_at_the_door",
+    "title": "Sibling at the Door",
+    "body": "Your sibling arrives after midnight with a split lip and a borrowed coat. They say they only need a couch, but their eyes keep checking the window.",
+    "category": "family",
+    "tags": [
+      "sibling"
+    ],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 70,
+    "art": "home",
+    "choices": [
+      {
+        "id": "shelter",
+        "text": "Let them stay",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "shelter",
+            "weight": 100,
+            "title": "Family first",
+            "body": "You make up the couch and ask no questions until morning.",
+            "log": "Sheltered a sibling in trouble.",
+            "stats": {
+              "loyalty": 3,
+              "stress": 2
+            },
+            "addFlags": [
+              "sibling_feud"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Refuse the risk",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "closed",
+            "weight": 100,
+            "title": "Door closed",
+            "body": "You keep the boundary, and hear the elevator groan after they leave.",
+            "log": "Refused to shelter a sibling.",
+            "stats": {
+              "stress": 2
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "call",
+        "text": "Call a safe contact",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "route",
+            "weight": 100,
+            "title": "A safer route",
+            "body": "You find them a place that does not lead back to your door.",
+            "log": "Found safe shelter for a sibling.",
+            "stats": {
+              "loyalty": 2,
+              "intelligence": 2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "family_rift"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Loyal",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "family_dinner_silence",
+    "title": "Family Dinner Silence",
+    "body": "At dinner, the conversation stops whenever your phone lights up. An aunt asks if you are all right, and nobody at the table believes the easy answer.",
+    "category": "family",
+    "tags": [
+      "family"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 20,
+    "maxAge": 75,
+    "art": "home",
+    "choices": [
+      {
+        "id": "honest",
+        "text": "Tell a careful truth",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "truth",
+            "weight": 100,
+            "title": "A hard conversation",
+            "body": "The room gets quieter, then kinder. They cannot fix your life, but they stop guessing at it.",
+            "log": "Shared a careful truth with family.",
+            "stats": {
+              "stress": -3,
+              "loyalty": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "lie",
+        "text": "Change the subject",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "lie",
+            "weight": 100,
+            "title": "Another cover story",
+            "body": "The lie gets you through dessert and follows you home.",
+            "log": "Covered up trouble at family dinner.",
+            "stats": {
+              "stress": 2
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "protect",
+        "text": "Tell them you will handle it",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "shield",
+            "weight": 100,
+            "title": "A loyal shield",
+            "body": "You take the worry onto yourself, whether or not you can carry it.",
+            "log": "Shielded family from trouble.",
+            "stats": {
+              "loyalty": 3,
+              "stress": 3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "family_rift"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Loyal"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "nursery_window",
+    "title": "Nursery Window",
+    "body": "You pause outside a shop window full of strollers and soft light. The city noise drops away long enough for you to imagine a different kind of inheritance.",
+    "category": "family",
+    "tags": [
+      "children"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 50,
+    "art": "home",
+    "choices": [
+      {
+        "id": "hope",
+        "text": "Let yourself hope",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "hope",
+            "weight": 100,
+            "title": "A future imagined",
+            "body": "You carry the thought home carefully, as though it might break.",
+            "log": "Imagined a family future.",
+            "stats": {
+              "stress": -2,
+              "charisma": 1
+            },
+            "addFlags": [
+              "courted"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "turn",
+        "text": "Turn away",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "turn",
+            "weight": 100,
+            "title": "Not yet",
+            "body": "You decide the future can wait until Ravenport stops demanding the present.",
+            "log": "Put family plans aside.",
+            "stats": {
+              "nerve": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "school_conference",
+    "title": "School Conference",
+    "body": "A teacher asks to meet about your child’s sharp mind and short temper. The classroom smells of dust, crayons, and a future you can still influence.",
+    "category": "family",
+    "tags": [
+      "children"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 28,
+    "maxAge": 75,
+    "art": "home",
+    "choices": [
+      {
+        "id": "attend",
+        "text": "Attend and listen",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "present",
+            "weight": 100,
+            "title": "Present parent",
+            "body": "You sit through every difficult sentence and make a plan with the teacher.",
+            "log": "Attended a child school conference.",
+            "stats": {
+              "loyalty": 3,
+              "stress": -2
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "send",
+        "text": "Send someone else",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "absent",
+            "weight": 100,
+            "title": "Empty chair",
+            "body": "The teacher leaves a packet at the office. Your child notices who was not there.",
+            "log": "Missed a child school conference.",
+            "stats": {
+              "loyalty": -3,
+              "stress": 2
+            },
+            "addFlags": [
+              "family_rift"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "mentor",
+        "text": "Find a patient mentor",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "mentor",
+            "weight": 100,
+            "title": "A better example",
+            "body": "A trusted adult gives your child a view beyond your shadow.",
+            "log": "Found a mentor for a child.",
+            "stats": {
+              "money": -500,
+              "loyalty": 4,
+              "reputation": 1
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "minMoney": 500,
+          "traitsAny": [
+            "Compassionate",
+            "Loyal"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "hasChildren": true
+    }
+  },
+  {
+    "id": "spouse_phone_call",
+    "title": "The Unanswered Call",
+    "body": "Your spouse sees another late-night call flash across the room. The question they ask is simple; the answer is not.",
+    "category": "family",
+    "tags": [
+      "marriage"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "talk",
+        "text": "Talk without dodging",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "repair",
+            "weight": 100,
+            "title": "An honest hour",
+            "body": "You say enough truth to make repair possible.",
+            "log": "Had an honest talk with a spouse.",
+            "stats": {
+              "charisma": 2,
+              "loyalty": 2,
+              "stress": -3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "spouse_conflict"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "evade",
+        "text": "Evade the question",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "crack",
+            "weight": 100,
+            "title": "A crack widens",
+            "body": "The argument ends without ending.",
+            "log": "Evaded a spouse’s question.",
+            "stats": {
+              "stress": 4,
+              "loyalty": -2
+            },
+            "addFlags": [
+              "spouse_conflict"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Walk out",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "break",
+            "weight": 100,
+            "title": "Door shut",
+            "body": "The night takes the argument and gives nothing back.",
+            "log": "Walked out on a spouse.",
+            "stats": {
+              "stress": 5
+            },
+            "addFlags": [
+              "spouse_conflict",
+              "family_rift"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "hasSpouse": true
+    }
+  },
+  {
+    "id": "birthday_candles",
+    "title": "Birthday Candles",
+    "body": "Your child watches the candles burn down while adults tell stories that keep changing. For one evening, you can choose what they learn about your attention.",
+    "category": "family",
+    "tags": [
+      "children"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "stay",
+        "text": "Stay until the last gift",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "memory",
+            "weight": 100,
+            "title": "A true memory",
+            "body": "You make the evening ordinary in the best way.",
+            "log": "Stayed for a child’s birthday.",
+            "stats": {
+              "loyalty": 4,
+              "stress": -2
+            },
+            "addFlags": [
+              "has_heir_child"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Leave for business",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "absence",
+            "weight": 100,
+            "title": "An empty place setting",
+            "body": "A present arrives later, but it cannot sit in your chair.",
+            "log": "Left a child’s birthday early.",
+            "stats": {
+              "money": 1200,
+              "loyalty": -3,
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "listen",
+        "text": "Ask what they want",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "listen",
+            "weight": 100,
+            "title": "Their own dream",
+            "body": "You listen without steering the answer toward your own unfinished ambitions.",
+            "log": "Listened to a child’s dream.",
+            "stats": {
+              "loyalty": 3,
+              "charisma": 1
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "hasChildren": true
+    }
+  },
+  {
+    "id": "inheritance_box",
+    "title": "Inheritance Box",
+    "body": "A relative leaves behind a box of letters, receipts, and photographs from a life nobody explained. One page mentions a debt your family never told you about.",
+    "category": "family",
+    "tags": [
+      "legacy"
+    ],
+    "weight": 5,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 25,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "read",
+        "text": "Read every letter",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "past",
+            "weight": 100,
+            "title": "The family past",
+            "body": "The letters do not solve anything, but they explain why some rooms were always cold.",
+            "log": "Learned about a family debt.",
+            "stats": {
+              "intelligence": 2,
+              "stress": 2
+            },
+            "addFlags": [
+              "in_debt"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "seal",
+        "text": "Seal the box",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "sealed",
+            "weight": 100,
+            "title": "Not your burden",
+            "body": "You put the past back where you found it.",
+            "log": "Set aside a family inheritance.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "pay",
+        "text": "Settle the old debt",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "settled",
+            "weight": 100,
+            "title": "A debt settled",
+            "body": "You close a chapter for people who cannot thank you.",
+            "log": "Settled an old family debt.",
+            "stats": {
+              "money": -2500,
+              "reputation": 3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "in_debt"
+            ]
+          }
+        ],
+        "requires": {
+          "minMoney": 2500,
+          "traitsAny": [
+            "Loyal",
+            "Compassionate"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "family_lawyer_letter",
+    "title": "Family Lawyer Letter",
+    "body": "A lawyer’s letter arrives with too many formal phrases and one clear threat: someone is contesting what you thought was settled.",
+    "category": "family",
+    "tags": [
+      "legacy",
+      "law"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "meet",
+        "text": "Meet the lawyer",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "brief",
+            "weight": 100,
+            "title": "A clear brief",
+            "body": "You learn the dispute has rules, deadlines, and a human grudge at its center.",
+            "log": "Met a lawyer about family matters.",
+            "stats": {
+              "money": -800,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "will_dispute"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Ignore it for now",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "delay",
+            "weight": 100,
+            "title": "Delay costs",
+            "body": "The letter remains on the table until it becomes more expensive to answer.",
+            "log": "Ignored a family legal letter.",
+            "stats": {
+              "stress": 3
+            },
+            "addFlags": [
+              "will_dispute"
+            ],
+            "removeFlags": []
+          }
+        ]
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_heir_child"
+      ]
+    }
+  },
+  {
+    "id": "newborn_night",
+    "title": "Newborn Night",
+    "body": "The apartment is finally quiet except for a newborn’s small, impossible cry. You are exhausted, frightened, and more awake than you have ever been.",
+    "category": "family",
+    "tags": [
+      "children"
+    ],
+    "weight": 5,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 60,
+    "art": "home",
+    "choices": [
+      {
+        "id": "hold",
+        "text": "Take the night shift",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "bond",
+            "weight": 100,
+            "title": "A long night together",
+            "body": "You pace by the window until dawn, learning a new kind of patience.",
+            "log": "Cared for a newborn overnight.",
+            "stats": {
+              "loyalty": 4,
+              "stress": 3
+            },
+            "addFlags": [
+              "has_heir_child"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "call",
+        "text": "Call for help",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "help",
+            "weight": 100,
+            "title": "Family answers",
+            "body": "Someone arrives with coffee and a tired smile. You do not have to carry everything alone.",
+            "log": "Accepted family help with a newborn.",
+            "stats": {
+              "stress": -3,
+              "loyalty": 2
+            },
+            "addFlags": [
+              "has_heir_child"
+            ],
+            "removeFlags": []
+          }
+        ]
+      }
+    ],
+    "requires": {
+      "hasChildren": true
+    }
+  },
+  {
+    "id": "adult_child_question",
+    "title": "The Adult Child Question",
+    "body": "Your child is old enough to ask why your name opens some doors and closes others. The question is not angry yet, which makes it harder to answer.",
+    "category": "family",
+    "tags": [
+      "children",
+      "legacy"
+    ],
+    "weight": 8,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 38,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "legal",
+        "text": "Encourage a straight path",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "legal",
+            "weight": 100,
+            "title": "A door toward daylight",
+            "body": "You help them see a future that does not require your enemies.",
+            "log": "Encouraged an adult child’s legal path.",
+            "stats": {
+              "money": -1200,
+              "loyalty": 3
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": [
+              "kid_rival"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "family",
+        "text": "Invite them into the family orbit",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "family",
+            "weight": 100,
+            "title": "Closer to the flame",
+            "body": "They take your hand, and you hope proximity will mean protection.",
+            "log": "Brought an adult child closer to the family business.",
+            "stats": {
+              "reputation": 3,
+              "stress": 2
+            },
+            "addFlags": [
+              "has_heir_child"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "warn",
+        "text": "Tell them what you have learned",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "warning",
+            "weight": 100,
+            "title": "The cost named",
+            "body": "You do not romanticize the city. They hear you, even if they do not agree.",
+            "log": "Warned an adult child about the life.",
+            "stats": {
+              "charisma": 2,
+              "loyalty": 2
+            },
+            "addFlags": [
+              "kid_legal"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Loyal"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_heir_child"
+      ],
+      "minChildrenAdult": 1
+    }
+  },
+  {
+    "id": "family_portrait",
+    "title": "Family Portrait",
+    "body": "A photographer asks everyone to stand still in a room full of old arguments. For a minute, Ravenport cannot reach through the glass.",
+    "category": "family",
+    "tags": [
+      "family"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 30,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "smile",
+        "text": "Stay for the portrait",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "portrait",
+            "weight": 100,
+            "title": "One frame",
+            "body": "The photo catches a version of the family you want to believe can last.",
+            "log": "Took a family portrait.",
+            "stats": {
+              "loyalty": 2,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "family_rift"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "skip",
+        "text": "Skip the photo",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "skip",
+            "weight": 100,
+            "title": "A missing space",
+            "body": "Someone saves you a place anyway.",
+            "log": "Skipped a family portrait.",
+            "stats": {
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  }
+]

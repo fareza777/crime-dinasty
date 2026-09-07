@@ -1,0 +1,450 @@
+[
+  {
+    "id": "late_knees_rain",
+    "title": "The Knees Keep Their Own Calendar",
+    "body": "Rain used to be atmosphere. Now it is a medical opinion. A doctor in Midtown says the body is a ledger that does not forgive late entries.",
+    "category": "life",
+    "tags": ["late", "midtown"],
+    "weight": 13,
+    "once": false,
+    "cooldownYears": 6,
+    "minAge": 48,
+    "maxAge": 80,
+    "art": "home",
+    "choices": [
+      {
+        "id": "slow",
+        "text": "Slow the year. Pay the clinic.",
+        "outcomes": [
+          {
+            "id": "slow",
+            "weight": 100,
+            "title": "A softer walk",
+            "body": "You buy time the way you used to buy turf. The name can wait one night.",
+            "log": "Paid a late-life clinic.",
+            "stats": { "money": -180, "health": 7, "stress": -5 }
+          }
+        ]
+      },
+      {
+        "id": "push",
+        "text": "Push through. The city does not sit.",
+        "outcomes": [
+          {
+            "id": "push",
+            "weight": 70,
+            "title": "Pride in the joints",
+            "body": "You make the meeting. The body files a complaint you will read later.",
+            "log": "Pushed through late rain.",
+            "stats": { "health": -5, "nerve": 2, "reputation": 2 }
+          },
+          {
+            "id": "fall",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "A wet sidewalk",
+            "body": "The year takes a piece of you. Someone helps you up who should not know your name.",
+            "log": "Fell in late rain.",
+            "stats": { "health": -10, "stress": 6, "heat": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_will_draft",
+    "title": "Ink for After You",
+    "body": "A lawyer wants the chair written down while you can still hold a pen. The empty chair in the Hall is not a metaphor tonight.",
+    "category": "family",
+    "tags": ["late"],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 50,
+    "maxAge": 84,
+    "art": "funeral",
+    "choices": [
+      {
+        "id": "write",
+        "text": "Write the heir. Say it out loud.",
+        "outcomes": [
+          {
+            "id": "write",
+            "weight": 100,
+            "title": "A named tomorrow",
+            "body": "The paper is not kindness. It is a fence. The family sleeps a little less afraid.",
+            "log": "Drafted a late-life will.",
+            "stats": { "loyalty": 5, "stress": -3, "reputation": 2 }
+          }
+        ]
+      },
+      {
+        "id": "wait",
+        "text": "Wait. Superstition is a kind of law.",
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "An unwritten chair",
+            "body": "You keep the power and the fog. Someone will fight over the fog later.",
+            "log": "Refused to draft a late will.",
+            "stats": { "stress": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_grandchild_ask",
+    "title": "A Small Voice at the Books",
+    "body": "A child in the name asks what you did for a living. The honest answer would end the evening. The kind answer would start a lie you have to keep.",
+    "category": "family",
+    "tags": ["late"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 9,
+    "minAge": 48,
+    "maxAge": 82,
+    "art": "family_dinner",
+    "choices": [
+      {
+        "id": "kind",
+        "text": "Tell the kind version.",
+        "outcomes": [
+          {
+            "id": "kind",
+            "weight": 100,
+            "title": "A softer myth",
+            "body": "They hear about rain and work. You hear the chair creak. Bond holds.",
+            "log": "Told a kind late-life story.",
+            "stats": { "loyalty": 4, "stress": -2 }
+          }
+        ]
+      },
+      {
+        "id": "true",
+        "text": "Tell enough truth to stain the year.",
+        "outcomes": [
+          {
+            "id": "true",
+            "weight": 100,
+            "title": "A heavier myth",
+            "body": "They will not sleep the same. The name gets an heir who knows the weather.",
+            "log": "Told a truer late-life story.",
+            "stats": { "loyalty": 2, "stress": 4, "reputation": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_rival_funeral",
+    "title": "A House Buries Someone",
+    "body": "A rival family puts a body in the rain and expects flowers. Missing it is a statement. Attending is another. Cass will count the chairs.",
+    "category": "rival",
+    "tags": ["late"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 10,
+    "minAge": 48,
+    "maxAge": 80,
+    "art": "funeral",
+    "choices": [
+      {
+        "id": "go",
+        "text": "Go. Stand in the back. Mean it.",
+        "outcomes": [
+          {
+            "id": "go",
+            "weight": 100,
+            "title": "Shared weather",
+            "body": "You do not speak. You are seen. Hostility cools because grief is a kind of truce.",
+            "log": "Attended a rival funeral.",
+            "stats": { "reputation": 3, "heat": -2, "stress": 2 }
+          }
+        ]
+      },
+      {
+        "id": "send",
+        "text": "Send flowers. Stay home.",
+        "outcomes": [
+          {
+            "id": "send",
+            "weight": 100,
+            "title": "A polite absence",
+            "body": "The card is perfect. The empty chair is louder than the card.",
+            "log": "Sent flowers to a rival funeral.",
+            "stats": { "money": -80, "reputation": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_chair_creak",
+    "title": "The Chair Creaks When You Stand",
+    "body": "You have sat long enough that standing is news. Crew watch how you rise. Heirs watch harder.",
+    "category": "life",
+    "tags": ["late"],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 7,
+    "minAge": 52,
+    "maxAge": 84,
+    "art": "funeral",
+    "choices": [
+      {
+        "id": "hold",
+        "text": "Hold the year. Smile like it does not hurt.",
+        "outcomes": [
+          {
+            "id": "hold",
+            "weight": 100,
+            "title": "Still in the chair",
+            "body": "They believe you, mostly. The books stay yours. The body files a memo.",
+            "log": "Held the late chair.",
+            "stats": { "reputation": 3, "health": -3, "stress": 3 }
+          }
+        ]
+      },
+      {
+        "id": "share",
+        "text": "Let an heir sit beside you.",
+        "outcomes": [
+          {
+            "id": "share",
+            "weight": 100,
+            "title": "A shared hour",
+            "body": "Power looks like trust. Trust looks like a rehearsal for your absence.",
+            "log": "Shared the late chair for an hour.",
+            "stats": { "loyalty": 5, "stress": -4, "reputation": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_old_quarter_walk",
+    "title": "A Walk Through Old Quarter",
+    "body": "The bricks remember your first year better than the new glass does. Someone who knew you at eighteen is selling coffee like it is a truce.",
+    "category": "life",
+    "tags": ["late", "old_quarter"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 48,
+    "maxAge": 78,
+    "art": "skyline",
+    "choices": [
+      {
+        "id": "sit",
+        "text": "Sit. Buy the coffee. Hear the decade.",
+        "outcomes": [
+          {
+            "id": "sit",
+            "weight": 100,
+            "title": "A cheap hour",
+            "body": "You learn who died of ordinary years. The city feels smaller and more expensive.",
+            "log": "Walked Old Quarter in a late year.",
+            "stats": { "stress": -6, "intelligence": 2 }
+          }
+        ]
+      },
+      {
+        "id": "car",
+        "text": "Stay in the car. Keep the year moving.",
+        "outcomes": [
+          {
+            "id": "car",
+            "weight": 100,
+            "title": "A faster rain",
+            "body": "You miss the names. You keep the schedule. That is how bosses get old.",
+            "log": "Skipped an Old Quarter walk.",
+            "stats": { "stress": 2, "reputation": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_books_audit",
+    "title": "The Last Honest Audit",
+    "body": "A hand you trust says the take is lying. Late life is when loyalty and arithmetic finally meet in a room without windows.",
+    "category": "business",
+    "tags": ["late"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 48,
+    "maxAge": 76,
+    "art": "ledger",
+    "choices": [
+      {
+        "id": "cut",
+        "text": "Cut the leak. Pay the honest ones.",
+        "outcomes": [
+          {
+            "id": "cut",
+            "weight": 100,
+            "title": "A cleaner book",
+            "body": "Someone walks. The numbers sit up. The table is smaller and true.",
+            "log": "Cut a late-life leak in the books.",
+            "stats": { "money": 200, "loyalty": 3, "stress": 3 }
+          }
+        ]
+      },
+      {
+        "id": "forgive",
+        "text": "Forgive the leak. Keep the peace.",
+        "outcomes": [
+          {
+            "id": "forgive",
+            "weight": 100,
+            "title": "A softer table",
+            "body": "You buy loyalty with blindness. It works until it does not.",
+            "log": "Forgave a late leak.",
+            "stats": { "money": -120, "loyalty": 5, "heat": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_harbor_fog",
+    "title": "Fog on the Last Crane",
+    "body": "The docks look like 1998 if you squint. A crate sits unclaimed again. You are old enough to know it is never unclaimed.",
+    "category": "crime",
+    "tags": ["late", "docks"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 9,
+    "minAge": 50,
+    "maxAge": 78,
+    "art": "docks_heist",
+    "choices": [
+      {
+        "id": "leave",
+        "text": "Leave it. You have stolen enough years.",
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "A crate that stays",
+            "body": "Someone younger will take the lesson. You take the walk home.",
+            "log": "Left a late-life crate on the docks.",
+            "stats": { "stress": -4, "heat": -2, "reputation": 2 }
+          }
+        ]
+      },
+      {
+        "id": "open",
+        "text": "Open it. Old habits pay rent.",
+        "outcomes": [
+          {
+            "id": "open",
+            "weight": 60,
+            "title": "A last easy night",
+            "body": "Cash, still. Heat, still. You laugh like eighteen and feel like a receipt.",
+            "log": "Opened a late crate on the docks.",
+            "stats": { "money": 320, "heat": 7, "nerve": 2 }
+          },
+          {
+            "id": "caught",
+            "weight": 40,
+            "isHarsh": true,
+            "title": "Vale's weather",
+            "body": "The crate was a story someone wanted you to finish. The year gets louder.",
+            "log": "A late crate was bait.",
+            "stats": { "heat": 10, "stress": 6, "reputation": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_name_on_stone",
+    "title": "A Stone That Wants a Name",
+    "body": "A mason in Old Quarter offers to cut the dynasty into granite while you can still argue the spelling. Superstition again. Also advertising.",
+    "category": "life",
+    "tags": ["late", "old_quarter"],
+    "weight": 9,
+    "once": true,
+    "cooldownYears": 20,
+    "minAge": 55,
+    "maxAge": 90,
+    "art": "funeral",
+    "choices": [
+      {
+        "id": "cut",
+        "text": "Cut the name. Pay for forever.",
+        "outcomes": [
+          {
+            "id": "cut",
+            "weight": 100,
+            "title": "Granite weather",
+            "body": "The stone will outlast the heat. Tourists will not know what it cost.",
+            "log": "Cut the name into Old Quarter stone.",
+            "stats": { "money": -300, "reputation": 6, "loyalty": 3 }
+          }
+        ]
+      },
+      {
+        "id": "wait",
+        "text": "Let the hall be enough.",
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "No stone yet",
+            "body": "You refuse the grave's first draft. The rain approves, or does not care.",
+            "log": "Refused a late-life stone.",
+            "stats": { "stress": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_doctor_again",
+    "title": "The Doctor Uses Your First Name",
+    "body": "That is never a good sign. They want a slower life. The city wants the old one. You are the only voter.",
+    "category": "life",
+    "tags": ["late"],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 6,
+    "minAge": 50,
+    "maxAge": 88,
+    "art": "home",
+    "choices": [
+      {
+        "id": "obey",
+        "text": "Obey. Lose a little empire.",
+        "outcomes": [
+          {
+            "id": "obey",
+            "weight": 100,
+            "title": "A smaller year",
+            "body": "You cancel a night that would have paid. The body sends a thank-you you cannot cash.",
+            "log": "Obeyed a late doctor.",
+            "stats": { "health": 8, "money": -80, "stress": -6 }
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Ignore it. The chair is not a bed.",
+        "outcomes": [
+          {
+            "id": "ignore",
+            "weight": 100,
+            "title": "The old speed",
+            "body": "You keep the schedule. The doctor writes a note you will not read until it is too late to argue.",
+            "log": "Ignored a late doctor.",
+            "stats": { "health": -4, "reputation": 2, "stress": 3 }
+          }
+        ]
+      }
+    ]
+  }
+]

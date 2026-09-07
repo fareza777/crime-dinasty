@@ -1,0 +1,926 @@
+[
+  {
+    "id": "quiet_pier_whisper",
+    "title": "The Quiet Pier",
+    "body": "Crowe finds you where the cranes sleep. 'Pier 9 after midnight is a church with no God,' he says. 'Don't look. If you look, the Calderas will look back. If you don't, the fire will still happen. I just won't have to watch you in it.'",
+    "category": "chain",
+    "tags": ["quiet_pier", "docks", "crowe"],
+    "weight": 22,
+    "once": true,
+    "minAge": 21,
+    "maxAge": 55,
+    "art": "docks",
+    "chain": "quiet_pier",
+    "chainStage": 1,
+    "requires": { "anyFlags": ["mentor_crowe", "docks_interest", "prologue_done"] },
+    "choices": [
+      {
+        "id": "look",
+        "text": "Look anyway.",
+        "outcomes": [
+          {
+            "id": "look",
+            "weight": 100,
+            "title": "A church of crates",
+            "body": "You see sealed boxes with a Caldera wax the color of old blood. A kid on a bike takes a photograph and is gone. Crowe swears without poetry.",
+            "log": "Looked at Pier 9. The Quiet Pier looked back.",
+            "stats": { "intelligence": 4, "heat": 7, "nerve": 3 },
+            "addFlags": ["quiet_pier", "quiet_pier_looked"],
+            "queueEvent": { "eventId": "quiet_pier_crate", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "heed",
+        "text": "Heed Crowe. Stay inland.",
+        "outcomes": [
+          {
+            "id": "heed",
+            "weight": 100,
+            "title": "Faith in a wet coat",
+            "body": "You don't look. Months later you will smell smoke and know the sermon anyway.",
+            "log": "Heeded Crowe about Pier 9.",
+            "stats": { "loyalty": 5, "stress": 2 },
+            "addFlags": ["quiet_pier", "quiet_pier_heeded"],
+            "queueEvent": { "eventId": "docks_fire", "yearsAhead": 3 }
+          }
+        ]
+      },
+      {
+        "id": "vale",
+        "text": "Slip Vale a dock number. No name.",
+        "hideIfUnmet": true,
+        "requires": { "allFlags": ["vale_file"] },
+        "outcomes": [
+          {
+            "id": "tip",
+            "weight": 100,
+            "title": "A number without a priest",
+            "body": "Vale does not thank you. A week later Pier 9 has extra lamps. Crowe stops calling for a season.",
+            "log": "Tipped Vale about Pier 9 without naming Crowe.",
+            "stats": { "heat": -4, "loyalty": -4, "reputation": 2 },
+            "addFlags": ["quiet_pier", "vale_respect", "crowe_cold"],
+            "queueEvent": { "eventId": "docks_fire", "yearsAhead": 2 },
+            "rivalDelta": { "calderas": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "quiet_pier_crate",
+    "title": "The Quiet Pier: Crate",
+    "body": "A crate from Pier 9 appears behind your building like a stray dog. No note. The wax is Caldera red. Opening it is a marriage. Leaving it is a different kind of vow.",
+    "category": "chain",
+    "tags": ["quiet_pier", "calderas"],
+    "weight": 40,
+    "once": true,
+    "art": "docks_heist",
+    "chain": "quiet_pier",
+    "chainStage": 2,
+    "requires": { "allFlags": ["quiet_pier_looked"] },
+    "choices": [
+      {
+        "id": "open",
+        "text": "Open it. Own the night.",
+        "outcomes": [
+          {
+            "id": "open",
+            "weight": 100,
+            "title": "Red wax, gold problem",
+            "body": "Ledgers. A key. A photograph of Cass Caldera laughing in Glassridge. You are in their weather now.",
+            "log": "Opened the Quiet Pier crate.",
+            "stats": { "money": 1800, "heat": 12, "intelligence": 3, "reputation": 5 },
+            "addFlags": ["quiet_pier_crate", "cass_notice"],
+            "queueEvent": { "eventId": "docks_fire", "yearsAhead": 2 },
+            "rivalDelta": { "calderas": 6 }
+          }
+        ]
+      },
+      {
+        "id": "return",
+        "text": "Send it back with a clean lie.",
+        "outcomes": [
+          {
+            "id": "return",
+            "weight": 100,
+            "title": "Returned to the church",
+            "body": "The crate leaves. A week later a Caldera driver nods at you in traffic like you share a joke. You do not.",
+            "log": "Returned the Quiet Pier crate.",
+            "stats": { "heat": 3, "stress": -2, "charisma": 2 },
+            "addFlags": ["quiet_pier_crate"],
+            "queueEvent": { "eventId": "docks_fire", "yearsAhead": 2 },
+            "rivalDelta": { "calderas": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "docks_fire",
+    "title": "Docks Fire",
+    "body": "Pier 9 burns the color of old gold. Sirens arrive late on purpose. Crowe is there with a wet rag over his mouth. Cass Caldera watches from a black car that does not get dirty. Vale is already counting witnesses. The Quiet Pier has become a headline.",
+    "category": "chain",
+    "tags": ["quiet_pier", "docks", "fire"],
+    "weight": 50,
+    "once": true,
+    "art": "skyline",
+    "chain": "quiet_pier",
+    "chainStage": 3,
+    "requires": { "allFlags": ["quiet_pier"] },
+    "choices": [
+      {
+        "id": "pull",
+        "text": "Pull people out. Let the ledgers burn.",
+        "outcomes": [
+          {
+            "id": "pull",
+            "weight": 100,
+            "title": "A fire that remembers kindness",
+            "body": "You come out coughing with a stranger's kid and no evidence. Crowe squeezes your shoulder hard enough to bruise. Vale sees it. So does Cass.",
+            "log": "Pulled people from the Docks Fire. Let the paper burn.",
+            "stats": { "loyalty": 8, "reputation": 6, "health": -8, "heat": 8, "stress": 6 },
+            "addFlags": ["docks_fire_done", "vale_respect"],
+            "injury": true,
+            "rivalDelta": { "calderas": 3 }
+          }
+        ]
+      },
+      {
+        "id": "save_books",
+        "text": "Save the books. Let the smoke take the rest.",
+        "outcomes": [
+          {
+            "id": "books",
+            "weight": 100,
+            "title": "Ash and advantage",
+            "body": "You get a satchel out. It will make you money and a list of people who will not forgive the smell on it.",
+            "log": "Saved ledgers from the Docks Fire.",
+            "stats": { "money": 4200, "heat": 16, "intelligence": 4, "loyalty": -4, "reputation": 4 },
+            "addFlags": ["docks_fire_done", "crow_ledger"],
+            "rivalDelta": { "calderas": 8 }
+          }
+        ]
+      },
+      {
+        "id": "watch_cass",
+        "text": "Watch Cass instead of the flames.",
+        "hideIfUnmet": true,
+        "requires": { "traitsAny": ["Cunning", "Ambitious", "Paranoid"] },
+        "outcomes": [
+          {
+            "id": "watch",
+            "weight": 100,
+            "title": "Heir to heir",
+            "body": "Cass mouths one word through glass: LATER. You will hold them to it.",
+            "log": "Watched Cass Caldera during the Docks Fire.",
+            "stats": { "intelligence": 5, "nerve": 3, "heat": 6 },
+            "addFlags": ["docks_fire_done", "cass_pact"],
+            "queueEvent": { "eventId": "cass_later", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crow_ledger_book",
+    "title": "Crow Ledger",
+    "body": "Crowe's apartment is all ashtrays and ferry schedules. He sets a bound book on the table — black, gold thread, no title. 'Every surname that lasts in Ravenport is in here twice: once as they wanted, once as they were. I'll let you write one line. Don't waste it on poetry.'",
+    "category": "chain",
+    "tags": ["crow_ledger", "crowe"],
+    "weight": 16,
+    "once": true,
+    "minAge": 21,
+    "maxAge": 70,
+    "art": "ledger",
+    "chain": "crow_ledger",
+    "chainStage": 1,
+    "requires": { "anyFlags": ["mentor_crowe", "prologue_done"] },
+    "choices": [
+      {
+        "id": "write_true",
+        "text": "Write the true line.",
+        "outcomes": [
+          {
+            "id": "true",
+            "weight": 100,
+            "title": "Ink that doesn't flinch",
+            "body": "You write what you did at Pier 7 and who you didn't tell. Crowe closes the book like a coffin that still has manners.",
+            "log": "Wrote a true line in the Crow Ledger.",
+            "stats": { "loyalty": 6, "intelligence": 3, "stress": 3 },
+            "addFlags": ["crow_ledger", "crow_true"],
+            "queueEvent": { "eventId": "crow_ledger_name", "yearsAhead": 2 }
+          }
+        ]
+      },
+      {
+        "id": "write_kind",
+        "text": "Write a kinder fiction.",
+        "outcomes": [
+          {
+            "id": "kind",
+            "weight": 100,
+            "title": "A prettier corpse",
+            "body": "The line is elegant and false. Crowe leaves it. The book knows. Books always know.",
+            "log": "Wrote a kinder fiction in the Crow Ledger.",
+            "stats": { "charisma": 4, "loyalty": 1, "stress": 1 },
+            "addFlags": ["crow_ledger"],
+            "queueEvent": { "eventId": "crow_ledger_name", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crow_ledger_name",
+    "title": "Crow Ledger: A Second Hand",
+    "body": "Years later the book is in someone else's apartment. A page with your line is dog-eared. Cass Caldera has been reading. Or Vale. Or your sibling. Crowe is in the hospital with a cough that sounds like a dock crane.",
+    "category": "chain",
+    "tags": ["crow_ledger", "betrayal"],
+    "weight": 28,
+    "once": true,
+    "art": "betrayal",
+    "chain": "crow_ledger",
+    "chainStage": 2,
+    "requires": { "allFlags": ["crow_ledger"] },
+    "choices": [
+      {
+        "id": "take_book",
+        "text": "Take the book back.",
+        "outcomes": [
+          {
+            "id": "take",
+            "weight": 100,
+            "title": "Returned to the crow",
+            "body": "You get it. You also get seen. Crowe, when you show him, cries without permission.",
+            "log": "Reclaimed the Crow Ledger.",
+            "stats": { "heat": 9, "loyalty": 5, "nerve": 3 },
+            "addFlags": ["crow_ledger_held"],
+            "queueEvent": { "eventId": "crow_ledger_close", "yearsAhead": 2 }
+          }
+        ]
+      },
+      {
+        "id": "let",
+        "text": "Let them keep the page. Change the story elsewhere.",
+        "outcomes": [
+          {
+            "id": "let",
+            "weight": 100,
+            "title": "A story with copies",
+            "body": "You leave it. Control is a rumor. You spend the year making better rumors.",
+            "log": "Left the Crow Ledger in other hands.",
+            "stats": { "charisma": 3, "stress": 4, "reputation": 2 },
+            "addFlags": ["crow_ledger_loose"],
+            "queueEvent": { "eventId": "crow_ledger_close", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crow_ledger_close",
+    "title": "Crow Ledger: Close",
+    "body": "Crowe asks you to sit. The book — or its absence — sits between you. 'When I go,' he says, 'don't put me in the Hall like furniture. Put me in the rain.' Then he asks whether you still keep names.",
+    "category": "chain",
+    "tags": ["crow_ledger", "legacy"],
+    "weight": 20,
+    "once": true,
+    "art": "funeral",
+    "chain": "crow_ledger",
+    "chainStage": 3,
+    "requires": { "allFlags": ["crow_ledger"] },
+    "choices": [
+      {
+        "id": "keep_names",
+        "text": "Keep names. Keep the weather.",
+        "outcomes": [
+          {
+            "id": "keep",
+            "weight": 100,
+            "title": "The crow's last lesson",
+            "body": "You promise. He believes you this time, which is either wisdom or fatigue.",
+            "log": "Promised Crowe you would keep names.",
+            "stats": { "loyalty": 8, "reputation": 3 },
+            "addFlags": ["crowe_heir"]
+          }
+        ]
+      },
+      {
+        "id": "burn",
+        "text": "Burn whatever's left of the ledger.",
+        "hideIfUnmet": true,
+        "requires": { "anyFlags": ["crow_ledger_held", "will_burn_crowe"] },
+        "outcomes": [
+          {
+            "id": "burn",
+            "weight": 100,
+            "title": "Ash for the crow",
+            "body": "Paper becomes weather. Crowe laughs until it becomes a cough. 'Cleaner than most endings.'",
+            "log": "Burned the Crow Ledger.",
+            "stats": { "heat": -6, "stress": -4, "loyalty": 2 },
+            "addFlags": ["crow_ledger_burned"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sibling_split_ask",
+    "title": "Sibling Split",
+    "body": "Your sibling sits on the fire escape like the city owes them an apology. 'I can go legal,' they say. 'Or I can go with you. Or I can go to the Marrow Kin, who at least pretend not to be a family.' The rain makes every option sound expensive.",
+    "category": "chain",
+    "tags": ["sibling", "family"],
+    "weight": 18,
+    "once": true,
+    "minAge": 20,
+    "maxAge": 45,
+    "art": "home",
+    "chain": "sibling_split",
+    "chainStage": 1,
+    "choices": [
+      {
+        "id": "keep",
+        "text": "Keep them close. Make it a vow.",
+        "outcomes": [
+          {
+            "id": "keep",
+            "weight": 100,
+            "title": "A second spine",
+            "body": "They stay. The apartment gets louder. So does your luck.",
+            "log": "Kept a sibling close after the Split.",
+            "stats": { "loyalty": 6, "stress": 3, "reputation": 2 },
+            "addFlags": ["sib_close"],
+            "queueEvent": { "eventId": "sibling_split_door", "yearsAhead": 3 }
+          }
+        ]
+      },
+      {
+        "id": "legal",
+        "text": "Push them toward daylight books.",
+        "outcomes": [
+          {
+            "id": "legal",
+            "weight": 100,
+            "title": "A cleaner surname, nearby",
+            "body": "You buy a semester. They look at you like you are both a jailer and a saint.",
+            "log": "Pushed a sibling toward a legal life.",
+            "stats": { "money": -1800, "loyalty": 3, "reputation": 3 },
+            "addFlags": ["sib_legal"],
+            "queueEvent": { "eventId": "sibling_split_door", "yearsAhead": 3 }
+          }
+        ]
+      },
+      {
+        "id": "let_marrow",
+        "text": "Let them take the Marrow meeting.",
+        "outcomes": [
+          {
+            "id": "marrow",
+            "weight": 100,
+            "title": "Blood on another crest",
+            "body": "They leave with a borrowed jacket. Nessa Marrow sends a courteous note. Courteous is how knives arrive in Harbor Lights.",
+            "log": "Allowed a sibling to meet the Marrow Kin.",
+            "stats": { "stress": 7, "loyalty": -5, "heat": 4 },
+            "addFlags": ["sib_rival", "family_rift"],
+            "queueEvent": { "eventId": "sibling_split_door", "yearsAhead": 2 },
+            "rivalDelta": { "marrow": 5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sibling_split_door",
+    "title": "Sibling Split: The Door",
+    "body": "Years later they are at your door with a bag and a face that has learned new weather. They want a night's sleep or a job or forgiveness. Possibly all three.",
+    "category": "chain",
+    "tags": ["sibling", "family"],
+    "weight": 30,
+    "once": true,
+    "art": "home",
+    "chain": "sibling_split",
+    "chainStage": 2,
+    "requires": { "anyFlags": ["sib_close", "sib_legal", "sib_rival"] },
+    "choices": [
+      {
+        "id": "in",
+        "text": "Let them in. No speech.",
+        "outcomes": [
+          {
+            "id": "in",
+            "weight": 100,
+            "title": "The door remembers",
+            "body": "You make coffee. The bag stays by the radiator. A dynasty is also a couch.",
+            "log": "Let a sibling back in after the Split.",
+            "stats": { "loyalty": 8, "stress": -4 },
+            "addFlags": ["sib_home"],
+            "removeFlags": ["family_rift"],
+            "queueEvent": { "eventId": "sibling_split_table", "yearsAhead": 2 }
+          }
+        ]
+      },
+      {
+        "id": "terms",
+        "text": "Name terms first.",
+        "outcomes": [
+          {
+            "id": "terms",
+            "weight": 100,
+            "title": "Love with a contract",
+            "body": "They agree. They also memorize the cold in your voice.",
+            "log": "Set terms before letting a sibling in.",
+            "stats": { "intelligence": 2, "loyalty": -2, "reputation": 2 },
+            "addFlags": ["sib_terms"],
+            "queueEvent": { "eventId": "sibling_split_table", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sibling_split_table",
+    "title": "Sibling Split: Table",
+    "body": "A family table. Someone younger is watching how you pass the bread. Your sibling raises a glass that might be a truce.",
+    "category": "chain",
+    "tags": ["sibling", "legacy"],
+    "weight": 18,
+    "once": true,
+    "art": "family_dinner",
+    "chain": "sibling_split",
+    "chainStage": 3,
+    "requires": { "anyFlags": ["sib_home", "sib_terms", "sib_close"] },
+    "choices": [
+      {
+        "id": "toast",
+        "text": "Toast the split as a scar, not a verdict.",
+        "outcomes": [
+          {
+            "id": "toast",
+            "weight": 100,
+            "title": "Scar accepted",
+            "body": "The younger ones laugh. That is the whole point of a table.",
+            "log": "Toasted the Sibling Split as a scar.",
+            "stats": { "loyalty": 6, "charisma": 3, "reputation": 3 },
+            "addFlags": ["sib_healed"]
+          }
+        ]
+      },
+      {
+        "id": "chair",
+        "text": "Remind them who sits at the head.",
+        "outcomes": [
+          {
+            "id": "chair",
+            "weight": 100,
+            "title": "A narrower table",
+            "body": "The bread still moves. The warmth does not.",
+            "log": "Used the family table to remind them of the chair.",
+            "stats": { "reputation": 4, "loyalty": -4, "stress": 2 },
+            "addFlags": ["family_rift"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "glass_marriage_invite",
+    "title": "Glass Marriage",
+    "body": "House Vex sends an invitation printed like a threat: dinner in Midtown glass, rain on the outside, lawyers on the inside. Lior Vex wants a marriage that is also a merger. Cass Caldera will be there, which means the room has two knives and one cake.",
+    "category": "chain",
+    "tags": ["glass_marriage", "vex", "romance"],
+    "weight": 12,
+    "once": true,
+    "minAge": 23,
+    "maxAge": 50,
+    "art": "club",
+    "chain": "glass_marriage",
+    "chainStage": 1,
+    "requires": { "hasSpouse": false },
+    "choices": [
+      {
+        "id": "go",
+        "text": "Go. Wear the rain like jewelry.",
+        "outcomes": [
+          {
+            "id": "go",
+            "weight": 100,
+            "title": "Glass, gold, witnesses",
+            "body": "You are charming because you are afraid in a pretty room. A Vex cousin laughs at your jokes and means some of it.",
+            "log": "Attended the Glass Marriage dinner.",
+            "stats": { "charisma": 5, "reputation": 4, "stress": 3, "money": -400 },
+            "addFlags": ["glass_marriage", "courted"],
+            "queueEvent": { "eventId": "glass_marriage_vow", "yearsAhead": 2 },
+            "rivalDelta": { "vex": 3 }
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Decline. Marry the city instead.",
+        "outcomes": [
+          {
+            "id": "decline",
+            "weight": 100,
+            "title": "No merger",
+            "body": "Vex marks you as uninterested in thrones. Cass sends a different kind of smile the next week.",
+            "log": "Declined the Glass Marriage.",
+            "stats": { "stress": -2, "reputation": 1 },
+            "addFlags": ["cass_notice"],
+            "rivalDelta": { "vex": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "glass_marriage_vow",
+    "title": "Glass Marriage: Vows",
+    "body": "Midtown chapel, rain doing stained glass work. The Vex cousin waits. Cass sits in the back like a rumor with a pulse. Vale is not invited and is somehow still in the parking lot.",
+    "category": "chain",
+    "tags": ["glass_marriage", "wedding"],
+    "weight": 24,
+    "once": true,
+    "art": "wedding",
+    "chain": "glass_marriage",
+    "chainStage": 2,
+    "requires": { "allFlags": ["glass_marriage"], "hasSpouse": false },
+    "choices": [
+      {
+        "id": "vow",
+        "text": "Make the vows. Merge the weather.",
+        "outcomes": [
+          {
+            "id": "vow",
+            "weight": 100,
+            "title": "A marriage that files papers",
+            "body": "You say yes in a room that understands contracts. Love may arrive later, like a late ferry.",
+            "log": "Married through the Glass Marriage.",
+            "stats": { "loyalty": 5, "reputation": 6, "assets": 4000, "stress": -1 },
+            "addFlags": ["married", "vex_in_law"],
+            "marry": true,
+            "rivalDelta": { "vex": -4, "calderas": 3 }
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Walk before the ring.",
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 100,
+            "title": "A scandal with good posture",
+            "body": "You leave. Cass stands as you pass. Vale's car, for once, does not follow.",
+            "log": "Walked out of the Glass Marriage.",
+            "stats": { "nerve": 6, "reputation": -3, "stress": 4, "charisma": 2 },
+            "addFlags": ["glass_jilt"],
+            "rivalDelta": { "vex": 8 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "red_audit_knock",
+    "title": "Red Audit",
+    "body": "An auditor with immaculate shoes sits in your front like they were born there. 'Irregularities,' they say, as if the word were a hymn. Crowe taught you that clean books create their own trail. Tonight the trail has a clipboard.",
+    "category": "chain",
+    "tags": ["red_audit", "business"],
+    "weight": 14,
+    "once": true,
+    "minAge": 24,
+    "maxAge": 70,
+    "art": "office",
+    "chain": "red_audit",
+    "chainStage": 1,
+    "requires": { "hasBusiness": true },
+    "choices": [
+      {
+        "id": "open",
+        "text": "Open the real books.",
+        "outcomes": [
+          {
+            "id": "open",
+            "weight": 100,
+            "title": "Honesty as a weapon",
+            "body": "You show enough truth to make the lie look expensive. The auditor blinks. Vale will hear a softer version.",
+            "log": "Opened the books for the Red Audit.",
+            "stats": { "money": -2200, "heat": -5, "intelligence": 4, "stress": 4 },
+            "addFlags": ["red_audit", "lawyered"],
+            "queueEvent": { "eventId": "red_audit_verdict", "yearsAhead": 2 }
+          }
+        ]
+      },
+      {
+        "id": "theater",
+        "text": "Stage a prettier ledger.",
+        "outcomes": [
+          {
+            "id": "theater",
+            "weight": 100,
+            "title": "Theater with numbers",
+            "body": "It works until it doesn't. The clipboard leaves heavier.",
+            "log": "Staged books for the Red Audit.",
+            "stats": { "heat": 8, "charisma": 3, "stress": 5 },
+            "addFlags": ["red_audit", "red_audit_fake"],
+            "queueEvent": { "eventId": "red_audit_verdict", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "red_audit_verdict",
+    "title": "Red Audit: Verdict",
+    "body": "Two years of envelopes. The verdict arrives on a Tuesday that smells like rain and photocopiers. Vale is quoted in a paper that does not print your photo. Yet.",
+    "category": "chain",
+    "tags": ["red_audit", "court"],
+    "weight": 22,
+    "once": true,
+    "art": "courtroom",
+    "chain": "red_audit",
+    "chainStage": 2,
+    "requires": { "allFlags": ["red_audit"] },
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay. Stay a person with a name.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "A fine that buys weather",
+            "body": "You pay. The city files you under expensive and alive.",
+            "log": "Paid the Red Audit. Kept the name above water.",
+            "stats": { "money": -8000, "heat": -10, "stress": -3, "reputation": 2 },
+            "addFlags": ["red_audit_done", "legitimate_turn"]
+          }
+        ]
+      },
+      {
+        "id": "fight",
+        "text": "Fight it in Vale's weather.",
+        "outcomes": [
+          {
+            "id": "fight",
+            "weight": 100,
+            "title": "Crown Prosecutor notices",
+            "body": "You win a delay and a enemy with better stationery. Vale's file thickens like a novel.",
+            "log": "Fought the Red Audit. Vale noticed.",
+            "stats": { "money": -3500, "heat": 6, "reputation": 4, "stress": 5 },
+            "addFlags": ["red_audit_done", "vale_file", "da_file"],
+            "queueEvent": { "eventId": "crown_prosecutor_open", "yearsAhead": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crown_prosecutor_open",
+    "title": "Crown Prosecutor",
+    "body": "Rhea Vale is no longer just a coat in a diner. The office plaque says Crown Prosecutor in a font that wants you tired. She offers coffee again. This time the mug is heavier.",
+    "category": "chain",
+    "tags": ["crown_prosecutor", "vale", "court"],
+    "weight": 18,
+    "once": true,
+    "minAge": 24,
+    "maxAge": 80,
+    "art": "prosecutor",
+    "chain": "crown_prosecutor",
+    "chainStage": 1,
+    "requires": { "anyFlags": ["vale_file", "da_file", "first_heat"] },
+    "choices": [
+      {
+        "id": "deal",
+        "text": "Ask what a person costs these days.",
+        "outcomes": [
+          {
+            "id": "deal",
+            "weight": 100,
+            "title": "A price list",
+            "body": "Vale names years, not dollars. She is almost kind. Kindness from her is a strategy.",
+            "log": "Heard Vale's price as Crown Prosecutor.",
+            "stats": { "intelligence": 3, "stress": 6, "heat": 4 },
+            "addFlags": ["vale_offer"],
+            "queueEvent": { "eventId": "crown_prosecutor_court", "yearsAhead": 2 }
+          }
+        ]
+      },
+      {
+        "id": "lawyer",
+        "text": "Bring a lawyer who hates coffee.",
+        "outcomes": [
+          {
+            "id": "lawyer",
+            "weight": 100,
+            "title": "Professionals in the rain",
+            "body": "Your counsel talks. Vale listens. You feel like furniture in your own life, which is sometimes safer.",
+            "log": "Met Vale with counsel.",
+            "stats": { "money": -4000, "heat": -3, "intelligence": 2 },
+            "addFlags": ["lawyered", "vale_offer"],
+            "queueEvent": { "eventId": "crown_prosecutor_court", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crown_prosecutor_court",
+    "title": "Crown Prosecutor: Court",
+    "body": "The eagle on the wall has seen worse. Vale's voice is even. Your name sounds like a city ordinance. The jury looks like people who take ferries.",
+    "category": "chain",
+    "tags": ["crown_prosecutor", "court"],
+    "weight": 30,
+    "once": true,
+    "art": "courtroom",
+    "chain": "crown_prosecutor",
+    "chainStage": 2,
+    "requires": { "allFlags": ["vale_offer"] },
+    "choices": [
+      {
+        "id": "stand",
+        "text": "Stand on the story you can live with.",
+        "outcomes": [
+          {
+            "id": "stand",
+            "weight": 70,
+            "title": "A city that blinked",
+            "body": "Not guilty enough. Vale nods once, professional. You walk into rain that feels rented.",
+            "log": "Stood in Vale's court and walked.",
+            "stats": { "heat": -8, "reputation": 6, "stress": 4, "charisma": 3 },
+            "addFlags": ["vale_trial_done"]
+          },
+          {
+            "id": "years",
+            "weight": 30,
+            "title": "Years, counted",
+            "body": "The gavel is quieter than movies. Vale does not look triumphant. That is the insult.",
+            "log": "Took years in Vale's court.",
+            "stats": { "stress": 8, "reputation": -2 },
+            "addFlags": ["vale_trial_done"],
+            "arrest": true,
+            "setPrisonYears": 4
+          }
+        ]
+      },
+      {
+        "id": "plea",
+        "text": "Take the years you can spell.",
+        "outcomes": [
+          {
+            "id": "plea",
+            "weight": 100,
+            "title": "A known corridor",
+            "body": "You buy certainty. The Hall of Legacy will have to wait in a visiting room.",
+            "log": "Pleaded in Vale's court.",
+            "stats": { "heat": -6, "stress": 5 },
+            "addFlags": ["vale_trial_done"],
+            "arrest": true,
+            "setPrisonYears": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "empty_chair_dream",
+    "title": "The Empty Chair",
+    "body": "You dream the Hall before you earn it: a long red carpet, gold frames, an empty chair that already has your posture. Waking, you hear the house settle like a jury. Someone younger is asleep down the hall — or isn't.",
+    "category": "chain",
+    "tags": ["empty_chair", "legacy"],
+    "weight": 10,
+    "once": true,
+    "minAge": 48,
+    "maxAge": 90,
+    "art": "funeral",
+    "chain": "empty_chair",
+    "chainStage": 1,
+    "choices": [
+      {
+        "id": "write",
+        "text": "Write the epitaph while you can still lie well.",
+        "outcomes": [
+          {
+            "id": "write",
+            "weight": 100,
+            "title": "A draft for the Hall",
+            "body": "You write three sentences and burn two. The remaining one is almost kind.",
+            "log": "Drafted an epitaph for an empty chair.",
+            "stats": { "intelligence": 3, "stress": -2, "loyalty": 2 },
+            "addFlags": ["empty_chair", "legacy_speech"],
+            "queueEvent": { "eventId": "empty_chair_will", "yearsAhead": 2 }
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Refuse the dream. Work the year.",
+        "outcomes": [
+          {
+            "id": "ignore",
+            "weight": 100,
+            "title": "The chair waits anyway",
+            "body": "You make coffee. The dream files itself under later, which is where all chairs live.",
+            "log": "Ignored the Empty Chair dream.",
+            "stats": { "nerve": 2, "stress": 2 },
+            "addFlags": ["empty_chair"],
+            "queueEvent": { "eventId": "empty_chair_will", "yearsAhead": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "empty_chair_will",
+    "title": "The Empty Chair: Will",
+    "body": "A lawyer in Westmere wants signatures. The will can leave money, turf, silence, or a fight. The empty chair in the Hall does not care which. The people who will sit in it do.",
+    "category": "chain",
+    "tags": ["empty_chair", "legacy"],
+    "weight": 20,
+    "once": true,
+    "art": "office",
+    "chain": "empty_chair",
+    "chainStage": 2,
+    "requires": { "allFlags": ["empty_chair"] },
+    "choices": [
+      {
+        "id": "fair",
+        "text": "Split it like a family, not a raid.",
+        "outcomes": [
+          {
+            "id": "fair",
+            "weight": 100,
+            "title": "A will with manners",
+            "body": "Nobody is thrilled. Everybody can live. That is a kind of empire.",
+            "log": "Wrote a fair will for the empty chair.",
+            "stats": { "loyalty": 6, "reputation": 4, "stress": -3 },
+            "addFlags": ["will_fair"]
+          }
+        ]
+      },
+      {
+        "id": "heir",
+        "text": "Name one heir. Let the others become weather.",
+        "outcomes": [
+          {
+            "id": "heir",
+            "weight": 100,
+            "title": "A sharp succession",
+            "body": "Clarity is a knife. The Hall will look expensive and lonely.",
+            "log": "Named a single heir in the will.",
+            "stats": { "reputation": 5, "loyalty": -3, "stress": 2 },
+            "addFlags": ["will_sharp"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cass_later",
+    "title": "Cass Caldera: Later",
+    "body": "Cass meant later. A Glassridge terrace, rain on the rail, whiskey the color of the medallion on your city's cheap souvenirs. 'Aurelia thinks you're a weather problem,' Cass says. 'I think you're a door. Doors can be used from both sides.'",
+    "category": "chain",
+    "tags": ["cass", "calderas"],
+    "weight": 20,
+    "once": true,
+    "art": "skyline",
+    "chain": "cass",
+    "chainStage": 1,
+    "requires": { "allFlags": ["cass_pact"] },
+    "choices": [
+      {
+        "id": "pact",
+        "text": "Make a quiet pact against the old weather.",
+        "outcomes": [
+          {
+            "id": "pact",
+            "weight": 100,
+            "title": "Heirs in the rain",
+            "body": "You don't shake hands. You look at the same red window across the water and understand it.",
+            "log": "Made a quiet pact with Cass Caldera.",
+            "stats": { "intelligence": 4, "reputation": 5, "heat": 5 },
+            "addFlags": ["cass_ally"],
+            "rivalDelta": { "calderas": -6 }
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Refuse. Stay a problem, not a door.",
+        "outcomes": [
+          {
+            "id": "refuse",
+            "weight": 100,
+            "title": "No door",
+            "body": "Cass toasts you anyway. 'Then I'll inherit the view without you.' It does not sound like a joke.",
+            "log": "Refused Cass Caldera's later.",
+            "stats": { "nerve": 5, "stress": 3 },
+            "addFlags": ["cass_foe"],
+            "rivalDelta": { "calderas": 7 }
+          }
+        ]
+      }
+    ]
+  }
+]

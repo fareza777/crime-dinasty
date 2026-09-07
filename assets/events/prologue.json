@@ -1,0 +1,256 @@
+[
+  {
+    "id": "prologue_rain",
+    "title": "Rain Takes Sides",
+    "body": "1998. The Docks smell like rust and orange peels. Silas Crowe — fifty, raincoat older than you — flicks a cigarette into a puddle that already knows your last name. A crate sits unclaimed under Pier 7. Somebody is coming for it. Somebody always is.",
+    "category": "prologue",
+    "tags": ["prologue", "docks", "crowe"],
+    "weight": 100,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 21,
+    "art": "docks",
+    "chain": "prologue",
+    "chainStage": 1,
+    "choices": [
+      {
+        "id": "take",
+        "text": "Cut the strap. Take the crate.",
+        "outcomes": [
+          {
+            "id": "mark",
+            "weight": 100,
+            "title": "First mark",
+            "body": "Inside: three bottles of something that isn't wine and a ledger page with half a name burned off. Crowe doesn't smile. He nods, which is worse. The rain writes you down.",
+            "log": "Took an unclaimed crate at Pier 7. The rain noticed.",
+            "stats": { "money": 220, "nerve": 6, "heat": 8, "reputation": 3 },
+            "addFlags": ["first_mark", "did_first_score", "mentor_crowe", "docks_interest", "chapter_prologue"],
+            "queueEvent": { "eventId": "prologue_heat", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "watch",
+        "text": "Watch with Crowe. Learn the hour.",
+        "outcomes": [
+          {
+            "id": "watch",
+            "weight": 100,
+            "title": "A teacher in a wet coat",
+            "body": "You don't touch the crate. You watch who does — a kid in Rooke colors who doesn't look back. Crowe says, 'That's the lesson. Ravenport rewards the quiet thief and buries the loud one.' He buys you coffee that tastes like a dock rope.",
+            "log": "Learned the Pier 7 hour from Silas Crowe.",
+            "stats": { "intelligence": 5, "loyalty": 4, "heat": 2 },
+            "addFlags": ["mentor_crowe", "docks_interest", "chapter_prologue", "quiet_student"],
+            "queueEvent": { "eventId": "prologue_heat", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Walk. Pretend the crate is weather.",
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 100,
+            "title": "Clean shoes, dirty city",
+            "body": "You leave the pier. Crowe's voice follows: 'Running's a skill too. Just don't confuse it with a plan.' A block later a siren tries the air and thinks better of it.",
+            "log": "Walked away from Pier 7. The crate found other hands.",
+            "stats": { "stress": -2, "heat": 1, "loyalty": 1 },
+            "addFlags": ["chapter_prologue", "walked_first"],
+            "queueEvent": { "eventId": "prologue_heat", "yearsAhead": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "prologue_heat",
+    "title": "A Coat That Asks Questions",
+    "body": "Detective Rhea Vale finds you outside a diner that never learned to close. She is not loud. She puts a photograph on the wet counter: Pier 7, last year, a figure that could be you if the rain wanted it to be. 'I don't need a confession,' she says. 'I need to know if you're going to become a problem or a person.'",
+    "category": "prologue",
+    "tags": ["prologue", "vale", "heat"],
+    "weight": 100,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 22,
+    "art": "prosecutor",
+    "chain": "prologue",
+    "chainStage": 2,
+    "requires": { "allFlags": ["chapter_prologue"] },
+    "choices": [
+      {
+        "id": "truth",
+        "text": "Give her a careful truth.",
+        "outcomes": [
+          {
+            "id": "truth",
+            "weight": 100,
+            "title": "Vale writes in pencil",
+            "body": "You tell her you were there and you were hungry. She doesn't thank you. She files you under unfinished. The diner's neon makes your coffee look like a warning.",
+            "log": "Spoke carefully to Detective Rhea Vale. First heat, named.",
+            "stats": { "heat": 6, "charisma": 3, "stress": 3, "intelligence": 2 },
+            "addFlags": ["vale_file", "first_heat"],
+            "queueEvent": { "eventId": "prologue_loyalty", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "lie",
+        "text": "Lie like the rain is a witness.",
+        "outcomes": [
+          {
+            "id": "lie",
+            "weight": 100,
+            "title": "She lets the lie live",
+            "body": "Vale listens to your weather story and almost smiles. 'Cute. The city eats cute.' She leaves the photograph. The back has a case number. You are in a drawer now.",
+            "log": "Lied to Vale. The photograph stayed.",
+            "stats": { "heat": 10, "nerve": 4, "stress": 5 },
+            "addFlags": ["vale_file", "first_heat", "lied_to_vale"],
+            "queueEvent": { "eventId": "prologue_loyalty", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "silence",
+        "text": "Drink the coffee. Say nothing.",
+        "hideIfUnmet": true,
+        "requires": { "traitsAny": ["Patient", "Cunning", "Paranoid"] },
+        "outcomes": [
+          {
+            "id": "silence",
+            "weight": 100,
+            "title": "Silence as a language",
+            "body": "Vale waits a full minute. Then: 'All right. We'll talk when you have a worse year.' She pays for both coffees, which feels like a warrant with manners.",
+            "log": "Met Vale's first heat with silence.",
+            "stats": { "heat": 4, "intelligence": 3, "stress": 2 },
+            "addFlags": ["vale_file", "first_heat", "vale_respect"],
+            "queueEvent": { "eventId": "prologue_loyalty", "yearsAhead": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "prologue_loyalty",
+    "title": "A Name You Don't Repeat",
+    "body": "Crowe asks you onto a late ferry that doesn't print tickets. Mid-channel he says a first name — not yours — and asks you not to say it to Vale, to the Calderas, to your own sibling if they start asking smart questions. The water is black glass. Loyalty, tonight, is a sound you decide not to make.",
+    "category": "prologue",
+    "tags": ["prologue", "crowe", "loyalty"],
+    "weight": 100,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 23,
+    "art": "docks",
+    "chain": "prologue",
+    "chainStage": 3,
+    "requires": { "allFlags": ["chapter_prologue"] },
+    "choices": [
+      {
+        "id": "keep",
+        "text": "Keep the name. Keep Crowe.",
+        "outcomes": [
+          {
+            "id": "keep",
+            "weight": 100,
+            "title": "The first loyalty test",
+            "body": "You nod. Crowe looks older and younger at once. 'That's a dynasty, kid. Not the money. The silences.' Somewhere on shore a red window stays lit too long.",
+            "log": "Kept Crowe's name. First loyalty held.",
+            "stats": { "loyalty": 10, "reputation": 4, "stress": 2 },
+            "addFlags": ["first_loyalty", "crowe_secret", "quiet_pier"],
+            "crewLoyaltyDelta": 0,
+            "queueEvent": { "eventId": "prologue_name", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "sell",
+        "text": "Sell the name to Vale later.",
+        "outcomes": [
+          {
+            "id": "sell",
+            "weight": 100,
+            "title": "A ledger with two inks",
+            "body": "You smile like a person who will sleep. You will not. Crowe believes you. Vale will too, if you let her. The ferry hits the slip harder than it should.",
+            "log": "Promised Crowe silence and planned to break it.",
+            "stats": { "heat": -2, "loyalty": -6, "nerve": 3, "stress": 6 },
+            "addFlags": ["first_loyalty", "crowe_secret", "will_burn_crowe", "lied_to_vale"],
+            "queueEvent": { "eventId": "prologue_name", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Refuse the secret. Stay smaller.",
+        "hideIfUnmet": true,
+        "requires": { "traitsAny": ["Compassionate", "Patient"] },
+        "outcomes": [
+          {
+            "id": "refuse",
+            "weight": 100,
+            "title": "Small on purpose",
+            "body": "You tell Crowe you don't collect names you can't protect. He almost looks proud. 'Then don't collect people either.' The city doesn't applaud. It allows it.",
+            "log": "Refused Crowe's secret. Stayed smaller on purpose.",
+            "stats": { "loyalty": 4, "stress": -3, "reputation": 1 },
+            "addFlags": ["first_loyalty", "quiet_student"],
+            "queueEvent": { "eventId": "prologue_name", "yearsAhead": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "prologue_name",
+    "title": "Twenty-One in Ravenport",
+    "body": "A cheap cake in a walk-up. Your sibling argues about the radio. Outside, the rain does the same trick it did in '98. Crowe sends a note: THE CITY HAS A SLOT FOR YOUR SURNAME. Vale's car idles half a block away and does not come in. Cass Caldera — Aurelia's sharp heir — leaves a gold-foiled card with no message. The prologue is over. The campaign is not.",
+    "category": "prologue",
+    "tags": ["prologue", "legacy"],
+    "weight": 100,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 24,
+    "art": "home",
+    "chain": "prologue",
+    "chainStage": 4,
+    "requires": { "allFlags": ["chapter_prologue"] },
+    "choices": [
+      {
+        "id": "claim",
+        "text": "Claim the slot. Let the rain introduce you.",
+        "outcomes": [
+          {
+            "id": "claim",
+            "weight": 100,
+            "title": "A name that sticks",
+            "body": "You stand in the window until Vale's car leaves. The gold card goes in a drawer you will open on a worse night. Ravenport, at last, has a sentence that starts with you.",
+            "log": "Closed the prologue by claiming the family's slot in the rain.",
+            "stats": { "reputation": 6, "nerve": 4, "charisma": 2 },
+            "addFlags": ["prologue_done", "cass_notice"],
+            "removeFlags": ["chapter_prologue"],
+            "queueEvent": { "eventId": "quiet_pier_whisper", "yearsAhead": 1 }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Stay a rumor a little longer.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "Rumor with a birthday",
+            "body": "You blow out the candles and do not look at the street. Crowe will be disappointed. Vale will be busy. Cass will assume you are prey. Sometimes prey lives longer.",
+            "log": "Closed the prologue quietly, still a rumor.",
+            "stats": { "heat": -3, "stress": -2, "reputation": 1 },
+            "addFlags": ["prologue_done", "quiet_student"],
+            "removeFlags": ["chapter_prologue"],
+            "queueEvent": { "eventId": "crow_ledger_book", "yearsAhead": 2 }
+          }
+        ]
+      }
+    ]
+  }
+]

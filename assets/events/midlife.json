@@ -1,0 +1,710 @@
+[
+  {
+    "id": "midlife_ledger_eyes",
+    "title": "The Books Grow Teeth",
+    "body": "You are old enough now that the ledger looks back. A clerk in Old Quarter asks if the Hart name still signs its own pages, or if the pages have started signing you.",
+    "category": "business",
+    "tags": ["midlife", "old_quarter"],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 30,
+    "maxAge": 54,
+    "art": "ledger",
+    "choices": [
+      {
+        "id": "audit",
+        "text": "Audit every line yourself.",
+        "outcomes": [
+          {
+            "id": "audit",
+            "weight": 100,
+            "title": "Ink under the nails",
+            "body": "You find a leak the size of a polite lie. The books tighten. Your shoulders do not.",
+            "log": "Audited the midlife books.",
+            "stats": { "money": 220, "intelligence": 3, "stress": 4 }
+          }
+        ]
+      },
+      {
+        "id": "delegate",
+        "text": "Let a hand keep the pen.",
+        "outcomes": [
+          {
+            "id": "delegate",
+            "weight": 100,
+            "title": "A softer year",
+            "body": "The numbers stay almost honest. You sleep. Someone else learns where the money hides.",
+            "log": "Delegated a midlife audit.",
+            "stats": { "stress": -6, "loyalty": 2, "heat": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_school_gate",
+    "title": "A Gate That Knows Your Name",
+    "body": "A school in Westmere will not say Hart out loud. They say 'the family' the way people say weather. A teacher waits with a file that is not about grades.",
+    "category": "family",
+    "tags": ["midlife", "westmere"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 9,
+    "minAge": 30,
+    "maxAge": 52,
+    "art": "home",
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay the quiet fee. Keep the child inside.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "A door that stays shut",
+            "body": "Cash buys a year of pretending. The child will remember the smell of the envelope.",
+            "log": "Paid a Westmere school to stay quiet.",
+            "stats": { "money": -240, "loyalty": 4, "reputation": 2 }
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Walk the child out. Let Westmere talk.",
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 100,
+            "title": "Rain on the steps",
+            "body": "Pride is cheaper than tuition and louder. The name gets a story it did not ask for.",
+            "log": "Walked a child out of a Westmere gate.",
+            "stats": { "reputation": -3, "loyalty": 3, "stress": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_old_crew",
+    "title": "A Hand From the First Years",
+    "body": "Someone you hired when the books were thin is back with a limp and a request. They still know which docks forget to lock.",
+    "category": "crew",
+    "tags": ["midlife", "docks"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 10,
+    "minAge": 32,
+    "maxAge": 55,
+    "art": "crime_night",
+    "choices": [
+      {
+        "id": "hire",
+        "text": "Put them back on the books.",
+        "outcomes": [
+          {
+            "id": "hire",
+            "weight": 100,
+            "title": "An old cut",
+            "body": "Loyalty has a price and a limp. The table remembers who pays for history.",
+            "log": "Rehired a hand from the early years.",
+            "stats": { "money": -160, "loyalty": 5, "heat": 2 }
+          }
+        ]
+      },
+      {
+        "id": "cash",
+        "text": "Pay them off. Keep the table young.",
+        "outcomes": [
+          {
+            "id": "cash",
+            "weight": 100,
+            "title": "A closed door",
+            "body": "They take the envelope like a funeral. The docks will still know their walk.",
+            "log": "Paid off an old hand.",
+            "stats": { "money": -90, "stress": -2, "reputation": -1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_vale_file",
+    "title": "Vale Still Has a Pencil",
+    "body": "Rhea Vale is older in the eyes and younger in the patience. She sits across from you like the rain is a witness. The file has your decade in it.",
+    "category": "police",
+    "tags": ["midlife", "midtown"],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 30,
+    "maxAge": 56,
+    "art": "prosecutor",
+    "choices": [
+      {
+        "id": "talk",
+        "text": "Answer the questions she already knows.",
+        "outcomes": [
+          {
+            "id": "talk",
+            "weight": 100,
+            "title": "A thinner file",
+            "body": "You give her weather, not names. She writes anyway. Heat cools a degree because she likes the shoes.",
+            "log": "Sat with Vale over a midlife file.",
+            "stats": { "heat": -4, "stress": 3, "reputation": 1 }
+          }
+        ]
+      },
+      {
+        "id": "lawyer",
+        "text": "Send the lawyer. Smile nothing.",
+        "outcomes": [
+          {
+            "id": "lawyer",
+            "weight": 100,
+            "title": "A colder table",
+            "body": "Counsel speaks. Vale closes the pencil. The city files you under expensive.",
+            "log": "Sent counsel to Vale.",
+            "stats": { "money": -200, "heat": -2, "stress": -1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_cass_lunch",
+    "title": "Cass Orders for the Table",
+    "body": "Cass Caldera wants lunch in Glassridge like it is a kindness. The menu is a map. Every dish has a street under it.",
+    "category": "rival",
+    "tags": ["midlife", "glassridge"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 9,
+    "minAge": 30,
+    "maxAge": 55,
+    "art": "club",
+    "choices": [
+      {
+        "id": "eat",
+        "text": "Eat. Listen. Pay the bill.",
+        "outcomes": [
+          {
+            "id": "eat",
+            "weight": 100,
+            "title": "A polite hunger",
+            "body": "You learn which street Cass wants next. The Calderas write your name in a softer ink.",
+            "log": "Took Cass's Glassridge lunch.",
+            "stats": { "money": -140, "intelligence": 3, "heat": 2 }
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Leave before the wine.",
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "An empty chair",
+            "body": "Cass smiles like you failed a test and passed another. Hostility keeps its appointment.",
+            "log": "Walked out on Cass.",
+            "stats": { "reputation": 2, "stress": 2, "heat": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_harbor_lease",
+    "title": "A Lease With Salt on It",
+    "body": "Harbor Lights offers a paper that is almost a front. The Kin already circled the clause that matters. You can buy the hour or let the rain decide.",
+    "category": "business",
+    "tags": ["midlife", "harbor_lights"],
+    "weight": 10,
+    "once": true,
+    "cooldownYears": 12,
+    "minAge": 31,
+    "maxAge": 50,
+    "art": "office",
+    "choices": [
+      {
+        "id": "sign",
+        "text": "Sign. Pay. Own the hour.",
+        "outcomes": [
+          {
+            "id": "sign",
+            "weight": 100,
+            "title": "A key with salt",
+            "body": "The paper is real enough. The Kin will remember who bought the night.",
+            "log": "Signed a Harbor Lights lease.",
+            "stats": { "money": -280, "reputation": 3 },
+            "businessGain": "restaurant"
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Pass. Keep the cash dry.",
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "A window that closed",
+            "body": "Someone else hangs a sign. You sleep cheaper. The harbor does not.",
+            "log": "Passed on a Harbor Lights lease.",
+            "stats": { "stress": -3, "reputation": -1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_cousin_loan",
+    "title": "A Cousin With a Number",
+    "body": "A cousin in The Flats needs a number that looks like family and spends like a job. They will not call it a loan. The rain will.",
+    "category": "family",
+    "tags": ["midlife", "flats"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 30,
+    "maxAge": 53,
+    "art": "family",
+    "choices": [
+      {
+        "id": "lend",
+        "text": "Lend it. Write nothing.",
+        "outcomes": [
+          {
+            "id": "lend",
+            "weight": 100,
+            "title": "A debt that loves you",
+            "body": "They will mention your name at a table you are not invited to. That is how streets stay warm.",
+            "log": "Lent a Flats cousin midlife cash.",
+            "stats": { "money": -180, "loyalty": 5, "reputation": 2 }
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "The name is not a bank.",
+        "outcomes": [
+          {
+            "id": "refuse",
+            "weight": 100,
+            "title": "A colder hallway",
+            "body": "They nod like they expected it. The Flats keep the receipt in their teeth.",
+            "log": "Refused a cousin's midlife ask.",
+            "stats": { "stress": -2, "loyalty": -3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_rooke_paint",
+    "title": "Rooke Paint on Your Door",
+    "body": "The Outfit left a mark that is almost art. Dane Rooke does not send letters. He sends color. The year has a smell now.",
+    "category": "rival",
+    "tags": ["midlife", "ironyard", "war"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 7,
+    "minAge": 30,
+    "maxAge": 56,
+    "art": "crime_night",
+    "choices": [
+      {
+        "id": "scrub",
+        "text": "Scrub it. Pay a hand to watch.",
+        "outcomes": [
+          {
+            "id": "scrub",
+            "weight": 100,
+            "title": "A cleaner door",
+            "body": "The paint comes off. The story does not. Heat drops because you looked busy.",
+            "log": "Scrubbed Rooke paint off a door.",
+            "stats": { "money": -120, "heat": -3, "stress": 2 }
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Leave it. Let Ravenport read.",
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "A public year",
+            "body": "People take pictures with their eyes. The Outfit thinks you blinked.",
+            "log": "Left Rooke paint on the door.",
+            "stats": { "reputation": -2, "heat": 4, "nerve": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_doctor_quiet",
+    "title": "A Doctor Who Does Not Bill",
+    "body": "Your knees remember 1998 better than you do. A clinic in Midtown will take cash or a favor. The favor is always more expensive.",
+    "category": "life",
+    "tags": ["midlife", "midtown"],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 7,
+    "minAge": 34,
+    "maxAge": 58,
+    "art": "home",
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay cash. Keep the favor unspent.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "A quieter body",
+            "body": "The year hurts less. The books notice. Vale would call it adult.",
+            "log": "Paid a Midtown clinic in cash.",
+            "stats": { "money": -160, "health": 6, "stress": -4 }
+          }
+        ]
+      },
+      {
+        "id": "favor",
+        "text": "Owe the favor. Keep the cash.",
+        "outcomes": [
+          {
+            "id": "favor",
+            "weight": 70,
+            "title": "A name on a chart",
+            "body": "They fix the knee. They also fix a story about you into a file.",
+            "log": "Owed a clinic a midlife favor.",
+            "stats": { "health": 4, "heat": 5, "stress": 2 }
+          },
+          {
+            "id": "favor_soft",
+            "weight": 30,
+            "title": "A clean stitch",
+            "body": "They forget to write the name. You do not forget the smell of alcohol and rain.",
+            "log": "Took a clinic favor that stayed quiet.",
+            "stats": { "health": 5, "loyalty": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_empty_sunday",
+    "title": "An Empty Sunday",
+    "body": "No job. No card. Just rain on the glass and a city that expects you to be a machine. The year asks if you still have a private hour.",
+    "category": "life",
+    "tags": ["midlife"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 6,
+    "minAge": 30,
+    "maxAge": 55,
+    "art": "sit",
+    "choices": [
+      {
+        "id": "sit",
+        "text": "Sit. Do nothing that earns.",
+        "outcomes": [
+          {
+            "id": "sit",
+            "weight": 100,
+            "title": "A held breath",
+            "body": "The books do not grow. The body does not break. That is a kind of wealth.",
+            "log": "Kept a midlife Sunday empty.",
+            "stats": { "stress": -8, "loyalty": 2 }
+          }
+        ]
+      },
+      {
+        "id": "work",
+        "text": "Work the hour anyway.",
+        "outcomes": [
+          {
+            "id": "work",
+            "weight": 100,
+            "title": "A louder ledger",
+            "body": "Cash arrives like it always does. The rain sounds like someone you should have called.",
+            "log": "Worked through a midlife Sunday.",
+            "stats": { "money": 140, "stress": 5, "health": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_jury_weather",
+    "title": "Jury Weather",
+    "body": "A clerk in Midtown says your name like a civic duty. The envelope is legal. The choice is not. Vale would enjoy watching you open it.",
+    "category": "police",
+    "tags": ["midlife", "midtown"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 11,
+    "minAge": 30,
+    "maxAge": 60,
+    "art": "courtroom",
+    "choices": [
+      {
+        "id": "serve",
+        "text": "Serve. Look like a citizen.",
+        "outcomes": [
+          {
+            "id": "serve",
+            "weight": 100,
+            "title": "A borrowed halo",
+            "body": "You sit in a box and judge a stranger. Heat cools because the city saw you behave.",
+            "log": "Served midlife jury weather.",
+            "stats": { "heat": -5, "reputation": 3, "stress": 3 }
+          }
+        ]
+      },
+      {
+        "id": "buy",
+        "text": "Buy a medical excuse.",
+        "outcomes": [
+          {
+            "id": "buy",
+            "weight": 100,
+            "title": "A paper illness",
+            "body": "The clerk files you as frail. The street files you as busy.",
+            "log": "Bought out of a midlife jury.",
+            "stats": { "money": -150, "heat": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_front_key",
+    "title": "A Key That Arrived Late",
+    "body": "A landlord in Ironyard finally offers a garage that pretends to fix cars. You could have bought this years ago. The city likes to wait until you are tired.",
+    "category": "business",
+    "tags": ["midlife", "ironyard"],
+    "weight": 9,
+    "once": true,
+    "cooldownYears": 14,
+    "minAge": 33,
+    "maxAge": 52,
+    "art": "office",
+    "choices": [
+      {
+        "id": "take",
+        "text": "Take the key. Pay the year.",
+        "outcomes": [
+          {
+            "id": "take",
+            "weight": 100,
+            "title": "Oil and rain",
+            "body": "The garage smells like a second life. Hands can watch it. Heat likes the cover.",
+            "log": "Took a late Ironyard garage key.",
+            "stats": { "money": -200, "reputation": 2 },
+            "businessGain": "garage"
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Pass. You already have enough keys.",
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "A lighter pocket",
+            "body": "Someone else oils the floor. You keep the cash for a war you have not named.",
+            "log": "Passed on a late garage key.",
+            "stats": { "stress": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_anniversary",
+    "title": "A Table That Still Holds",
+    "body": "If you have a spouse, they set two plates. If you do not, the table still asks. Midlife is a season that counts chairs.",
+    "category": "family",
+    "tags": ["midlife"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 8,
+    "minAge": 30,
+    "maxAge": 55,
+    "art": "wedding",
+    "choices": [
+      {
+        "id": "stay",
+        "text": "Stay for the hour. No books.",
+        "outcomes": [
+          {
+            "id": "stay",
+            "weight": 100,
+            "title": "Two cups",
+            "body": "The city can wait. Bond is the only number that does not show on Empire.",
+            "log": "Kept a midlife table.",
+            "stats": { "stress": -6, "loyalty": 4 }
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Leave for a job that will not wait.",
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "A colder plate",
+            "body": "Cash arrives. The chair remembers you were not in it.",
+            "log": "Left a midlife table for work.",
+            "stats": { "money": 180, "loyalty": -3, "stress": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_street_tax",
+    "title": "The Street Tax Grew Up",
+    "body": "What used to be a whisper is now a schedule. A collector in Old Quarter wants the grown-up rate. You can pay, press, or smile.",
+    "category": "crime",
+    "tags": ["midlife", "old_quarter"],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 7,
+    "minAge": 30,
+    "maxAge": 54,
+    "art": "street",
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay the grown-up rate.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "A quiet sidewalk",
+            "body": "The year stays walkable. The collector files you as reasonable.",
+            "log": "Paid a midlife street tax.",
+            "stats": { "money": -200, "heat": -3 }
+          }
+        ]
+      },
+      {
+        "id": "press",
+        "text": "Refuse. Make it a problem.",
+        "outcomes": [
+          {
+            "id": "press",
+            "weight": 65,
+            "title": "A louder sidewalk",
+            "body": "They back up. Heat does not. The name gets a year of staring.",
+            "log": "Refused a midlife street tax.",
+            "stats": { "heat": 7, "nerve": 3, "reputation": 2 }
+          },
+          {
+            "id": "hurt",
+            "weight": 35,
+            "isHarsh": true,
+            "title": "A bad night",
+            "body": "Someone brought friends. You keep the cash and lose the easy walk home.",
+            "log": "A street tax turned ugly.",
+            "stats": { "health": -8, "heat": 8, "stress": 6 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_vex_paper",
+    "title": "House Vex Sends Paper",
+    "body": "A merger offer arrives like a compliment. Lior Vex wants a slice of a year you already spent. The font is expensive.",
+    "category": "rival",
+    "tags": ["midlife", "midtown"],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 9,
+    "minAge": 32,
+    "maxAge": 56,
+    "art": "office",
+    "choices": [
+      {
+        "id": "sign",
+        "text": "Sign a small slice. Keep the peace.",
+        "outcomes": [
+          {
+            "id": "sign",
+            "weight": 100,
+            "title": "A polite cut",
+            "body": "Vex takes a taste. Hostility cools. The books look slightly less yours.",
+            "log": "Signed a midlife Vex paper.",
+            "stats": { "money": -160, "heat": -2, "reputation": 2 }
+          }
+        ]
+      },
+      {
+        "id": "return",
+        "text": "Return the paper unmarked.",
+        "outcomes": [
+          {
+            "id": "return",
+            "weight": 100,
+            "title": "A colder font",
+            "body": "Vex files you as difficult. That is sometimes the same as respected.",
+            "log": "Returned a Vex merger unmarked.",
+            "stats": { "reputation": 3, "heat": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "midlife_laundry_steam",
+    "title": "Steam That Remembers",
+    "body": "A wash house in The Flats is for sale because someone died of ordinary years. The machines still know how to hide a night.",
+    "category": "business",
+    "tags": ["midlife", "flats"],
+    "weight": 9,
+    "once": true,
+    "cooldownYears": 14,
+    "minAge": 30,
+    "maxAge": 50,
+    "art": "office",
+    "choices": [
+      {
+        "id": "buy",
+        "text": "Buy the steam. Keep the cover.",
+        "outcomes": [
+          {
+            "id": "buy",
+            "weight": 100,
+            "title": "Warm air, clean books",
+            "body": "The Flats get a Hart sign that pretends to be soap. Heat likes the smell.",
+            "log": "Bought a Flats wash house.",
+            "stats": { "money": -260, "heat": -2 },
+            "businessGain": "laundry"
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Let the Kin take the steam.",
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "Someone else's soap",
+            "body": "Nessa Marrow hangs a quieter sign. You keep the cash for a louder year.",
+            "log": "Passed on Flats steam.",
+            "stats": { "stress": -2, "reputation": -1 }
+          }
+        ]
+      }
+    ]
+  }
+]

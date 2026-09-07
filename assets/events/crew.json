@@ -1,0 +1,858 @@
+[
+  {
+    "id": "corner_recruit",
+    "title": "Corner Recruit",
+    "body": "A young regular from the corner asks for a chance to prove useful. They are eager, observant, and one bad night away from becoming somebody else’s problem.",
+    "category": "crew",
+    "tags": [
+      "recruit"
+    ],
+    "weight": 11,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 19,
+    "maxAge": 70,
+    "art": "street",
+    "choices": [
+      {
+        "id": "take",
+        "text": "Give them a small role",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "recruit",
+            "weight": 100,
+            "title": "A new face",
+            "body": "They show up on time and say less than expected.",
+            "log": "Recruited a new crew member.",
+            "stats": {
+              "reputation": 2,
+              "loyalty": 1
+            },
+            "addFlags": [
+              "has_crew"
+            ],
+            "removeFlags": [],
+            "spawnCrew": true
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Tell them to stay clear",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "clear",
+            "weight": 100,
+            "title": "A boundary offered",
+            "body": "They look disappointed, then relieved.",
+            "log": "Turned away a potential recruit.",
+            "stats": {
+              "reputation": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "test",
+        "text": "Set a patient test",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "tested",
+            "weight": 100,
+            "title": "Patience proven",
+            "body": "They pass a simple test of discretion, not bravado.",
+            "log": "Tested a potential recruit.",
+            "stats": {
+              "intelligence": 2,
+              "loyalty": 2
+            },
+            "addFlags": [
+              "has_crew"
+            ],
+            "removeFlags": [],
+            "spawnCrew": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Patient",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "crew_meal",
+    "title": "Crew Meal",
+    "body": "Your people crowd into a booth after a long week, tired enough to be honest. A small argument begins over who carried more of the risk.",
+    "category": "crew",
+    "tags": [
+      "loyalty"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "club",
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay for the table",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "table",
+            "weight": 100,
+            "title": "Shared bread",
+            "body": "The argument fades under hot food and a gesture that costs less than resentment.",
+            "log": "Treated the crew to a meal.",
+            "stats": {
+              "money": -600,
+              "loyalty": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 4
+          }
+        ]
+      },
+      {
+        "id": "mediate",
+        "text": "Make them talk it out",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "talk",
+            "weight": 100,
+            "title": "Terms reset",
+            "body": "You give each person room to speak before the anger gets useful to someone else.",
+            "log": "Mediated a crew dispute.",
+            "stats": {
+              "charisma": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 3
+          }
+        ]
+      },
+      {
+        "id": "threaten",
+        "text": "Shut it down with fear",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "fear",
+            "weight": 100,
+            "title": "Silence, not peace",
+            "body": "Nobody argues again that night. Nobody forgets the tone either.",
+            "log": "Threatened the crew into silence.",
+            "stats": {
+              "reputation": 1,
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -4
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Violent"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "loose_tongue",
+    "title": "Loose Tongue",
+    "body": "A trusted crew member is seen talking too long with a stranger near the courthouse. It could mean nothing; in Ravenport, it rarely does.",
+    "category": "crew",
+    "tags": [
+      "betrayal",
+      "police"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "ask",
+        "text": "Ask them directly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "truth",
+            "weight": 100,
+            "title": "A frightened truth",
+            "body": "They admit to being pressured but give you the shape of the threat.",
+            "log": "Confronted a crew member about pressure.",
+            "stats": {
+              "intelligence": 2
+            },
+            "addFlags": [
+              "snitch_risk"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 1
+          }
+        ]
+      },
+      {
+        "id": "cut",
+        "text": "Cut them loose",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "cut",
+            "weight": 100,
+            "title": "Trust severed",
+            "body": "You end the association before the rumor can become evidence.",
+            "log": "Cut loose a suspected informant.",
+            "stats": {
+              "reputation": 1
+            },
+            "addFlags": [
+              "betrayed_once"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -2
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "text": "Verify the story quietly",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "proof",
+            "weight": 100,
+            "title": "Proof before judgment",
+            "body": "You learn the stranger was a cousin, not a handler. Your restraint is noticed.",
+            "log": "Verified a crew rumor.",
+            "stats": {
+              "intelligence": 4
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "snitch_risk"
+            ],
+            "crewLoyaltyDelta": 4
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid",
+            "Cunning"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "crew_oath_night",
+    "title": "Crew Oath Night",
+    "body": "A winter blackout leaves the crew around a candlelit table. Someone suggests an oath, less for theater than for the feeling that things are coming.",
+    "category": "crew",
+    "tags": [
+      "loyalty"
+    ],
+    "weight": 6,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "oath",
+        "text": "Take the oath",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "oath",
+            "weight": 100,
+            "title": "Words in the dark",
+            "body": "Each person makes a promise they will eventually have to measure against fear.",
+            "log": "Swore a crew oath.",
+            "stats": {
+              "reputation": 2
+            },
+            "addFlags": [
+              "crew_oath",
+              "loyal_crew"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 5
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Refuse ceremony",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "plain",
+            "weight": 100,
+            "title": "No false promises",
+            "body": "You tell them loyalty must be earned in daylight.",
+            "log": "Declined a formal crew oath.",
+            "stats": {
+              "intelligence": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "safe_driver",
+    "title": "Safe Driver",
+    "body": "A driver named Nia has kept calm through three bad exits. They ask for a larger role and a larger share.",
+    "category": "crew",
+    "tags": [
+      "crew"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "street",
+    "choices": [
+      {
+        "id": "promote",
+        "text": "Promote them",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "promote",
+            "weight": 100,
+            "title": "Earned seat",
+            "body": "You reward competence and gain someone with a stake in the whole operation.",
+            "log": "Promoted a reliable crew member.",
+            "stats": {
+              "money": -900,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 5
+          }
+        ]
+      },
+      {
+        "id": "delay",
+        "text": "Tell them to wait",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "A pause",
+            "body": "They nod, but not warmly.",
+            "log": "Delayed a crew promotion.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -2
+          }
+        ]
+      },
+      {
+        "id": "share",
+        "text": "Offer a profit share",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "share",
+            "weight": 100,
+            "title": "Aligned interests",
+            "body": "The new terms turn ambition into commitment.",
+            "log": "Gave a crew member a profit share.",
+            "stats": {
+              "money": -1500,
+              "loyalty": 2
+            },
+            "addFlags": [
+              "loyal_crew"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 6
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Loyal",
+            "Ambitious"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "crew_hospital_visit",
+    "title": "Hospital Visit",
+    "body": "A crew member wakes in a hospital bed after a night that went wrong. Their family has not arrived, and the fluorescent lights make every promise look thin.",
+    "category": "crew",
+    "tags": [
+      "crew",
+      "health"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "visit",
+        "text": "Sit with them",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "visit",
+            "weight": 100,
+            "title": "Stayed until morning",
+            "body": "You bring coffee, listen, and make sure they are not abandoned when fear is loudest.",
+            "log": "Visited an injured crew member.",
+            "stats": {
+              "money": -400,
+              "loyalty": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 5
+          }
+        ]
+      },
+      {
+        "id": "send",
+        "text": "Send money only",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "money",
+            "weight": 100,
+            "title": "Money at the desk",
+            "body": "The payment helps, but absence is its own message.",
+            "log": "Sent money to an injured crew member.",
+            "stats": {
+              "money": -700
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 1
+          }
+        ]
+      },
+      {
+        "id": "abandon",
+        "text": "Cut losses",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "cold",
+            "weight": 100,
+            "title": "Cold arithmetic",
+            "body": "The crew hears about it before noon.",
+            "log": "Abandoned an injured crew member.",
+            "stats": {
+              "reputation": -2
+            },
+            "addFlags": [
+              "betrayed_once"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -7
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Greedy"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "missing_cut",
+    "title": "The Missing Cut",
+    "body": "The weekly envelope comes up short. Nobody claims to know why, but the numbers do not lie even when people do.",
+    "category": "crew",
+    "tags": [
+      "crew",
+      "money"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "absorb",
+        "text": "Absorb the loss",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "absorb",
+            "weight": 100,
+            "title": "A costly peace",
+            "body": "You refuse to turn a small loss into a public war.",
+            "log": "Absorbed a crew shortfall.",
+            "stats": {
+              "money": -1100
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 2
+          }
+        ]
+      },
+      {
+        "id": "audit",
+        "text": "Audit the books",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "audit",
+            "weight": 100,
+            "title": "The missing line",
+            "body": "You find a bookkeeping error before it becomes an accusation.",
+            "log": "Audited a crew shortfall.",
+            "stats": {
+              "intelligence": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 2
+          }
+        ]
+      },
+      {
+        "id": "accuse",
+        "text": "Accuse the newest member",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "wrong",
+            "weight": 100,
+            "title": "The wrong target",
+            "body": "Your accusation misses, and the actual thief has more room to run.",
+            "log": "Wrongly accused a crew member.",
+            "stats": {
+              "stress": 3
+            },
+            "addFlags": [
+              "betrayed_once"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -6
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "crew_defection",
+    "title": "A Defection Offer",
+    "body": "A rival quietly offers one of your crew a better deal. The crew member brings the message to you before answering.",
+    "category": "crew",
+    "tags": [
+      "betrayal",
+      "rival"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "club",
+    "choices": [
+      {
+        "id": "thank",
+        "text": "Thank them and improve terms",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "kept",
+            "weight": 100,
+            "title": "Kept close",
+            "body": "You make it clear loyalty is seen and rewarded.",
+            "log": "Kept a crew member from defecting.",
+            "stats": {
+              "money": -1800
+            },
+            "addFlags": [
+              "loyal_crew"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 6
+          }
+        ]
+      },
+      {
+        "id": "test",
+        "text": "Tell them to take the meeting",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "test",
+            "weight": 100,
+            "title": "Loyalty tested",
+            "body": "They return with useful information and a little less innocence.",
+            "log": "Used a defection offer for intelligence.",
+            "stats": {
+              "intelligence": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": 2
+            },
+            "crewLoyaltyDelta": 3
+          }
+        ]
+      },
+      {
+        "id": "threaten",
+        "text": "Threaten them for asking",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "defect",
+            "weight": 100,
+            "title": "Pushed away",
+            "body": "Fear answers for them. The rival gets a new voice.",
+            "log": "Drove a crew member to defect.",
+            "stats": {
+              "reputation": -2
+            },
+            "addFlags": [
+              "betrayed_once"
+            ],
+            "removeFlags": [],
+            "betrayCrew": true,
+            "crewLoyaltyDelta": -8
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Violent"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "crew_memorial",
+    "title": "Crew Memorial",
+    "body": "A former associate’s name is spoken softly in a back room. The city moves on outside, but your people wait to see whether you will.",
+    "category": "crew",
+    "tags": [
+      "legacy"
+    ],
+    "weight": 4,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "honor",
+        "text": "Pay respects",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "honor",
+            "weight": 100,
+            "title": "Name remembered",
+            "body": "You let grief be visible, and the crew sees the difference.",
+            "log": "Honored a fallen associate.",
+            "stats": {
+              "money": -500,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 4
+          }
+        ]
+      },
+      {
+        "id": "work",
+        "text": "Keep the meeting to work",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "work",
+            "weight": 100,
+            "title": "Business continues",
+            "body": "You keep everyone moving, though the silence becomes its own eulogy.",
+            "log": "Kept working through a memorial.",
+            "stats": {
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -1
+          }
+        ]
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "trusted_lieutenant",
+    "title": "Trusted Lieutenant",
+    "body": "Your most reliable person asks whether you actually trust them, or merely need them. Ravenport has taught them to hear the difference.",
+    "category": "crew",
+    "tags": [
+      "loyalty"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "trust",
+        "text": "Give them real authority",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "authority",
+            "weight": 100,
+            "title": "Weight shared",
+            "body": "You hand over a decision that matters and accept the risk of being surprised.",
+            "log": "Trusted a lieutenant with authority.",
+            "stats": {
+              "reputation": 3
+            },
+            "addFlags": [
+              "loyal_crew"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 5
+          }
+        ]
+      },
+      {
+        "id": "deflect",
+        "text": "Deflect the question",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "distance",
+            "weight": 100,
+            "title": "Distance kept",
+            "body": "They smile like they understand. You are not sure they do.",
+            "log": "Avoided a lieutenant’s trust question.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": [],
+            "crewLoyaltyDelta": -3
+          }
+        ]
+      },
+      {
+        "id": "pledge",
+        "text": "Make a reciprocal pledge",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "pledge",
+            "weight": 100,
+            "title": "Two-way loyalty",
+            "body": "You frame loyalty as mutual obligation, not ownership.",
+            "log": "Made a reciprocal pledge to a lieutenant.",
+            "stats": {
+              "loyalty": 3
+            },
+            "addFlags": [
+              "crew_oath",
+              "loyal_crew"
+            ],
+            "removeFlags": [],
+            "crewLoyaltyDelta": 6
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Loyal"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  }
+]

@@ -1,0 +1,1187 @@
+[
+  {
+    "id": "backroom_pickup",
+    "title": "Backroom Pickup",
+    "body": "A bartender asks you to collect a forgotten coat from a backroom where nobody is supposed to be. The coat is heavier than it looks, and the room is watched.",
+    "category": "crime",
+    "tags": [
+      "theft",
+      "street"
+    ],
+    "weight": 15,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 35,
+    "art": "club",
+    "choices": [
+      {
+        "id": "take",
+        "text": "Take the coat",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "clean",
+            "weight": 100,
+            "title": "A clean pickup",
+            "body": "You leave through the kitchen before the attention turns your way.",
+            "log": "Completed a backroom pickup.",
+            "stats": {
+              "money": 600,
+              "heat": 2,
+              "reputation": 2
+            },
+            "addFlags": [
+              "thief",
+              "did_first_score"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Walk away",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "safe",
+            "weight": 100,
+            "title": "No coat, no trouble",
+            "body": "You keep your hands visible and your evening uncomplicated.",
+            "log": "Refused a suspicious pickup.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decoy",
+        "text": "Create a harmless distraction",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "slip",
+            "weight": 100,
+            "title": "A clever exit",
+            "body": "A spilled tray buys a few seconds. You use them without making a spectacle.",
+            "log": "Used misdirection for a pickup.",
+            "stats": {
+              "money": 850,
+              "heat": 1,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "thief",
+              "did_first_score"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "pier_manifest",
+    "title": "A Pier Manifest",
+    "body": "At the docks, a foreman wants a manifest nudged through before dawn. The paperwork is vague, the air smells of diesel, and the tide makes every promise sound temporary.",
+    "category": "crime",
+    "tags": [
+      "smuggling",
+      "docks"
+    ],
+    "weight": 13,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 19,
+    "maxAge": 55,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "help",
+        "text": "Help with the paperwork",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "clear",
+            "weight": 100,
+            "title": "Stamped through",
+            "body": "The shipment disappears into the gray morning. Your payment arrives through three careful hands.",
+            "log": "Helped move a dock shipment.",
+            "stats": {
+              "money": 1800,
+              "heat": 4,
+              "reputation": 2
+            },
+            "addFlags": [
+              "smuggler",
+              "docks_interest"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Decline the favor",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "dry",
+            "weight": 100,
+            "title": "Kept dry",
+            "body": "You walk away from the pier with your name still off the manifest.",
+            "log": "Declined a dock favor.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "audit",
+        "text": "Read every page first",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "catch",
+            "weight": 100,
+            "title": "A bad page",
+            "body": "A detail tells you someone is setting a trap. You leave before it closes.",
+            "log": "Avoided a suspect dock deal.",
+            "stats": {
+              "intelligence": 3,
+              "reputation": 2
+            },
+            "addFlags": [
+              "snitch_risk"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "cashroom_rumor",
+    "title": "Cashroom Rumor",
+    "body": "A rumor circles a shuttered arcade: one final cash pickup before the machines are hauled away. Everyone who repeats it swears it is easy, which is how Ravenport advertises danger.",
+    "category": "crime",
+    "tags": [
+      "robbery"
+    ],
+    "weight": 9,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 19,
+    "maxAge": 50,
+    "art": "heist",
+    "choices": [
+      {
+        "id": "join",
+        "text": "Join the job",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "score",
+            "weight": 100,
+            "title": "The room opens",
+            "body": "The job is fast, tense, and over before your hands stop shaking.",
+            "log": "Took part in an arcade cashroom score.",
+            "stats": {
+              "money": 4200,
+              "heat": 7,
+              "nerve": 2
+            },
+            "addFlags": [
+              "robber"
+            ],
+            "removeFlags": []
+          },
+          {
+            "id": "caught",
+            "weight": 25,
+            "title": "Blue lights",
+            "body": "A silent alarm changes the ending. You are caught before the night can invent a better version.",
+            "log": "Arrested after an arcade job.",
+            "stats": {
+              "heat": 12,
+              "stress": 5
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 2
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Pass on it",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "Rumor only",
+            "body": "The arcade is empty by morning. Whatever happened there belongs to someone else.",
+            "log": "Passed on an arcade rumor.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "rush",
+        "text": "Kick the door into the story",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "injured",
+            "weight": 100,
+            "title": "Too loud",
+            "body": "The night goes loud and somebody shoves you into broken glass. You escape, but not cleanly.",
+            "log": "Was injured during a reckless robbery.",
+            "stats": {
+              "money": 1800,
+              "heat": 15,
+              "health": -14,
+              "stress": 5
+            },
+            "addFlags": [
+              "robber"
+            ],
+            "removeFlags": [],
+            "injury": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Violent"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "ghost_terminal",
+    "title": "Ghost Terminal",
+    "body": "A House Vex intermediary says a corporate terminal has been left exposed by someone careless. They offer a cut for your silence and your nerve, without explaining the rest.",
+    "category": "crime",
+    "tags": [
+      "cyber",
+      "vex"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 20,
+    "maxAge": 60,
+    "art": "office",
+    "choices": [
+      {
+        "id": "introduce",
+        "text": "Make the introduction",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "signal",
+            "weight": 100,
+            "title": "A signal sent",
+            "body": "You connect two people who prefer not to meet. The exchange leaves no hero in its wake.",
+            "log": "Connected a Vex cyber contact.",
+            "stats": {
+              "money": 2500,
+              "heat": 3,
+              "intelligence": 3
+            },
+            "addFlags": [
+              "cyber_debut",
+              "vex_contact"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Ignore the message",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "off",
+            "weight": 100,
+            "title": "Screen dark",
+            "body": "You delete the message before it can become a habit.",
+            "log": "Ignored a cyber contact.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "verify",
+        "text": "Verify the contact first",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "safe",
+            "weight": 100,
+            "title": "The wrong signature",
+            "body": "A small inconsistency keeps you from walking into a Vex test.",
+            "log": "Detected a false Vex contact.",
+            "stats": {
+              "intelligence": 4,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": 2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "freight_yard_watch",
+    "title": "Freight Yard Watch",
+    "body": "A fenced freight yard sits quiet except for a watchman and the hum of cranes. Your crew wants a look at the place before anybody makes a bigger promise.",
+    "category": "crime",
+    "tags": [
+      "heist",
+      "crew"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "heist",
+    "choices": [
+      {
+        "id": "scout",
+        "text": "Watch from a distance",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "map",
+            "weight": 100,
+            "title": "A better picture",
+            "body": "You learn enough to know the job would cost more than courage.",
+            "log": "Scouted a freight yard.",
+            "stats": {
+              "intelligence": 3,
+              "stress": 1
+            },
+            "addFlags": [
+              "heist_planned"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Call it off",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "sense",
+            "weight": 100,
+            "title": "Good sense",
+            "body": "You do not mistake a bad feeling for cowardice.",
+            "log": "Called off a freight-yard plan.",
+            "stats": {
+              "loyalty": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "press",
+        "text": "Push past the fence",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "sirens",
+            "weight": 100,
+            "title": "A bad shortcut",
+            "body": "The yard erupts in noise. You make it out with bruises and a sharper police interest.",
+            "log": "Triggered trouble at a freight yard.",
+            "stats": {
+              "heat": 14,
+              "health": -9,
+              "stress": 4
+            },
+            "addFlags": [
+              "heat_spike"
+            ],
+            "removeFlags": [],
+            "injury": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "has_crew"
+      ]
+    }
+  },
+  {
+    "id": "midtown_ledger",
+    "title": "The Midtown Ledger",
+    "body": "A bookkeeper offers a glimpse at a ledger that could embarrass a small-time operator. The paper has value, but it also has owners.",
+    "category": "crime",
+    "tags": [
+      "theft",
+      "blackmail"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 65,
+    "art": "office",
+    "choices": [
+      {
+        "id": "sell",
+        "text": "Sell it back quietly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "sold",
+            "weight": 100,
+            "title": "Paid for silence",
+            "body": "The owner pays to make the pages disappear. You learn the price of a secret.",
+            "log": "Sold back a compromising ledger.",
+            "stats": {
+              "money": 3200,
+              "heat": 4,
+              "reputation": 1
+            },
+            "addFlags": [
+              "known_on_street"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "burn",
+        "text": "Destroy it",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "gone",
+            "weight": 100,
+            "title": "Paper smoke",
+            "body": "You remove a problem without turning it into an empire.",
+            "log": "Destroyed a dangerous ledger.",
+            "stats": {
+              "reputation": 1,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "copy",
+        "text": "Keep a careful copy",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "lever",
+            "weight": 100,
+            "title": "Leverage held",
+            "body": "You keep a private insurance policy and sleep a little worse.",
+            "log": "Kept leverage from a ledger.",
+            "stats": {
+              "money": 800,
+              "intelligence": 2,
+              "stress": 2
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Greedy"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "club_back_door",
+    "title": "Club Back Door",
+    "body": "The club manager asks you to move a troublesome guest out through the back without turning the dance floor into a story. Bass thumps through the wall like a second heartbeat.",
+    "category": "crime",
+    "tags": [
+      "club",
+      "nightlife"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 21,
+    "maxAge": 65,
+    "art": "club",
+    "choices": [
+      {
+        "id": "talk",
+        "text": "Talk the guest down",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "quiet",
+            "weight": 100,
+            "title": "A quiet door",
+            "body": "Your voice does what fists would have ruined. The manager notices.",
+            "log": "Defused a club problem.",
+            "stats": {
+              "money": 700,
+              "charisma": 3,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "muscle",
+        "text": "Use force",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "mess",
+            "weight": 100,
+            "title": "A messy exit",
+            "body": "The guest leaves, but the witnesses remember the shape of the night.",
+            "log": "Used force at a club.",
+            "stats": {
+              "money": 900,
+              "heat": 6,
+              "reputation": 1,
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "shadow",
+        "text": "Find out who sent them",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "thread",
+            "weight": 100,
+            "title": "A thread to pull",
+            "body": "You uncover a rival’s quiet provocation and keep the club clean.",
+            "log": "Uncovered a club provocation.",
+            "stats": {
+              "money": 1000,
+              "intelligence": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": 2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Paranoid"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "delivery_van_score",
+    "title": "Delivery Van Score",
+    "body": "A delivery van idles in an alley while its driver argues inside a corner store. The moment feels smaller than it is, because every witness has a phone.",
+    "category": "crime",
+    "tags": [
+      "theft"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 45,
+    "art": "street",
+    "choices": [
+      {
+        "id": "take",
+        "text": "Take the opportunity",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "take",
+            "weight": 100,
+            "title": "Quick hands",
+            "body": "You leave with a few unremarkable boxes and an unremarkable amount of attention.",
+            "log": "Took goods from an unattended van.",
+            "stats": {
+              "money": 1100,
+              "heat": 5
+            },
+            "addFlags": [
+              "thief"
+            ],
+            "removeFlags": []
+          },
+          {
+            "id": "camera",
+            "weight": 20,
+            "title": "Caught on camera",
+            "body": "A nearby camera gives the police a story with your outline in it.",
+            "log": "Caught on camera after a theft.",
+            "stats": {
+              "heat": 12,
+              "stress": 4
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 1
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Keep walking",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "Not tonight",
+            "body": "You let the van idle and keep your luck from becoming evidence.",
+            "log": "Passed an easy theft.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "westmere_package",
+    "title": "Package for Westmere",
+    "body": "A polished contact asks you to carry a sealed case into Westmere and never ask what room it enters. The fee could clear a month of problems.",
+    "category": "crime",
+    "tags": [
+      "vex",
+      "delivery"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 70,
+    "art": "office",
+    "choices": [
+      {
+        "id": "deliver",
+        "text": "Make the delivery",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "fee",
+            "weight": 100,
+            "title": "Westmere fee",
+            "body": "The case changes hands in a clean lobby. The money is real, and so is the attention.",
+            "log": "Delivered a sealed Westmere package.",
+            "stats": {
+              "money": 2200,
+              "heat": 3,
+              "charisma": 1
+            },
+            "addFlags": [
+              "vex_contact"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Decline",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "boundary",
+            "weight": 100,
+            "title": "A boundary kept",
+            "body": "You choose not to be rented by a stranger in a good suit.",
+            "log": "Declined a Westmere delivery.",
+            "stats": {
+              "reputation": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "ask",
+        "text": "Ask for collateral",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "terms",
+            "weight": 100,
+            "title": "Terms improved",
+            "body": "The contact respects the question, if not the caution.",
+            "log": "Negotiated a Westmere delivery.",
+            "stats": {
+              "money": 3400,
+              "charisma": 3,
+              "stress": 1
+            },
+            "addFlags": [
+              "vex_contact"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming",
+            "Greedy"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "ironyard_scrap",
+    "title": "Ironyard Scrap",
+    "body": "An Ironyard foreman points at a pile of unclaimed metal and says nobody will miss what the city already forgot. The offer comes with a crooked smile.",
+    "category": "crime",
+    "tags": [
+      "ironyard",
+      "theft"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 20,
+    "maxAge": 55,
+    "art": "street",
+    "choices": [
+      {
+        "id": "haul",
+        "text": "Take the scrap",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "haul",
+            "weight": 100,
+            "title": "Heavy pockets",
+            "body": "The sale is modest, but it puts your name near people who prize hard work and hard edges.",
+            "log": "Moved unclaimed Ironyard scrap.",
+            "stats": {
+              "money": 900,
+              "heat": 3,
+              "reputation": 1
+            },
+            "addFlags": [
+              "turf_ironyard"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Leave it where it lies",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "Rust and rain",
+            "body": "You leave the metal to the weather.",
+            "log": "Refused an Ironyard scrap offer.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "claim",
+        "text": "Claim the whole pile",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "fight",
+            "weight": 100,
+            "title": "Too much to claim",
+            "body": "A confrontation turns ugly, and you pay for your appetite in bruises.",
+            "log": "Overreached at the Ironyard.",
+            "stats": {
+              "money": 1600,
+              "heat": 9,
+              "health": -10
+            },
+            "addFlags": [
+              "turf_ironyard"
+            ],
+            "removeFlags": [],
+            "injury": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Greedy",
+            "Reckless"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "safehouse_leak",
+    "title": "Safehouse Leak",
+    "body": "Someone says one of your hideouts has been mentioned around a card table. You can move tonight, or trust the walls one more week.",
+    "category": "crime",
+    "tags": [
+      "heat",
+      "crew"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "move",
+        "text": "Move what matters",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "moved",
+            "weight": 100,
+            "title": "Empty rooms",
+            "body": "You leave the place bare before anyone can make it useful against you.",
+            "log": "Moved out of a compromised safehouse.",
+            "stats": {
+              "money": -600,
+              "heat": -4,
+              "intelligence": 2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "snitch_risk"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stay",
+        "text": "Stay put",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "raided",
+            "weight": 100,
+            "title": "Doors splinter",
+            "body": "The warning proves true when the night comes down hard around you.",
+            "log": "Safehouse was raided.",
+            "stats": {
+              "heat": 18,
+              "stress": 6
+            },
+            "addFlags": [
+              "heat_spike"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 3
+          }
+        ]
+      },
+      {
+        "id": "watch",
+        "text": "Set a watch and wait",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "source",
+            "weight": 100,
+            "title": "The source appears",
+            "body": "Patience reveals who has been talking, and the knowledge is worth more than the room.",
+            "log": "Identified a safehouse leak.",
+            "stats": {
+              "intelligence": 3,
+              "reputation": 2
+            },
+            "addFlags": [
+              "betrayed_once"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "anyFlags": [
+        "has_crew",
+        "known_on_street"
+      ]
+    }
+  },
+  {
+    "id": "night_market_offer",
+    "title": "Night Market Offer",
+    "body": "At a night market under the expressway, a seller offers merchandise with no questions attached. The crowd is dense enough to hide anyone and remember everyone.",
+    "category": "crime",
+    "tags": [
+      "street"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 50,
+    "art": "street",
+    "choices": [
+      {
+        "id": "buy",
+        "text": "Buy low and resell",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "margin",
+            "weight": 100,
+            "title": "A narrow margin",
+            "body": "You turn a small profit and leave before the market turns sour.",
+            "log": "Made a night-market resale.",
+            "stats": {
+              "money": 750,
+              "heat": 2
+            },
+            "addFlags": [
+              "thief"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Pass",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "Keep moving",
+            "body": "You leave with your cash and no new stories attached.",
+            "log": "Passed on a night-market deal.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "take",
+        "text": "Take more than offered",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "stab",
+            "weight": 100,
+            "title": "The crowd closes",
+            "body": "A sudden struggle leaves you hurt and empty-handed.",
+            "log": "Was injured in a reckless night-market grab.",
+            "stats": {
+              "health": -18,
+              "heat": 8,
+              "stress": 4
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "injury": true
+          },
+          {
+            "id": "fatal",
+            "weight": 3,
+            "title": "The price",
+            "body": "The crowd breaks into panic, and the night ends before you can make sense of it.",
+            "log": "Died in a night-market confrontation.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": [],
+            "death": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Violent"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "crownless_job",
+    "title": "Crownless Job",
+    "body": "A veteran planner mentions a job big enough to change your standing, then goes silent when the rain starts. They need people who can keep a secret and accept a bad ending.",
+    "category": "crime",
+    "tags": [
+      "heist"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 23,
+    "maxAge": 70,
+    "art": "heist",
+    "choices": [
+      {
+        "id": "commit",
+        "text": "Commit to planning",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "plan",
+            "weight": 100,
+            "title": "Plans on the table",
+            "body": "You agree to a meeting and the room grows suddenly serious.",
+            "log": "Joined a major-job planning session.",
+            "stats": {
+              "reputation": 4,
+              "stress": 2
+            },
+            "addFlags": [
+              "heist_planned"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Keep your distance",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "decline",
+            "weight": 100,
+            "title": "No crown tonight",
+            "body": "You leave the grand promises to people who need them.",
+            "log": "Declined a major-job offer.",
+            "stats": {
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "demand",
+        "text": "Demand a larger share",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "ego",
+            "weight": 100,
+            "title": "A bold demand",
+            "body": "The planner laughs, then writes your name down anyway.",
+            "log": "Demanded a larger share of a planned job.",
+            "stats": {
+              "reputation": 3,
+              "stress": 3
+            },
+            "addFlags": [
+              "heist_planned"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Ambitious",
+            "Greedy"
+          ]
+        }
+      }
+    ]
+  }
+]

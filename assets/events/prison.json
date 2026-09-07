@@ -1,0 +1,710 @@
+[
+  {
+    "id": "yard_introduction",
+    "title": "Yard Introduction",
+    "body": "The prison yard has its own weather and its own rules of distance. A respected inmate watches to see how you occupy the first hour.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "reputation"
+    ],
+    "weight": 10,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "quiet",
+        "text": "Keep to yourself",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "quiet",
+            "weight": 100,
+            "title": "Quiet beginning",
+            "body": "You learn the rhythms before you add your name to them.",
+            "log": "Kept quiet in the prison yard.",
+            "stats": {
+              "stress": -1,
+              "intelligence": 1
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "respect",
+        "text": "Offer measured respect",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "respect",
+            "weight": 100,
+            "title": "Respect returned",
+            "body": "You avoid a needless test by treating the moment seriously.",
+            "log": "Earned measured prison respect.",
+            "stats": {
+              "reputation": 2,
+              "nerve": 1
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "challenge",
+        "text": "Challenge the stare",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "hurt",
+            "weight": 100,
+            "title": "A hard lesson",
+            "body": "The yard gives you a lesson nobody writes down.",
+            "log": "Was injured after a prison-yard challenge.",
+            "stats": {
+              "health": -12,
+              "stress": 4
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": [],
+            "injury": true
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Violent"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true
+    }
+  },
+  {
+    "id": "library_stack",
+    "title": "Library Stack",
+    "body": "The prison library smells of old paper and radiator steam. A volunteer librarian says the exam prep books are free if you return them on time.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "study"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "study",
+        "text": "Study every evening",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "study",
+            "weight": 100,
+            "title": "Pages open",
+            "body": "You make a small room inside your mind that the walls cannot close.",
+            "log": "Studied in prison.",
+            "stats": {
+              "intelligence": 5,
+              "stress": -3
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "skip",
+        "text": "Skip the books",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "skip",
+            "weight": 100,
+            "title": "Time passes",
+            "body": "You let the hours take their shape without asking more of them.",
+            "log": "Skipped prison study.",
+            "stats": {
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "teach",
+        "text": "Help another inmate read",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "teach",
+            "weight": 100,
+            "title": "Shared pages",
+            "body": "Teaching forces you to slow down and makes another person’s week less lonely.",
+            "log": "Tutored another inmate in prison.",
+            "stats": {
+              "intelligence": 2,
+              "loyalty": 3,
+              "reputation": 2
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true
+    }
+  },
+  {
+    "id": "kitchen_shift",
+    "title": "Kitchen Shift",
+    "body": "A kitchen supervisor offers you a work shift before dawn. The pay is thin, but routine can keep a person from breaking into smaller pieces.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "work"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "work",
+        "text": "Take the shift",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "routine",
+            "weight": 100,
+            "title": "Routine found",
+            "body": "You learn the comfort of a schedule that asks nothing about your past.",
+            "log": "Worked a prison kitchen shift.",
+            "stats": {
+              "money": 180,
+              "stress": -3,
+              "health": 1
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Decline",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "decline",
+            "weight": 100,
+            "title": "Long morning",
+            "body": "You keep your time, though it does not feel like freedom.",
+            "log": "Declined prison work.",
+            "stats": {
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ],
+    "requires": {
+      "inPrison": true
+    }
+  },
+  {
+    "id": "prison_mediation",
+    "title": "Cellblock Mediation",
+    "body": "A disagreement between two groups threatens to make the whole block tense. An older inmate asks you to carry a message because you have not burned every bridge.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "politics"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "mediate",
+        "text": "Carry the message",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "calm",
+            "weight": 100,
+            "title": "A calmer tier",
+            "body": "Your words do not solve the conflict, but they lower the temperature.",
+            "log": "Mediated a prison dispute.",
+            "stats": {
+              "charisma": 3,
+              "reputation": 3,
+              "stress": -1
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Refuse involvement",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "refuse",
+            "weight": 100,
+            "title": "No messenger",
+            "body": "You keep your distance and hope the problem stays elsewhere.",
+            "log": "Refused prison mediation.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "scheme",
+        "text": "Turn the dispute to your advantage",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "backlash",
+            "weight": 100,
+            "title": "A dangerous reputation",
+            "body": "The short-term advantage leaves people reading you more carefully.",
+            "log": "Exploited a prison dispute.",
+            "stats": {
+              "reputation": 2,
+              "stress": 3
+            },
+            "addFlags": [
+              "prison_rep"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Greedy"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true
+    }
+  },
+  {
+    "id": "appeal_window",
+    "title": "Appeal Window",
+    "body": "A legal aid letter says there may be a narrow appeal window. The language is cautious, but it is the first opening you have seen in months.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "appeal"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "appeal",
+        "text": "File an appeal",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "filed",
+            "weight": 100,
+            "title": "Appeal filed",
+            "body": "You sign your name under a hope that has to survive paperwork.",
+            "log": "Filed a prison appeal.",
+            "stats": {
+              "money": -1000,
+              "intelligence": 2,
+              "stress": 2
+            },
+            "addFlags": [
+              "appealed",
+              "lawyered"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "wait",
+        "text": "Wait out the sentence",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "Time remains",
+            "body": "You decide not to spend hope you cannot afford.",
+            "log": "Chose not to appeal a sentence.",
+            "stats": {
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "research",
+        "text": "Research the record",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "basis",
+            "weight": 100,
+            "title": "A possible basis",
+            "body": "You help identify a question worth taking to counsel.",
+            "log": "Researched an appeal record.",
+            "stats": {
+              "intelligence": 4
+            },
+            "addFlags": [
+              "appealed"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true
+    }
+  },
+  {
+    "id": "visiting_room",
+    "title": "Visiting Room",
+    "body": "Behind thick glass, someone you love tries to sound normal. The visit is too short, and every goodbye rehearses the next one.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "family"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "listen",
+        "text": "Ask about their life",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "bond",
+            "weight": 100,
+            "title": "Connection held",
+            "body": "You give them room to speak instead of making the visit about your absence.",
+            "log": "Maintained a family bond from prison.",
+            "stats": {
+              "loyalty": 3,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "promise",
+        "text": "Make promises you cannot prove",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "promise",
+            "weight": 100,
+            "title": "Promises strain",
+            "body": "They nod, but the glass keeps both of you honest.",
+            "log": "Made difficult promises from prison.",
+            "stats": {
+              "stress": 2,
+              "loyalty": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "release",
+        "text": "Encourage them to move forward",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "release",
+            "weight": 100,
+            "title": "Love without a leash",
+            "body": "You tell them not to wait for a version of you that may take time to return.",
+            "log": "Put family freedom before pride.",
+            "stats": {
+              "loyalty": 4,
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "family_rift"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Loyal"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true,
+      "hasSpouse": true
+    }
+  },
+  {
+    "id": "parole_board",
+    "title": "Parole Board",
+    "body": "The parole board asks whether you understand the harm around your choices. Their faces are neutral, and your next years feel balanced on every word.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "parole"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "honest",
+        "text": "Answer honestly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "parole",
+            "weight": 100,
+            "title": "A chance outside",
+            "body": "Your honesty does not erase anything, but it gives the board a reason to let you return.",
+            "log": "Earned parole consideration.",
+            "stats": {
+              "stress": -4,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "heat_spike"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "defiant",
+        "text": "Answer with defiance",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "denied",
+            "weight": 100,
+            "title": "Parole denied",
+            "body": "The board hears only the part of you that still wants to fight the room.",
+            "log": "Lost parole consideration.",
+            "stats": {
+              "stress": 5,
+              "reputation": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "reflect",
+        "text": "Describe your concrete change",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "reflect",
+            "weight": 100,
+            "title": "Change recognized",
+            "body": "You speak about study, family, and the work of not repeating yourself.",
+            "log": "Made a reflective parole statement.",
+            "stats": {
+              "charisma": 3,
+              "intelligence": 2,
+              "stress": -3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "heat_spike"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Patient",
+            "Compassionate"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true,
+      "allFlags": [
+        "prison_rep"
+      ]
+    }
+  },
+  {
+    "id": "prison_release_gate",
+    "title": "Release Gate",
+    "body": "The gate opens onto a morning that feels too wide. Ravenport is waiting beyond the bus stop, familiar and changed by every year you were gone.",
+    "category": "prison",
+    "tags": [
+      "prison",
+      "release"
+    ],
+    "weight": 4,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prison",
+    "choices": [
+      {
+        "id": "home",
+        "text": "Go home first",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "home",
+            "weight": 100,
+            "title": "Homeward",
+            "body": "You choose family before every other invitation.",
+            "log": "Returned home after prison.",
+            "stats": {
+              "stress": -5,
+              "loyalty": 3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "prison_rep"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "work",
+        "text": "Go straight to work",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "work",
+            "weight": 100,
+            "title": "New routine",
+            "body": "You start building a day that can hold you.",
+            "log": "Sought work after prison.",
+            "stats": {
+              "money": 400,
+              "reputation": 2
+            },
+            "addFlags": [
+              "legitimate_turn"
+            ],
+            "removeFlags": [
+              "prison_rep"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "settle",
+        "text": "Look for old scores",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "old",
+            "weight": 100,
+            "title": "Old heat",
+            "body": "The city has not forgotten, and neither have you.",
+            "log": "Sought old scores after prison.",
+            "stats": {
+              "heat": 10,
+              "reputation": 3
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "prison_rep"
+            ]
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Violent"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "inPrison": true
+    }
+  }
+]

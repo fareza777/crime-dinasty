@@ -1,0 +1,692 @@
+[
+  {
+    "id": "laundry_keys",
+    "title": "Laundry Keys",
+    "body": "A tired owner offers the keys to a neighborhood laundry and a stack of bills. The machines rattle like old secrets, but the customers know one another by name.",
+    "category": "business",
+    "tags": [
+      "business",
+      "legitimate"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 85,
+    "art": "office",
+    "choices": [
+      {
+        "id": "buy",
+        "text": "Buy the laundry",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "laundry",
+            "weight": 100,
+            "title": "Keys in hand",
+            "body": "You take on the bills and the chance to build something that keeps its lights on.",
+            "log": "Bought a neighborhood laundry.",
+            "stats": {
+              "money": -6500,
+              "assets": 5000,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "businessGain": "laundry"
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Pass on it",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "No keys",
+            "body": "You leave the key ring on the counter and keep your cash fluid.",
+            "log": "Passed on a laundry business.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "partner",
+        "text": "Offer a fair partnership",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "partner",
+            "weight": 100,
+            "title": "Shared keys",
+            "body": "The owner stays on to teach you which machines lie and which people do.",
+            "log": "Partnered in a neighborhood laundry.",
+            "stats": {
+              "money": -3200,
+              "assets": 2800,
+              "charisma": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "businessGain": "laundry"
+          }
+        ],
+        "requires": {
+          "minMoney": 3200,
+          "traitsAny": [
+            "Charming",
+            "Compassionate"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "club_lease",
+    "title": "The Club Lease",
+    "body": "A vacant club near Harbor Lights comes with a cheap lease, a bad reputation, and a stage that still smells of last summer. You can hear the room waiting for a new identity.",
+    "category": "business",
+    "tags": [
+      "business",
+      "club"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 24,
+    "maxAge": 85,
+    "art": "club",
+    "choices": [
+      {
+        "id": "sign",
+        "text": "Sign the lease",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "open",
+            "weight": 100,
+            "title": "Doors open",
+            "body": "You gamble on music, payroll, and the possibility that people want a place to gather.",
+            "log": "Opened a Harbor Lights club.",
+            "stats": {
+              "money": -12000,
+              "assets": 9000,
+              "reputation": 4
+            },
+            "addFlags": [
+              "club_open"
+            ],
+            "removeFlags": [],
+            "businessGain": "club",
+            "territoryGain": "harbor_lights"
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Walk away",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 100,
+            "title": "Dark stage",
+            "body": "You leave the stage dark for someone else to imagine.",
+            "log": "Passed on a club lease.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "pitch",
+        "text": "Pitch investors",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "backing",
+            "weight": 100,
+            "title": "Backed opening",
+            "body": "A few local names invest in the dream, and expect a seat near the door.",
+            "log": "Secured backing for a club.",
+            "stats": {
+              "money": -6000,
+              "assets": 10000,
+              "charisma": 3
+            },
+            "addFlags": [
+              "club_open"
+            ],
+            "removeFlags": [],
+            "businessGain": "club",
+            "territoryGain": "harbor_lights"
+          }
+        ],
+        "requires": {
+          "minMoney": 6000,
+          "traitsAny": [
+            "Charming",
+            "Ambitious"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "shipping_front_offer",
+    "title": "Shipping Front Offer",
+    "body": "A freight broker proposes a small shipping firm with real invoices and a reputation that needs repair. The docks are close enough to make every opportunity complicated.",
+    "category": "business",
+    "tags": [
+      "business",
+      "docks"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 27,
+    "maxAge": 90,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "buy",
+        "text": "Buy into shipping",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "shipping",
+            "weight": 100,
+            "title": "A paper trail",
+            "body": "You acquire a legitimate-looking operation and a great deal of paperwork.",
+            "log": "Bought into a shipping company.",
+            "stats": {
+              "money": -18000,
+              "assets": 16000,
+              "heat": 2
+            },
+            "addFlags": [
+              "shipping_front",
+              "docks_interest"
+            ],
+            "removeFlags": [],
+            "businessGain": "shipping",
+            "territoryGain": "docks"
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Decline",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "decline",
+            "weight": 100,
+            "title": "No paper trail",
+            "body": "You decide not to mix your name with that much scrutiny.",
+            "log": "Declined a shipping opportunity.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "audit",
+        "text": "Audit their books first",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "clean",
+            "weight": 100,
+            "title": "A cleaner purchase",
+            "body": "You find problems before they become yours and negotiate a better price.",
+            "log": "Audited a shipping acquisition.",
+            "stats": {
+              "money": -13000,
+              "assets": 17000,
+              "intelligence": 4
+            },
+            "addFlags": [
+              "shipping_front",
+              "docks_interest"
+            ],
+            "removeFlags": [],
+            "businessGain": "shipping",
+            "territoryGain": "docks"
+          }
+        ],
+        "requires": {
+          "minMoney": 13000,
+          "traitsAny": [
+            "Cunning",
+            "Patient"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "garage_bid",
+    "title": "Garage Bid",
+    "body": "The city auctions a small garage in the Flats after its owner retires. It is an honest business with a leaking roof and loyal customers.",
+    "category": "business",
+    "tags": [
+      "business",
+      "legitimate"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 25,
+    "maxAge": 85,
+    "art": "office",
+    "choices": [
+      {
+        "id": "bid",
+        "text": "Place a bid",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "garage",
+            "weight": 100,
+            "title": "Garage acquired",
+            "body": "The keys are greasy and the books are simple. For once, that feels like a blessing.",
+            "log": "Bought a garage in the Flats.",
+            "stats": {
+              "money": -9000,
+              "assets": 7000,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "businessGain": "garage",
+            "territoryGain": "the_flats"
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Let it go",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "No bid",
+            "body": "You keep watching the auctioneer’s hammer fall.",
+            "log": "Passed on a garage auction.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "restaurant_second_chance",
+    "title": "Second Chance Kitchen",
+    "body": "A chef with a closed restaurant asks whether you believe in second chances. Their menu is excellent, their finances are not.",
+    "category": "business",
+    "tags": [
+      "business",
+      "community"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 30,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "fund",
+        "text": "Fund the restart",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "restaurant",
+            "weight": 100,
+            "title": "Kitchen fires up",
+            "body": "The first night is crowded, and the chef thanks you with a meal after close.",
+            "log": "Funded a restaurant restart.",
+            "stats": {
+              "money": -11000,
+              "assets": 9000,
+              "reputation": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "businessGain": "restaurant",
+            "territoryGain": "midtown"
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Wish them luck",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "luck",
+            "weight": 100,
+            "title": "A kind refusal",
+            "body": "You do not take on a risk just because it is beautiful.",
+            "log": "Declined a restaurant investment.",
+            "stats": {
+              "charisma": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "mentor",
+        "text": "Offer business mentoring",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "mentor",
+            "weight": 100,
+            "title": "A smaller stake",
+            "body": "You help build a plan before committing more than either of you can afford.",
+            "log": "Mentored a restaurant owner.",
+            "stats": {
+              "money": -2500,
+              "intelligence": 2,
+              "reputation": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "businessGain": "restaurant"
+          }
+        ],
+        "requires": {
+          "minMoney": 2500,
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "construction_meeting",
+    "title": "Construction Bid",
+    "body": "A developer wants a local face for a construction bid in Old Quarter. The proposal could change a block, and it could put you in rooms where every favor has a receipt.",
+    "category": "business",
+    "tags": [
+      "business",
+      "city"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 32,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "join",
+        "text": "Join the bid",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "bid",
+            "weight": 100,
+            "title": "Bid submitted",
+            "body": "Your name appears on documents that promise growth and invite scrutiny.",
+            "log": "Joined a construction bid.",
+            "stats": {
+              "money": -8000,
+              "assets": 12000,
+              "reputation": 4,
+              "heat": 2
+            },
+            "addFlags": [
+              "construction_bid"
+            ],
+            "removeFlags": [],
+            "businessGain": "construction",
+            "territoryGain": "old_quarter"
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Decline the bid",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "decline",
+            "weight": 100,
+            "title": "No signature",
+            "body": "You leave development to people who enjoy hearings.",
+            "log": "Declined a construction bid.",
+            "stats": {},
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "negotiate",
+        "text": "Negotiate community benefits",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "benefit",
+            "weight": 100,
+            "title": "A better bargain",
+            "body": "The proposal adds local jobs and quieter critics.",
+            "log": "Negotiated community benefits for a bid.",
+            "stats": {
+              "money": -9000,
+              "assets": 13000,
+              "charisma": 3,
+              "reputation": 5
+            },
+            "addFlags": [
+              "construction_bid",
+              "legitimate_turn"
+            ],
+            "removeFlags": [],
+            "businessGain": "construction",
+            "territoryGain": "old_quarter"
+          }
+        ],
+        "requires": {
+          "minMoney": 9000,
+          "traitsAny": [
+            "Charming",
+            "Compassionate",
+            "Ambitious"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "accountant_referral",
+    "title": "Accountant Referral",
+    "body": "A quiet accountant comes recommended by three people who never agree. They promise clean books, discretion, and no moral speeches.",
+    "category": "business",
+    "tags": [
+      "business",
+      "money"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 24,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "hire",
+        "text": "Hire the accountant",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "hire",
+            "weight": 100,
+            "title": "Numbers watched",
+            "body": "The books become calmer, and so does your sleep.",
+            "log": "Hired an accountant.",
+            "stats": {
+              "money": -2200,
+              "intelligence": 2,
+              "stress": -2
+            },
+            "addFlags": [
+              "accountant_hired"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Keep doing it yourself",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "self",
+            "weight": 100,
+            "title": "Your own books",
+            "body": "You keep control and keep losing evenings to paperwork.",
+            "log": "Kept handling finances alone.",
+            "stats": {
+              "stress": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "vet",
+        "text": "Vet the references",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "vetted",
+            "weight": 100,
+            "title": "References checked",
+            "body": "A little caution keeps an old liability from sitting at your desk.",
+            "log": "Vetted an accountant referral.",
+            "stats": {
+              "intelligence": 3
+            },
+            "addFlags": [
+              "accountant_hired"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "legitimate_award",
+    "title": "Neighborhood Award",
+    "body": "A neighborhood association wants to recognize your business support at a small public dinner. The invitation is sincere enough to make you suspicious.",
+    "category": "business",
+    "tags": [
+      "business",
+      "legacy"
+    ],
+    "weight": 4,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 40,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Accept quietly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "award",
+            "weight": 100,
+            "title": "Seen differently",
+            "body": "You stand beneath warm lights and let people see a version of you that is trying.",
+            "log": "Accepted a neighborhood business award.",
+            "stats": {
+              "reputation": 5,
+              "charisma": 2
+            },
+            "addFlags": [
+              "legitimate_turn"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Decline the attention",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "private",
+            "weight": 100,
+            "title": "Private good",
+            "body": "You send a note of thanks and keep the work offstage.",
+            "log": "Declined public business recognition.",
+            "stats": {
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "speech",
+        "text": "Give a legacy speech",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "speech",
+            "weight": 100,
+            "title": "Words for the room",
+            "body": "You speak about work, family, and the cost of being counted out.",
+            "log": "Gave a public legacy speech.",
+            "stats": {
+              "charisma": 5,
+              "reputation": 7
+            },
+            "addFlags": [
+              "legitimate_turn",
+              "legacy_speech"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming",
+            "Ambitious"
+          ]
+        }
+      }
+    ]
+  }
+]

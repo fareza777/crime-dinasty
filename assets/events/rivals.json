@@ -1,0 +1,861 @@
+[
+  {
+    "id": "caldera_invitation",
+    "title": "Caldera Invitation",
+    "body": "A Caldera courier leaves a black envelope at your door: dinner at a waterfront restaurant, no weapons, no promises. Old shipping money likes its threats dressed for supper.",
+    "category": "rival",
+    "tags": [
+      "calderas",
+      "docks"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 80,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "attend",
+        "text": "Attend dinner",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "terms",
+            "weight": 100,
+            "title": "Cold hospitality",
+            "body": "The Calderas speak politely about boundaries and remember every answer.",
+            "log": "Met the Calderas for dinner.",
+            "stats": {
+              "charisma": 2,
+              "stress": 2
+            },
+            "addFlags": [
+              "caldera_slight"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "burn",
+        "text": "Burn the invitation",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "slight",
+            "weight": 100,
+            "title": "An answer in ash",
+            "body": "The courier sees the smoke from the street.",
+            "log": "Insulted the Calderas by burning an invitation.",
+            "stats": {
+              "reputation": 2,
+              "heat": 3
+            },
+            "addFlags": [
+              "caldera_slight"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "counter",
+        "text": "Send a careful counteroffer",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "counter",
+            "weight": 100,
+            "title": "Terms in writing",
+            "body": "The family accepts the exchange, and nothing about the courtesy feels safe.",
+            "log": "Sent a counteroffer to the Calderas.",
+            "stats": {
+              "charisma": 3,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "caldera_slight"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -3
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "rooke_cardroom",
+    "title": "Rooke Cardroom",
+    "body": "A Rooke Outfit captain saves you a chair in a cardroom above a laundromat. The game is friendly until it is not, and every laugh has muscle behind it.",
+    "category": "rival",
+    "tags": [
+      "rooke",
+      "gambling"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "club",
+    "choices": [
+      {
+        "id": "play",
+        "text": "Sit at the table",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "read",
+            "weight": 100,
+            "title": "Read the room",
+            "body": "You leave with a small loss and a clearer sense of who answers to Rooke.",
+            "log": "Read the Rooke cardroom.",
+            "stats": {
+              "money": -300,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "rooke_deal"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "leave",
+        "text": "Decline the chair",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "leave",
+            "weight": 100,
+            "title": "No seat taken",
+            "body": "You do not owe a rival your time simply because they offer it.",
+            "log": "Declined a Rooke invitation.",
+            "stats": {
+              "reputation": 1
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "charm",
+        "text": "Turn the table friendly",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "smile",
+            "weight": 100,
+            "title": "A useful smile",
+            "body": "For one night, you make the captain laugh for real.",
+            "log": "Charmed a Rooke captain.",
+            "stats": {
+              "charisma": 4,
+              "reputation": 2
+            },
+            "addFlags": [
+              "rooke_deal"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -3
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "vex_boardroom",
+    "title": "Vex Boardroom",
+    "body": "House Vex offers a meeting in a glass boardroom that overlooks the harbor. Their representative speaks of risk as if it is a tax deductible expense.",
+    "category": "rival",
+    "tags": [
+      "vex",
+      "cyber"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "office",
+    "choices": [
+      {
+        "id": "listen",
+        "text": "Hear their proposal",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "vex",
+            "weight": 100,
+            "title": "A polished offer",
+            "body": "You leave with a contact and the sense that Vex has already profiled you.",
+            "log": "Heard out House Vex.",
+            "stats": {
+              "intelligence": 3,
+              "reputation": 1
+            },
+            "addFlags": [
+              "vex_contact"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "reject",
+        "text": "Reject their terms",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "reject",
+            "weight": 100,
+            "title": "Glass closes",
+            "body": "The representative stays pleasant. That is somehow worse.",
+            "log": "Rejected House Vex.",
+            "stats": {
+              "nerve": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "probe",
+        "text": "Probe for their weak point",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "weak",
+            "weight": 100,
+            "title": "A hairline crack",
+            "body": "You notice a disagreement beneath the polished language.",
+            "log": "Found a weakness in House Vex.",
+            "stats": {
+              "intelligence": 4,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": 2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Paranoid"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "marrow_afterhours",
+    "title": "Marrow Afterhours",
+    "body": "At a Marrow Kin after-hours room, the lights are low enough for secrets to feel theatrical. A host asks whether you came to be seen or to learn.",
+    "category": "rival",
+    "tags": [
+      "marrow",
+      "nightlife"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "club",
+    "choices": [
+      {
+        "id": "learn",
+        "text": "Listen to the room",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "listen",
+            "weight": 100,
+            "title": "Night intelligence",
+            "body": "You hear a rumor about a rival before it has a chance to become public.",
+            "log": "Gathered intelligence at a Marrow room.",
+            "stats": {
+              "intelligence": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "perform",
+        "text": "Make sure you are seen",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "seen",
+            "weight": 100,
+            "title": "A name carried",
+            "body": "By sunrise, the night has made your name larger than you intended.",
+            "log": "Made an impression in Marrow territory.",
+            "stats": {
+              "reputation": 4,
+              "heat": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "mercy",
+        "text": "Help a frightened kid leave",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "mercy",
+            "weight": 100,
+            "title": "A quiet mercy",
+            "body": "The host watches you make a humane choice and says nothing.",
+            "log": "Helped someone leave a Marrow room safely.",
+            "stats": {
+              "reputation": 3,
+              "loyalty": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "rival_tribute_demand",
+    "title": "Tribute Demand",
+    "body": "A messenger says a rival expects a monthly tribute for peace in a neighborhood you have been using. The message is calm, which means the pressure is deliberate.",
+    "category": "rival",
+    "tags": [
+      "rival",
+      "turf"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 22,
+    "maxAge": 80,
+    "art": "street",
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay the tribute",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "paid",
+            "weight": 100,
+            "title": "Peace rented",
+            "body": "The payment buys time, not respect.",
+            "log": "Paid rival tribute.",
+            "stats": {
+              "money": -1600,
+              "stress": -1
+            },
+            "addFlags": [
+              "rival_tribute"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "refuse",
+        "text": "Refuse",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "refuse",
+            "weight": 100,
+            "title": "A line drawn",
+            "body": "The messenger leaves with a thin smile.",
+            "log": "Refused rival tribute.",
+            "stats": {
+              "reputation": 3,
+              "heat": 4
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "negotiate",
+        "text": "Offer a one-time settlement",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "settle",
+            "weight": 100,
+            "title": "A temporary settlement",
+            "body": "You turn a demand into a meeting and a meeting into breathing room.",
+            "log": "Negotiated a rival tribute settlement.",
+            "stats": {
+              "money": -800,
+              "charisma": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -3
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming",
+            "Cunning"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "caldera_dockworker",
+    "title": "Caldera Dockworker",
+    "body": "A Caldera dockworker corners you behind a fish market and says the family knows what you are building. Their tone suggests they are offering one chance to stop.",
+    "category": "rival",
+    "tags": [
+      "calderas",
+      "docks"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "docks",
+    "choices": [
+      {
+        "id": "apologize",
+        "text": "Offer an apology",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "cool",
+            "weight": 100,
+            "title": "A cooler tide",
+            "body": "The worker accepts your words without warmth, but the immediate pressure eases.",
+            "log": "Eased a Caldera confrontation.",
+            "stats": {
+              "charisma": 2
+            },
+            "addFlags": [],
+            "removeFlags": [
+              "caldera_slight"
+            ],
+            "rivalDelta": {
+              "calderas": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "stand",
+        "text": "Stand your ground",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "hard",
+            "weight": 100,
+            "title": "Hard ground",
+            "body": "The worker walks away. By evening, somebody has made a point of watching your block.",
+            "log": "Defied a Caldera dockworker.",
+            "stats": {
+              "nerve": 3,
+              "heat": 4
+            },
+            "addFlags": [
+              "caldera_war"
+            ],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "outthink",
+        "text": "Offer them a mutual problem",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "angle",
+            "weight": 100,
+            "title": "A better target",
+            "body": "You redirect their anger toward a problem that serves you both.",
+            "log": "Redirected a Caldera dispute.",
+            "stats": {
+              "intelligence": 3,
+              "reputation": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -2
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "docks_interest"
+      ]
+    }
+  },
+  {
+    "id": "rooke_bouncer",
+    "title": "Rooke Bouncer",
+    "body": "A Rooke bouncer starts asking after one of your people at a neighborhood bar. Patrons notice the shift before the music does.",
+    "category": "rival",
+    "tags": [
+      "rooke"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "club",
+    "choices": [
+      {
+        "id": "buy",
+        "text": "Buy the room a round",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "soft",
+            "weight": 100,
+            "title": "A softer exit",
+            "body": "The bouncer lets the night end without a scene.",
+            "log": "Defused a Rooke bouncer encounter.",
+            "stats": {
+              "money": -450,
+              "charisma": 2
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "challenge",
+        "text": "Challenge them",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "loud",
+            "weight": 100,
+            "title": "A loud answer",
+            "body": "The confrontation makes you look fearless and leaves the block tense.",
+            "log": "Challenged a Rooke bouncer.",
+            "stats": {
+              "reputation": 3,
+              "heat": 7,
+              "health": -5
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": 4
+            },
+            "injury": true
+          }
+        ]
+      },
+      {
+        "id": "observe",
+        "text": "Observe who backs them",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "names",
+            "weight": 100,
+            "title": "Names collected",
+            "body": "You learn which regulars are more than regulars.",
+            "log": "Identified Rooke support.",
+            "stats": {
+              "intelligence": 3
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": 1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Paranoid",
+            "Patient"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "marrow_favor",
+    "title": "Marrow Favor",
+    "body": "A Marrow host calls in a small favor: attend a memorial, be gracious, do not bring your usual weather with you.",
+    "category": "rival",
+    "tags": [
+      "marrow"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "home",
+    "choices": [
+      {
+        "id": "attend",
+        "text": "Attend respectfully",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "respect",
+            "weight": 100,
+            "title": "Respect paid",
+            "body": "You show up, say the right amount, and leave the night calmer than you found it.",
+            "log": "Paid respects to Marrow Kin.",
+            "stats": {
+              "reputation": 3,
+              "loyalty": 1
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "skip",
+        "text": "Skip it",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "snub",
+            "weight": 100,
+            "title": "A remembered absence",
+            "body": "No one confronts you. That makes the snub travel farther.",
+            "log": "Skipped a Marrow memorial.",
+            "stats": {
+              "reputation": -1
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "give",
+        "text": "Cover the flowers",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "flowers",
+            "weight": 100,
+            "title": "A name remembered",
+            "body": "The gesture reaches people you did not know were watching.",
+            "log": "Supported a Marrow memorial.",
+            "stats": {
+              "money": -900,
+              "reputation": 4
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -4
+            }
+          }
+        ],
+        "requires": {
+          "minMoney": 900,
+          "traitsAny": [
+            "Compassionate",
+            "Loyal"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "four_houses_whisper",
+    "title": "Four Houses Whisper",
+    "body": "Rumor says Calderas, Rooke, Vex, and Marrow are all watching the same vacant corner. You can add your own voice to the city’s chorus or let the others exhaust themselves.",
+    "category": "rival",
+    "tags": [
+      "rival",
+      "turf"
+    ],
+    "weight": 4,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 30,
+    "maxAge": 90,
+    "art": "skyline",
+    "choices": [
+      {
+        "id": "wait",
+        "text": "Wait for clarity",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "Patience pays",
+            "body": "A rival blinks first, and you learn from the movement.",
+            "log": "Waited out a four-house dispute.",
+            "stats": {
+              "intelligence": 3,
+              "stress": -1
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -1,
+              "rooke": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "claim",
+        "text": "Make a public claim",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "claim",
+            "weight": 100,
+            "title": "A loud claim",
+            "body": "Everyone hears you, including people who were not part of the rumor.",
+            "log": "Claimed interest in contested ground.",
+            "stats": {
+              "reputation": 4,
+              "heat": 8
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": 2,
+              "rooke": 2,
+              "vex": 1,
+              "marrow": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "broker",
+        "text": "Offer to broker peace",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "broker",
+            "weight": 100,
+            "title": "A seat at the table",
+            "body": "For a brief season, rivals treat you as a necessary voice.",
+            "log": "Brokered a rival meeting.",
+            "stats": {
+              "charisma": 5,
+              "reputation": 4
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -2,
+              "rooke": -2,
+              "vex": -1,
+              "marrow": -1
+            }
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming",
+            "Ambitious"
+          ]
+        }
+      }
+    ]
+  }
+]

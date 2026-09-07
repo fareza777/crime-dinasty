@@ -1,0 +1,172 @@
+[
+  {
+    "id": "war_threat_card",
+    "title": "A Warning With a Crest",
+    "body": "A rival house sent a note that is not a note. It is a season. The docks already know. Heat is a smell. You can answer, pay, or pretend the rain is louder.",
+    "category": "rival",
+    "tags": ["war"],
+    "weight": 22,
+    "once": false,
+    "cooldownYears": 2,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "crime_night",
+    "requires": { "anyFlags": ["war_phase_threat"] },
+    "choices": [
+      {
+        "id": "stand",
+        "text": "Stand on the dock. Let them see you.",
+        "outcomes": [
+          {
+            "id": "stand",
+            "weight": 100,
+            "title": "A public spine",
+            "body": "You do not flinch. The house files you as expensive. Heat climbs because you were visible.",
+            "log": "Answered a war-season warning in person.",
+            "stats": { "heat": 4, "reputation": 3, "nerve": 3 }
+          }
+        ]
+      },
+      {
+        "id": "pay",
+        "text": "Pay a quiet tribute. Buy a week.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "A purchased pause",
+            "body": "Cash walks. The warning stays. You bought weather, not peace.",
+            "log": "Paid tribute in a war threat year.",
+            "stats": { "money": -220, "heat": -2, "reputation": -1 }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Stay inside. Let the year blink.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "A quieter door",
+            "body": "The house thinks you blinked. Stress drops. The street does not forget.",
+            "log": "Hid from a war-season warning.",
+            "stats": { "stress": -4, "reputation": -3, "heat": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "war_escalate_card",
+    "title": "The War Takes a Street",
+    "body": "This is the hot year. A crew you do not pay is standing where your name used to stand. You can spend blood, cash, or the last of your calm.",
+    "category": "rival",
+    "tags": ["war"],
+    "weight": 24,
+    "once": false,
+    "cooldownYears": 2,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "docks_heist",
+    "requires": { "anyFlags": ["war_phase_escalate"] },
+    "choices": [
+      {
+        "id": "fight",
+        "text": "Press back. Spend heat.",
+        "outcomes": [
+          {
+            "id": "fight",
+            "weight": 70,
+            "title": "A street that flinches",
+            "body": "You make a noise the city will invoice. The house steps off one corner.",
+            "log": "Pressed back in a hot war year.",
+            "stats": { "heat": 8, "reputation": 4, "money": -80 },
+            "territoryGain": "docks"
+          },
+          {
+            "id": "hurt",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "A bad press",
+            "body": "They brought more hands. You keep the story and lose the easy night.",
+            "log": "A war press went ugly.",
+            "stats": { "health": -8, "heat": 10, "stress": 6 }
+          }
+        ]
+      },
+      {
+        "id": "buy",
+        "text": "Buy the corner back.",
+        "outcomes": [
+          {
+            "id": "buy",
+            "weight": 100,
+            "title": "Cash for weather",
+            "body": "Money is a kind of army. The street returns looking embarrassed.",
+            "log": "Bought a street back in war season.",
+            "stats": { "money": -360, "heat": 2, "reputation": 1 }
+          }
+        ]
+      },
+      {
+        "id": "yield",
+        "text": "Yield the night. Keep the body.",
+        "outcomes": [
+          {
+            "id": "yield",
+            "weight": 100,
+            "title": "A lost corner",
+            "body": "You live. The map changes. Heirs will ask about this year later.",
+            "log": "Yielded a night in a hot war.",
+            "stats": { "stress": -3, "reputation": -4, "heat": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "war_resolve_card",
+    "title": "A Table That Wants an Ending",
+    "body": "The war is breaking. Someone sent coffee like it is a treaty. You can close the season clean, or leave a tooth in it for later.",
+    "category": "rival",
+    "tags": ["war"],
+    "weight": 22,
+    "once": false,
+    "cooldownYears": 2,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "family_dinner",
+    "requires": { "anyFlags": ["war_phase_resolve"] },
+    "choices": [
+      {
+        "id": "truce",
+        "text": "Take the truce. Cool the house.",
+        "outcomes": [
+          {
+            "id": "truce",
+            "weight": 100,
+            "title": "A closed season",
+            "body": "You drink the coffee. Hostility thins. The rain sounds like an invoice you already paid.",
+            "log": "Took a war-season truce.",
+            "stats": { "heat": -6, "reputation": 3, "stress": -4 }
+          }
+        ]
+      },
+      {
+        "id": "tooth",
+        "text": "Leave a tooth in it.",
+        "outcomes": [
+          {
+            "id": "tooth",
+            "weight": 100,
+            "title": "An unfinished war",
+            "body": "They will come back. You will be ready, or you will be a story. The name stays sharp.",
+            "log": "Left a tooth in a war truce.",
+            "stats": { "heat": 3, "nerve": 3, "reputation": 2 }
+          }
+        ]
+      }
+    ]
+  }
+]

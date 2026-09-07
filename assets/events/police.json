@@ -1,0 +1,843 @@
+[
+  {
+    "id": "patrol_stop",
+    "title": "Patrol Stop",
+    "body": "Blue lights find you on a wet avenue, turning the windshield into a small theater. The officer asks where you have been and waits too comfortably for the answer.",
+    "category": "police",
+    "tags": [
+      "heat",
+      "police"
+    ],
+    "weight": 12,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 80,
+    "art": "street",
+    "choices": [
+      {
+        "id": "calm",
+        "text": "Answer calmly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "warning",
+            "weight": 100,
+            "title": "A warning",
+            "body": "The officer runs your name, finds nothing immediate, and sends you on.",
+            "log": "Received a patrol warning.",
+            "stats": {
+              "heat": -1,
+              "charisma": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "silent",
+        "text": "Say little and ask to leave",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "noted",
+            "weight": 100,
+            "title": "Noted",
+            "body": "You avoid a larger conversation, but the stop goes into somebody’s notebook.",
+            "log": "Kept a patrol stop brief.",
+            "stats": {
+              "heat": 2,
+              "stress": 1
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "charm",
+        "text": "Turn on the charm",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "smile",
+            "weight": 100,
+            "title": "A practiced smile",
+            "body": "The officer softens, though you know charm is not a shield.",
+            "log": "Charmed your way through a patrol stop.",
+            "stats": {
+              "heat": -2,
+              "charisma": 2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "detective_card",
+    "title": "Detective Card",
+    "body": "A detective leaves a card under your door with a handwritten note: We should talk before someone else does. Rain has smudged the ink but not the invitation.",
+    "category": "police",
+    "tags": [
+      "detective",
+      "da"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "lawyer",
+        "text": "Call a lawyer first",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "counsel",
+            "weight": 100,
+            "title": "Counsel first",
+            "body": "Your lawyer makes the return call. The detective’s voice changes when it is no longer just you.",
+            "log": "Responded to a detective through counsel.",
+            "stats": {
+              "money": -1200,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "lawyered"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Ignore the card",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "wait",
+            "weight": 100,
+            "title": "The card waits",
+            "body": "Nothing happens today. The unanswered question grows heavier anyway.",
+            "log": "Ignored a detective’s card.",
+            "stats": {
+              "stress": 3
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "meet",
+        "text": "Meet the detective alone",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "pressure",
+            "weight": 100,
+            "title": "Pressure applied",
+            "body": "The detective offers half-truths and watches which one hurts.",
+            "log": "Met a detective without counsel.",
+            "stats": {
+              "heat": 5,
+              "stress": 4
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "minHeat": 3
+    }
+  },
+  {
+    "id": "subpoena_morning",
+    "title": "Subpoena Morning",
+    "body": "A subpoena arrives before breakfast, printed in clean black type that makes the threat feel official. Your stomach drops before you finish the first page.",
+    "category": "police",
+    "tags": [
+      "court",
+      "da"
+    ],
+    "weight": 8,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "comply",
+        "text": "Prepare with counsel",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "prepare",
+            "weight": 100,
+            "title": "Prepared response",
+            "body": "You give your lawyer the papers and stop guessing alone.",
+            "log": "Prepared a subpoena response.",
+            "stats": {
+              "money": -1800,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "lawyered",
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "delay",
+        "text": "Delay and hope",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "late",
+            "weight": 100,
+            "title": "A late answer",
+            "body": "The calendar moves faster than your excuses.",
+            "log": "Delayed a subpoena response.",
+            "stats": {
+              "heat": 5,
+              "stress": 4
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "study",
+        "text": "Study every allegation",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "gap",
+            "weight": 100,
+            "title": "A gap spotted",
+            "body": "You help your lawyer find a contradiction that matters.",
+            "log": "Found a flaw in subpoena allegations.",
+            "stats": {
+              "intelligence": 4
+            },
+            "addFlags": [
+              "lawyered",
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Patient"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "arraignment_day",
+    "title": "Arraignment Day",
+    "body": "The courtroom is colder than it needs to be. Your name is called in the same flat voice used for everyone else who thought they were exceptional.",
+    "category": "police",
+    "tags": [
+      "court",
+      "arrest"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "plead",
+        "text": "Enter a careful plea",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "release",
+            "weight": 100,
+            "title": "Released to wait",
+            "body": "You leave the courthouse with conditions, costs, and a future date circled in red.",
+            "log": "Entered a plea at arraignment.",
+            "stats": {
+              "money": -1500,
+              "stress": 5,
+              "heat": 3
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "fight",
+        "text": "Challenge the charge",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "fight",
+            "weight": 100,
+            "title": "Fight begins",
+            "body": "Your attorney files motions and the case becomes a second life.",
+            "log": "Challenged charges at arraignment.",
+            "stats": {
+              "money": -2800,
+              "intelligence": 2,
+              "stress": 6
+            },
+            "addFlags": [
+              "lawyered",
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "rage",
+        "text": "Make a scene",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "held",
+            "weight": 100,
+            "title": "Held in contempt",
+            "body": "The judge has heard anger before and responds with procedure.",
+            "log": "Made a scene at arraignment.",
+            "stats": {
+              "heat": 8,
+              "stress": 6
+            },
+            "addFlags": [],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 1
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Reckless",
+            "Violent"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    }
+  },
+  {
+    "id": "plea_offer",
+    "title": "Plea Offer",
+    "body": "Your lawyer slides a plea offer across a café table and lets it sit between the coffee cups. It is not justice; it is a calculation about how much uncertainty you can survive.",
+    "category": "police",
+    "tags": [
+      "court",
+      "prison"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Accept the plea",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "sentence",
+            "weight": 100,
+            "title": "A limited sentence",
+            "body": "You accept the known cost and walk toward it under your own power.",
+            "log": "Accepted a plea offer.",
+            "stats": {
+              "heat": -6,
+              "stress": 3
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 2
+          }
+        ]
+      },
+      {
+        "id": "reject",
+        "text": "Reject the offer",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "trial",
+            "weight": 100,
+            "title": "Toward trial",
+            "body": "The prosecutor’s office stops smiling. The stakes sharpen.",
+            "log": "Rejected a plea offer.",
+            "stats": {
+              "stress": 5,
+              "reputation": 2
+            },
+            "addFlags": [
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "negotiate",
+        "text": "Ask for better terms",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "better",
+            "weight": 100,
+            "title": "Terms improved",
+            "body": "Your lawyer finds room where you thought there was none.",
+            "log": "Negotiated a better plea offer.",
+            "stats": {
+              "money": -2100,
+              "stress": 2
+            },
+            "addFlags": [
+              "lawyered"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 1
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Charming",
+            "Cunning"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    }
+  },
+  {
+    "id": "witness_turns",
+    "title": "Witness Turns",
+    "body": "A familiar name appears in a prosecutor’s filing. The person has decided their own future is worth more than yours.",
+    "category": "police",
+    "tags": [
+      "snitch",
+      "da"
+    ],
+    "weight": 6,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "prepare",
+        "text": "Prepare for the testimony",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "prepare",
+            "weight": 100,
+            "title": "Damage controlled",
+            "body": "You and your counsel build around the betrayal instead of pretending it did not happen.",
+            "log": "Prepared for hostile testimony.",
+            "stats": {
+              "money": -1800,
+              "intelligence": 3,
+              "stress": 3
+            },
+            "addFlags": [
+              "snitch_risk",
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "confront",
+        "text": "Confront the witness",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "backfire",
+            "weight": 100,
+            "title": "A public mistake",
+            "body": "Your anger becomes another paragraph in someone else’s case.",
+            "log": "Confronted a witness.",
+            "stats": {
+              "heat": 9,
+              "stress": 5
+            },
+            "addFlags": [
+              "snitch_risk",
+              "da_file"
+            ],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "forgive",
+        "text": "Let it go publicly",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "mercy",
+            "weight": 100,
+            "title": "No retaliation",
+            "body": "The decision costs pride but deprives the case of fresh drama.",
+            "log": "Refused to retaliate against a witness.",
+            "stats": {
+              "reputation": 3,
+              "stress": -1
+            },
+            "addFlags": [
+              "snitch_risk"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Compassionate",
+            "Patient"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    }
+  },
+  {
+    "id": "warrant_at_dawn",
+    "title": "Warrant at Dawn",
+    "body": "A knock comes before sunrise, formal and relentless. Through the door, the city is all gray windows and official voices.",
+    "category": "police",
+    "tags": [
+      "warrant",
+      "arrest"
+    ],
+    "weight": 7,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "comply",
+        "text": "Comply and call counsel",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "booked",
+            "weight": 100,
+            "title": "Booked",
+            "body": "You keep your composure while the machinery starts around you.",
+            "log": "Was booked after a warrant.",
+            "stats": {
+              "heat": 8,
+              "stress": 6
+            },
+            "addFlags": [
+              "da_file",
+              "lawyered"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 3
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Try to disappear",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "found",
+            "weight": 100,
+            "title": "Found anyway",
+            "body": "The delay turns one bad morning into a worse case.",
+            "log": "Tried to evade a warrant.",
+            "stats": {
+              "heat": 18,
+              "stress": 8
+            },
+            "addFlags": [
+              "heat_spike",
+              "da_file"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 8
+          },
+          {
+            "id": "life",
+            "weight": 2,
+            "title": "Life sentence",
+            "body": "The case swells beyond the first charge, and the court takes the rest of your years.",
+            "log": "Received a life sentence after warrant charges.",
+            "stats": {},
+            "addFlags": [
+              "heat_spike",
+              "da_file"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "lifeSentence": true
+          }
+        ]
+      },
+      {
+        "id": "document",
+        "text": "Document every detail",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "record",
+            "weight": 100,
+            "title": "Record kept",
+            "body": "Your calm attention gives counsel a better record to work with.",
+            "log": "Documented a warrant execution.",
+            "stats": {
+              "intelligence": 3,
+              "stress": 4
+            },
+            "addFlags": [
+              "lawyered",
+              "da_file"
+            ],
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 2
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Paranoid"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "minHeat": 8
+    }
+  },
+  {
+    "id": "jury_whisper",
+    "title": "Jury Whisper",
+    "body": "A rumor reaches you that jurors are talking about your reputation before they hear the facts. It may be nonsense, but nonsense can still shape a room.",
+    "category": "police",
+    "tags": [
+      "trial"
+    ],
+    "weight": 5,
+    "once": false,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "trust",
+        "text": "Trust the process",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "steady",
+            "weight": 100,
+            "title": "Steady hands",
+            "body": "You focus on testimony, not ghosts in the hallway.",
+            "log": "Stayed focused before trial.",
+            "stats": {
+              "nerve": 3,
+              "stress": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "panic",
+        "text": "Panic privately",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "fray",
+            "weight": 100,
+            "title": "Frayed nerves",
+            "body": "You sleep poorly and make every silence mean the worst.",
+            "log": "Panicked before trial.",
+            "stats": {
+              "stress": 6,
+              "health": -2
+            },
+            "addFlags": [],
+            "removeFlags": []
+          }
+        ]
+      },
+      {
+        "id": "analyze",
+        "text": "Have counsel investigate ethically",
+        "hideIfUnmet": true,
+        "outcomes": [
+          {
+            "id": "clarify",
+            "weight": 100,
+            "title": "Rumor clarified",
+            "body": "The story proves exaggerated, and you regain a little ground.",
+            "log": "Clarified a jury rumor through counsel.",
+            "stats": {
+              "money": -900,
+              "intelligence": 3,
+              "stress": -1
+            },
+            "addFlags": [
+              "lawyered"
+            ],
+            "removeFlags": []
+          }
+        ],
+        "requires": {
+          "traitsAny": [
+            "Cunning",
+            "Paranoid"
+          ]
+        }
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    }
+  },
+  {
+    "id": "case_closed_notice",
+    "title": "Case Closed Notice",
+    "body": "A thin envelope from the district attorney’s office waits on the mat. You read it twice before the words become real: no further action at this time.",
+    "category": "police",
+    "tags": [
+      "da",
+      "relief"
+    ],
+    "weight": 3,
+    "once": true,
+    "cooldownYears": 4,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "court",
+    "choices": [
+      {
+        "id": "breathe",
+        "text": "Let yourself breathe",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "closed",
+            "weight": 100,
+            "title": "File closed",
+            "body": "The city feels briefly larger than its accusations.",
+            "log": "DA file closed.",
+            "stats": {
+              "heat": -10,
+              "stress": -6,
+              "reputation": 2
+            },
+            "addFlags": [
+              "da_closed"
+            ],
+            "removeFlags": [
+              "da_file",
+              "heat_spike"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "celebrate",
+        "text": "Celebrate too loudly",
+        "hideIfUnmet": false,
+        "outcomes": [
+          {
+            "id": "notice",
+            "weight": 100,
+            "title": "Attention renewed",
+            "body": "Friends gather, phones appear, and the wrong people hear you are relieved.",
+            "log": "Celebrated a closed case loudly.",
+            "stats": {
+              "heat": 3,
+              "reputation": 3
+            },
+            "addFlags": [
+              "da_closed"
+            ],
+            "removeFlags": [
+              "da_file"
+            ]
+          }
+        ]
+      }
+    ],
+    "requires": {
+      "allFlags": [
+        "da_file"
+      ]
+    }
+  }
+]
