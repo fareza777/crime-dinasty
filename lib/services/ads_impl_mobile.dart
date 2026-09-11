@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<bool> initMobileAds() async {
@@ -74,3 +75,71 @@ Future<void> showInterstitialAd(String id) async {
   }
   return completer.future.timeout(const Duration(seconds: 10), onTimeout: () {});
 }
+
+Widget buildAdsBanner(String adUnitId) => _AdaptiveBanner(adUnitId: adUnitId);
+
+class _AdaptiveBanner extends StatefulWidget {
+  const _AdaptiveBanner({required this.adUnitId});
+  final String adUnitId;
+
+  @override
+  State<_AdaptiveBanner> createState() => _AdaptiveBannerState();
+}
+
+class _AdaptiveBannerState extends State<_AdaptiveBanner> {
+  BannerAd? _ad;
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_load());
+  }
+
+  Future<void> _load() async {
+    if (_ad != null) return;
+    final size = AdSize.banner;
+    final ad = BannerAd(
+      adUnitId: widget.adUnitId,
+      size: size,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          if (mounted) setState(() => _loaded = true);
+        },
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+          if (_ad == ad) _ad = null;
+        },
+      ),
+    );
+    _ad = ad;
+    try {
+      await ad.load();
+    } catch (_) {
+      ad.dispose();
+      _ad = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _ad?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ad = _ad;
+    if (!_loaded || ad == null) return const SizedBox.shrink();
+    return ColoredBox(
+      color: const Color(0xFF0B1220),
+      child: SizedBox(
+        width: ad.size.width.toDouble(),
+        height: ad.size.height.toDouble(),
+        child: AdWidget(ad: ad),
+      ),
+    );
+  }
+}
+

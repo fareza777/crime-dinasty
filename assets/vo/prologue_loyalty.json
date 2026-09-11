@@ -1,0 +1,25 @@
+{
+  "asset": "vo/prologue_loyalty.mp3",
+  "lines": [
+    {
+      "text": "Crowe asks you onto a late ferry that doesn't print tickets.",
+      "start": 0.0,
+      "end": 3.262
+    },
+    {
+      "text": "Mid-channel he says a first name \u2014 not yours \u2014 and asks you not to say it.",
+      "start": 3.773,
+      "end": 8.533
+    },
+    {
+      "text": "The water is black glass.",
+      "start": 9.044,
+      "end": 10.588
+    },
+    {
+      "text": "Loyalty, tonight, is a sound you decide not to make.",
+      "start": 10.832,
+      "end": 13.886
+    }
+  ]
+}

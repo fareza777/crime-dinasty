@@ -63,16 +63,19 @@ Development uses **official Google test IDs** (safe for debug devices):
 | Slot | Test ID |
 | --- | --- |
 | App | `ca-app-pub-3940256099942544~3347511713` |
+| Banner | `ca-app-pub-3940256099942544/6300978111` |
 | Rewarded | `ca-app-pub-3940256099942544/5224354917` |
 | Interstitial | `ca-app-pub-3940256099942544/1033173712` |
 
-The Android manifest `APPLICATION_ID` meta-data is the test app id. **There are no banner ads.**
+The Android manifest `APPLICATION_ID` meta-data is the test app id.
 
-Rewarded ads: retry the last failed decision, or a small “bonus whisper” extra chance. Interstitials fire only at **generation end** or **major jail entry**, and are throttled (about every 4 in-game years and 8 real minutes).
+- **Banner:** adaptive, sits above the bottom nav. Hidden during cards, tour, help, heir, ending, and if ads are removed.
+- **Rewarded:** retry the last failed decision, or a small “bonus whisper” extra chance.
+- **Interstitials:** generation end, major jail entry, or every **8 in-game years** at year-close. Never during a card. Throttled to about 8 real minutes.
 
 Swap to production:
 
-1. Create an AdMob Android app and ad units (rewarded + interstitial only).
+1. Create an AdMob Android app and ad units (banner + rewarded + interstitial).
 2. Replace the manifest value:
 
 ```xml
@@ -86,6 +89,7 @@ Swap to production:
 ```bash
 flutter build appbundle --release \
   --dart-define=ADMOB_APP_ID=ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy \
+  --dart-define=ADMOB_BANNER_ID=ca-app-pub-xxxxxxxxxxxxxxxx/bbbbbbbbbb \
   --dart-define=ADMOB_REWARDED_ID=ca-app-pub-xxxxxxxxxxxxxxxx/zzzzzzzzzz \
   --dart-define=ADMOB_INTERSTITIAL_ID=ca-app-pub-xxxxxxxxxxxxxxxx/wwwwwwwwww
 ```

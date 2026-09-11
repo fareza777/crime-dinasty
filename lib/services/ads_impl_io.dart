@@ -1,5 +1,7 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/widgets.dart';
+
 import 'ads_impl_stub.dart' as stub;
 import 'ads_impl_mobile.dart' as mobile;
 
@@ -22,4 +24,11 @@ Future<void> showInterstitialAd(String id) async {
     return mobile.showInterstitialAd(id);
   }
   return stub.showInterstitialAd(id);
+}
+
+Widget buildAdsBanner(String adUnitId) {
+  if (Platform.isAndroid || Platform.isIOS) {
+    return mobile.buildAdsBanner(adUnitId);
+  }
+  return stub.buildAdsBanner(adUnitId);
 }

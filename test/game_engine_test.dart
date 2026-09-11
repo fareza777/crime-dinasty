@@ -38,6 +38,13 @@ void main() {
     expect(c.byId.length, c.events.length);
     expect(c['rain_on_orchard'], isNotNull);
     expect(c['glassridge_tip'], isNotNull);
+    expect(c['forgotten_weather']?.art, 'forgotten_desk');
+    expect(c['empty_name']?.art, 'forgotten_desk');
+    expect(c['promotion_shift']?.art, 'timeclock');
+    expect(c['promotion_shift_2']?.art, 'laundry');
+    expect(c['yard_introduction']?.art, 'prison_yard');
+    expect(Art.event('legacy'), Art.emptyChair);
+    expect(Art.event('laundry'), Art.businessFront('laundry'));
     expect(c['prologue_rain'], isNotNull);
     expect(c['quiet_pier_whisper'], isNotNull);
     expect(c['crow_ledger_book'], isNotNull);
@@ -45,6 +52,11 @@ void main() {
     expect(c['midlife_ledger_eyes'], isNotNull);
     expect(c['late_knees_rain'], isNotNull);
     expect(c['war_threat_card'], isNotNull);
+    expect(c['gen2_chair_test'], isNotNull);
+    expect(c['forgotten_weather'], isNotNull);
+    expect(c['empty_name'], isNotNull);
+    expect(c['promotion_shift'], isNotNull);
+    expect(c['promotion_shift_2'], isNotNull);
   });
 
   test('new game starts playable in Ravenport at 18', () {
@@ -290,21 +302,34 @@ void main() {
     expect(e.canAgeUp, isTrue);
     e.state.stats.heat = 90;
     e.ageUp();
-    expect(e.state.eventTarget, 1);
+    expect(e.state.eventTarget, 2);
     expect(e.state.phase, 'playing');
+    expect(e.yearEventPending, isTrue);
+    expect(e.canAgeUp, isFalse);
+    e.drawEvent();
+    e.choose(e.choicesFor(e.currentEvent()!).firstWhere((c) => c.enabled).choice.id);
+    expect(e.canAgeUp, isTrue);
+    expect(e.extraBeatAvailable, isFalse);
   });
 
-  test('empire hire pay and invest stay on the cash ledger', () {
+  test('empire hire pay and invest stay one cash tap a year', () {
     final e = fresh(seed: 6);
     e.state.stats.money = 4000;
-    expect(e.hireHand(), isNull);
+    expect(e.hireHand('enforcer'), isNull);
     expect(e.state.crew, hasLength(1));
+    expect(e.state.crew.first.role, 'enforcer');
+    final hired = e.state.people[e.state.crew.first.personId];
+    expect(hired, isNotNull);
+    expect(hired!.relation, 'crew');
+    expect(hired.portraitKey, isNotEmpty);
+    expect(Art.portraitKeys.contains(hired.portraitKey), isTrue);
     expect(e.state.stats.money, 4000 - GameEngine.hireCost);
+    expect(e.empireUsed, isTrue);
     final id = e.state.crew.first.personId;
-    final loyalty = e.state.crew.first.loyalty;
-    expect(e.payBonus(id), isNull);
-    expect(e.state.crew.first.loyalty, greaterThan(loyalty));
+    expect(e.payBonus(id), 'The books already moved this year.');
     e.debugBusiness('club');
+    expect(e.investFront(e.state.businesses.first.id), 'The books already moved this year.');
+    e.state.flags.remove('empire_year_${e.state.year}');
     final income = e.state.businesses.first.yearlyIncome;
     expect(e.investFront(e.state.businesses.first.id), isNull);
     expect(e.state.businesses.first.yearlyIncome, greaterThan(income));
@@ -331,14 +356,10 @@ void main() {
     expect(e.hireHand(), isNull);
     expect(e.pressTurf('docks'), isNull);
     expect(e.state.territories.firstWhere((t) => t.id == 'docks').controller, 'player');
-    expect(e.coolTurf('docks'), isNull);
+    expect(e.coolTurf('docks'), 'You already spent the year\'s street.');
     final living = e.state.people.values.where((p) => p.id != e.state.playerId && p.isAlive).toList();
     expect(e.sitWith(living.first.id), isNull);
     expect(e.satThisYear, isTrue);
-    expect(e.satPersonId(), living.first.id);
-    expect(e.satPerson()?.firstName, living.first.firstName);
-    expect(e.sitScene(living.first).id, 'sit');
-    expect(e.sitWith(living.last.id), 'You already sat with someone this year.');
     expect(e.giftedThisYear, isFalse);
     expect(e.giftPerson(living.last.id), isNull);
     expect(e.giftedThisYear, isTrue);
@@ -420,6 +441,8 @@ void main() {
     expect(e.state.stats.money, 2000 - GameEngine.frontCost);
     expect(e.availableFrontTypes().contains('laundry'), isFalse);
     e.state.stats.money = 40;
+    expect(e.buyFront(), 'The books already moved this year.');
+    e.state.flags.remove('empire_year_${e.state.year}');
     expect(e.buyFront(), 'Need \$800 to open a front.');
   });
 
@@ -468,5 +491,477 @@ void main() {
     expect(Art.portraitKeyFor(e.state.people['p_foil']!), 'vale');
     expect(Art.portraitKeyFor(e.state.people['p_cass']!), 'cass');
     expect(e.activities().any((a) => a.id == 'family_time'), isTrue);
+  });
+
+  test('the chair at fifty-two keeps the same head, aged', () {
+    final e = fresh(seed: 2);
+    final p = e.state.player;
+    expect(Art.portraitKeyFor(p, year: e.state.year), 'player_man');
+    p.birthYear = e.state.year - 55;
+    expect(Art.portraitKeyFor(p, year: e.state.year), 'player_man_old');
+  });
+
+  test('ceremonial ending is assigned before the heir picker', () {
+    final e = fresh(seed: 42);
+    e.debugMarry();
+    e.debugBirth();
+    final child = e.state.people.values.firstWhere((p) => p.relation == 'child');
+    for (var i = 0; i < 18; i++) {
+      e.ageUp();
+      e.state.phase = 'playing';
+      e.state.awaitingHeir = false;
+    }
+    e.debugKill();
+    expect(e.state.endingId, isNotNull);
+    expect(e.state.phase, 'ending');
+    expect(e.state.awaitingHeir, isTrue);
+    expect(e.eligibleHeirs().any((p) => p.id == child.id), isTrue);
+    e.dismissEnding();
+    expect(e.state.phase, 'heir');
+  });
+
+  test('lawyer quality shortens a sentence', () {
+    final e = fresh(seed: 1);
+    expect(e.sentenceAfterCounsel(3), 3);
+    e.state.lawyerQuality = 50;
+    expect(e.sentenceAfterCounsel(3), 1);
+    e.state.lawyerQuality = 100;
+    expect(e.sentenceAfterCounsel(2), 0);
+  });
+
+  test('first hire fills the lookout seat', () {
+    final e = fresh(seed: 6);
+    e.state.stats.money = 1000;
+    expect(e.hireHand(), isNull);
+    expect(e.state.crew.first.role, 'lookout');
+  });
+
+  test('high bond Mira can take the vows', () {
+    final e = fresh(seed: 2);
+    e.state.people['p_mira']!.bond = 80;
+    e.debugMarry();
+    expect(e.state.player.spouseId, 'p_mira');
+    expect(e.state.people['p_mira']!.relation, 'spouse');
+  });
+
+  test('chapter pin and empire checks exist', () {
+    final e = fresh(seed: 2);
+    expect(e.chapterPin(), contains('Prologue'));
+    expect(e.empireChecks(), hasLength(4));
+    expect(e.lifeArt(), isNotEmpty);
+    e.debugPrison(2);
+    expect(e.musicBed(), 'prison');
+  });
+
+  test('bloodline ends when no adult kin remain', () {
+    final e = fresh(seed: 3);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.debugTerritory('docks');
+    for (final p in e.state.people.values) {
+      if (p.id != e.state.playerId) {
+        p.isAlive = false;
+        p.lifePath = 'deceased';
+      }
+    }
+    e.debugKill();
+    expect(e.state.endingId, 'bloodline_ends');
+    expect(e.state.awaitingHeir, isFalse);
+    expect(e.state.phase, 'ending');
+    e.dismissEnding();
+    expect(e.state.phase, 'ending');
+  });
+
+  test('after prologue the year needs one city verb', () {
+    final e = fresh(seed: 11);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.seenEvents.addAll({
+      'prologue_rain',
+      'prologue_heat',
+      'prologue_loyalty',
+      'prologue_name',
+    });
+    e.state.year = 2006;
+    expect(e.yearVerbRequired, isTrue);
+    e.drawEvent();
+    e.choose(e.choicesFor(e.currentEvent()!).firstWhere((c) => c.enabled).choice.id);
+    expect(e.canAgeUp, isFalse);
+    expect(e.sitWith('p_mentor'), isNull);
+    expect(e.yearVerbUsed, isFalse);
+    expect(e.canAgeUp, isFalse);
+    expect(e.doActivity('side_hustle').skipped, isFalse);
+    expect(e.yearVerbUsed, isTrue);
+    expect(e.canAgeUp, isTrue);
+  });
+
+  test('press and cool spend the same year verb', () {
+    final e = fresh(seed: 12);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.stats.money = 4000;
+    e.state.eventsThisYear = 1;
+    expect(e.hireHand(), isNull);
+    expect(e.pressTurf('docks'), isNull);
+    expect(e.streetMoveThisYear, isTrue);
+    expect(e.yearVerbUsed, isTrue);
+    expect(e.sitWith('p_mira'), isNull);
+    expect(e.satThisYear, isTrue);
+    e.state.year += 1;
+    e.state.activityUsed = false;
+    e.state.eventsThisYear = 1;
+    e.debugTerritory('old_quarter');
+    expect(e.coolTurf('old_quarter'), isNull);
+    expect(e.yearVerbUsed, isTrue);
+  });
+
+  test('retain counsel only bumps lawyer quality once', () {
+    final e = fresh(seed: 3);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.stats.money = 5000;
+    final before = e.state.lawyerQuality;
+    final r = e.doActivity('lawyer');
+    expect(r.skipped, isFalse);
+    expect(e.state.lawyerQuality, before + 25);
+  });
+
+  test('generation two events sit behind minGeneration', () {
+    final c = loadCatalog();
+    expect(c['gen2_chair_test'], isNotNull);
+    final e = fresh(seed: 4);
+    expect(e.eventEligible(c['gen2_chair_test']!), isFalse);
+    e.state.generation = 2;
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    expect(e.eventEligible(c['gen2_chair_test']!), isTrue);
+    expect(c['gen3_chair_test'], isNotNull);
+    expect(e.eventEligible(c['gen3_chair_test']!), isFalse);
+    e.state.generation = 3;
+    expect(e.eventEligible(c['gen3_chair_test']!), isTrue);
+  });
+
+  test('laundry keys cost matches the empire front', () {
+    final c = loadCatalog();
+    final buy = c['laundry_keys']!.choices.firstWhere((ch) => ch.id == 'buy');
+    expect(buy.outcomes.first.stats['money'], -GameEngine.frontCost);
+  });
+
+  test('honest hours no longer beats the rent', () {
+    final e = fresh(seed: 2);
+    final act = e.activities().firstWhere((a) => a.id == 'side_hustle');
+    expect(act.outcomes.first.stats['money'], 360);
+  });
+
+  test('walk choices sting a rival', () {
+    final e = fresh(seed: 9);
+    final before = e.hottestRival()!.hostility;
+    e.drawEvent();
+    final walk = e.choicesFor(e.currentEvent()!).where((c) => c.choice.id == 'walk' && c.enabled);
+    if (walk.isEmpty) return;
+    e.choose(walk.first.choice.id);
+    expect(e.hottestRival()!.hostility, greaterThan(before));
+  });
+
+  test('after prologue a hot year needs a second card', () {
+    final e = fresh(seed: 11);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.seenEvents.addAll({
+      'prologue_rain',
+      'prologue_heat',
+      'prologue_loyalty',
+      'prologue_name',
+    });
+    e.state.year = 2006;
+    e.state.stats.heat = 90;
+    e.drawEvent();
+    e.choose(e.choicesFor(e.currentEvent()!).firstWhere((c) => c.enabled).choice.id);
+    expect(e.doActivity('side_hustle').skipped, isFalse);
+    expect(e.yearVerbUsed, isTrue);
+    expect(e.extraBeatAvailable, isTrue);
+    expect(e.canAgeUp, isFalse);
+    e.drawEvent();
+    e.choose(e.choicesFor(e.currentEvent()!).firstWhere((c) => c.enabled).choice.id);
+    expect(e.extraBeatAvailable, isFalse);
+    expect(e.canAgeUp, isTrue);
+  });
+
+  test('street lift no longer buys a hire by itself', () {
+    final e = fresh(seed: 2);
+    final act = e.activities().firstWhere((a) => a.id == 'petty_theft');
+    expect(act.outcomes.first.stats['money'], 420);
+    e.state.stats.money = 4000;
+    expect(e.hireHand('lookout'), isNull);
+    final hard = e.activities().firstWhere((a) => a.id == 'robbery');
+    expect(hard.outcomes.first.stats['money'], 1600);
+    final night = e.activities().firstWhere((a) => a.id == 'smuggle');
+    expect(night.outcomes.first.stats['money'], 1100);
+  });
+
+  test('loud story cards mix the take', () {
+    final c = loadCatalog();
+    expect(c['backroom_pickup']!.choices.first.outcomes, hasLength(2));
+    expect(c['patrol_stop']!.choices.first.outcomes, hasLength(2));
+  });
+
+  test('event stills keep their own files', () {
+    expect(Art.event('street'), endsWith('street.png'));
+    expect(Art.event('docks'), endsWith('docks.png'));
+    expect(Art.event('heist'), endsWith('heist.png'));
+    expect(Art.event('court'), endsWith('court.png'));
+    expect(Art.event('legacy'), endsWith('empty_chair.png'));
+    expect(Art.event('laundry'), endsWith('laundry.png'));
+    expect(Art.event('forgotten_desk'), endsWith('forgotten_desk.png'));
+    expect(Art.event('timeclock'), endsWith('timeclock.png'));
+    expect(Art.event('prison_yard'), endsWith('prison_yard.png'));
+    expect(Art.event('rival'), endsWith('betrayal.png'));
+    expect(Art.event('family'), endsWith('family_dinner.png'));
+    expect(Art.event('crime'), endsWith('crime_night.png'));
+  });
+
+  test('held street paints the Life still', () {
+    final e = fresh(seed: 4);
+    expect(e.lifeArt(), 'skyline');
+    e.debugTerritory('old_quarter');
+    expect(e.lifeArt(), 'old_quarter');
+    expect(e.lifeStill(), contains('districts/old_quarter.png'));
+    e.debugPrison(1);
+    expect(e.lifeArt(), 'prison');
+  });
+
+  test('honest hours can miss the paycheck', () {
+    final e = fresh(seed: 2);
+    final act = e.activities().firstWhere((a) => a.id == 'side_hustle');
+    expect(act.outcomes.length, 2);
+    expect(act.outcomes.first.stats['money'], lessThan(400));
+  });
+
+  test('a quiet job lets a house take an open street', () {
+    final e = fresh(seed: 9);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.year = 2001;
+    e.state.stats.money = 4000;
+    final openBefore = e.state.territories.where((t) => t.controller == null).map((t) => t.id).toSet();
+    expect(openBefore, isNotEmpty);
+    expect(e.doActivity('side_hustle').skipped, isFalse);
+    e.ageUp();
+    expect(e.state.lastYearLog.any((l) => l.contains('clocked in')), isTrue);
+    final openAfter = e.state.territories.where((t) => t.controller == null).map((t) => t.id).toSet();
+    expect(openAfter.length, lessThan(openBefore.length));
+  });
+
+  test('a street lift does not donate the map', () {
+    final e = fresh(seed: 9);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.year = 2001;
+    e.state.stats.nerve = 80;
+    expect(e.doActivity('petty_theft').skipped, isFalse);
+    e.ageUp();
+    expect(e.state.lastYearLog.any((l) => l.contains('clocked in')), isFalse);
+  });
+
+  test('prison work can bruise and letters can still find you', () {
+    final e = fresh(seed: 3);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done')
+      ..add('has_heir_child');
+    e.debugPrison(2);
+    final work = e.activities().firstWhere((a) => a.id == 'prison_work');
+    expect(work.outcomes.length, 2);
+    expect(e.eventEligible(e.catalog['family_lawyer_letter']!), isTrue);
+    expect(e.eventEligible(e.catalog['corner_recruit']!), isFalse);
+  });
+
+  test('assign can name the front', () {
+    final e = fresh(seed: 6);
+    e.state.stats.money = 8000;
+    expect(e.hireHand(), isNull);
+    e.debugBusiness('club');
+    final id = e.state.crew.first.personId;
+    expect(e.assignCrew(id, e.state.businesses.first.id), isNull);
+    expect(e.state.crew.first.assignedBizId, e.state.businesses.first.id);
+    expect(e.assignCrew(id, ''), isNull);
+    expect(e.state.crew.first.assignedBizId, isNull);
+  });
+
+  test('four quiet years on an empty board close the file', () {
+    final e = fresh(seed: 9);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.year = 2001;
+    e.state.stats.money = 4000;
+    for (var i = 0; i < 3; i++) {
+      expect(e.doActivity('side_hustle').skipped, isFalse);
+      e.ageUp();
+      expect(e.state.phase, isNot('ending'));
+      expect(e.state.endingId, isNull);
+    }
+    expect(e.doActivity('side_hustle').skipped, isFalse);
+    e.ageUp();
+    expect(e.state.endingId, 'forgotten');
+    expect(e.state.awaitingHeir, isFalse);
+    expect(e.state.phase, 'ending');
+    expect(e.continueLabel(), 'Game over');
+  });
+
+  test('a front on the board keeps quiet years from closing the file', () {
+    final e = fresh(seed: 9);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.year = 2001;
+    e.state.stats.money = 8000;
+    expect(e.hireHand(), isNull);
+    e.debugBusiness('club');
+    expect(e.assignCrew(e.state.crew.first.personId, e.state.businesses.first.id), isNull);
+    for (var i = 0; i < 4; i++) {
+      expect(e.doActivity('side_hustle').skipped, isFalse);
+      e.ageUp();
+    }
+    expect(e.state.endingId, isNull);
+    expect(e.state.phase, isNot('ending'));
+    expect(e.state.awaitingHeir, isFalse);
+  });
+
+  test('walking the year five times with nothing on the board is game over', () {
+    final e = fresh(seed: 4);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done')
+      ..add('yield_count_5');
+    e.ageUp();
+    expect(e.state.endingId, 'forgotten');
+    expect(e.state.awaitingHeir, isFalse);
+    expect(e.state.phase, 'ending');
+  });
+
+  test('death with no name on the board is game over, not an heir', () {
+    final e = fresh(seed: 3);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.debugKill();
+    expect(e.state.endingId, 'forgotten');
+    expect(e.state.awaitingHeir, isFalse);
+    expect(e.state.phase, 'ending');
+  });
+
+  test('death with a street still offers the chair', () {
+    final e = fresh(seed: 3);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.debugTerritory('docks');
+    e.debugKill();
+    expect(e.state.awaitingHeir, isTrue);
+    expect(e.state.endingId, isNot('forgotten'));
+    expect(e.eligibleHeirs(), isNotEmpty);
+  });
+
+  test('quiet ledger is mixed and no longer prints a fortune', () {
+    final e = fresh(seed: 2);
+    e.state.stats.intelligence = 60;
+    final act = e.activities().firstWhere((a) => a.id == 'cyber');
+    expect(act.outcomes.length, 3);
+    expect(act.outcomes.first.stats['money'], 1200);
+    expect(act.outcomes.any((o) => o.arrest), isTrue);
+  });
+
+  test('walk the books does not pay a salary', () {
+    final e = fresh(seed: 2);
+    e.debugBusiness('club');
+    final act = e.activities().firstWhere((a) => a.id == 'manage');
+    expect(act.outcomes.first.stats['money'], isNull);
+  });
+
+  test('an unwatched front pays half and says so', () {
+    final e = fresh(seed: 8);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.debugBusiness('club');
+    e.ageUp();
+    expect(e.state.lastYearLog.any((l) => l.contains('without a hand')), isTrue);
+  });
+
+  test('squeeze spends the street and heats the tile', () {
+    final e = fresh(seed: 4);
+    e.debugTerritory('docks');
+    final heat = e.state.territories.firstWhere((t) => t.id == 'docks').heat;
+    expect(e.squeezeTurf('docks'), isNull);
+    expect(e.yearVerbUsed, isTrue);
+    expect(e.state.territories.firstWhere((t) => t.id == 'docks').heat, greaterThan(heat));
+    expect(e.quietTurf('docks'), isNotNull);
+  });
+
+  test('war season marks a street', () {
+    final e = fresh(seed: 6);
+    e.debugStartWar();
+    expect(e.warTarget(), isNotNull);
+    expect(e.warLine(), contains('War season'));
+  });
+
+  test('five honest years open a quieter door', () {
+    final e = fresh(seed: 9);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.year = 2001;
+    e.state.stats.money = 8000;
+    expect(e.hireHand(), isNull);
+    e.debugBusiness('laundry');
+    expect(e.assignCrew(e.state.crew.first.personId, e.state.businesses.first.id), isNull);
+    for (var i = 0; i < 5; i++) {
+      expect(e.doActivity('side_hustle').skipped, isFalse);
+      e.ageUp();
+    }
+    expect(e.state.flags.contains('honest_rung_1'), isTrue);
+    expect(e.state.pending.any((p) => p.eventId == 'promotion_shift'), isTrue);
+  });
+
+  test('midlife pinch asks a second card', () {
+    final e = fresh(seed: 11);
+    e.state.flags
+      ..remove('chapter_prologue')
+      ..add('prologue_done');
+    e.state.seenEvents.addAll({
+      'prologue_rain',
+      'prologue_heat',
+      'prologue_loyalty',
+      'prologue_name',
+    });
+    e.state.year = 2014;
+    e.debugMarry();
+    e.debugBirth();
+    final kid = e.state.people.values.firstWhere((p) => p.relation == 'child');
+    kid.birthYear = 2000;
+    e.state.stats.heat = 20;
+    expect(e.state.age, 34);
+    expect(e.midlifePinch, isTrue);
+    e.drawEvent();
+    e.choose(e.choicesFor(e.currentEvent()!).firstWhere((c) => c.enabled).choice.id);
+    expect(e.doActivity('side_hustle').skipped, isFalse);
+    expect(e.extraBeatAvailable, isTrue);
+    expect(e.canAgeUp, isFalse);
+  });
+
+  test('war and vale cards mix the take', () {
+    final c = loadCatalog();
+    expect(c['war_threat_card']!.choices.first.outcomes, hasLength(2));
+    expect(c['midlife_vale_file']!.choices.first.outcomes, hasLength(2));
+    expect(c['debt_collector']!.choices, hasLength(3));
   });
 }

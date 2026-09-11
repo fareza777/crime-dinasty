@@ -1,0 +1,30 @@
+{
+  "asset": "vo/prologue_name.mp3",
+  "lines": [
+    {
+      "text": "A cheap cake in a walk-up.",
+      "start": 0.0,
+      "end": 1.533
+    },
+    {
+      "text": "Crowe sends a note: the city has a slot for your surname.",
+      "start": 1.974,
+      "end": 4.981
+    },
+    {
+      "text": "Vale's car idles half a block away and does not come in.",
+      "start": 5.422,
+      "end": 8.789
+    },
+    {
+      "text": "The prologue is over.",
+      "start": 9.23,
+      "end": 10.472
+    },
+    {
+      "text": "The campaign is not.",
+      "start": 10.913,
+      "end": 12.446
+    }
+  ]
+}

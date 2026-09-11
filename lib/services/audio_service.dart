@@ -12,6 +12,7 @@ class AudioService {
   bool haptics = true;
   double sfxVolume = 0.55;
   double musicVolume = 0.28;
+  String _bed = 'docks';
 
   bool get enabled => sfxOn;
   set enabled(bool v) => sfxOn = v;
@@ -28,15 +29,39 @@ class AudioService {
   }
 
   Future<void> startMusic() async {
-    if (!musicOn) return;
+    await setBed(_bed);
+  }
+
+  Future<void> setBed(String bed) async {
+    if (!musicOn) {
+      _bed = bed;
+      return;
+    }
+    final file = switch (bed) {
+      'war' => 'music/war.wav',
+      'prison' => 'music/prison.wav',
+      _ => 'music/ambience.wav',
+    };
+    final restart = _bed != bed || _music == null;
+    _bed = bed;
     try {
       _music ??= AudioPlayer();
       await _music!.setReleaseMode(ReleaseMode.loop);
       await _music!.setPlayerMode(PlayerMode.mediaPlayer);
-      await _music!.setVolume(musicVolume);
-      await _music!.play(AssetSource('music/ambience.wav'));
+      final vol = bed == 'prison'
+          ? musicVolume * 0.62
+          : (bed == 'war' ? (musicVolume * 1.18).clamp(0.0, 1.0) : musicVolume);
+      await _music!.setVolume(vol);
+      if (restart) {
+        await _music!.play(AssetSource(file));
+      }
     } catch (e) {
       debugPrint('music skipped: $e');
+      if (file != 'music/ambience.wav') {
+        try {
+          await _music?.play(AssetSource('music/ambience.wav'));
+        } catch (_) {}
+      }
     }
   }
 
@@ -57,7 +82,9 @@ class AudioService {
   Future<void> setMusicOn(bool on) async {
     musicOn = on;
     if (on) {
-      await startMusic();
+      final bed = _bed.isEmpty ? 'docks' : _bed;
+      _bed = '';
+      await setBed(bed);
     } else {
       await stopMusic();
     }
@@ -67,6 +94,25 @@ class AudioService {
     musicVolume = v.clamp(0, 1);
     try {
       await _music?.setVolume(musicOn ? musicVolume : 0);
+    } catch (_) {}
+  }
+
+  Future<void> duckForVo() async {
+    try {
+      if (_music != null && musicOn) {
+        await _music!.setVolume((musicVolume * 0.16).clamp(0.0, 1.0));
+      }
+    } catch (_) {}
+  }
+
+  Future<void> unduck() async {
+    try {
+      if (_music != null) {
+        final vol = _bed == 'prison'
+            ? musicVolume * 0.62
+            : (_bed == 'war' ? (musicVolume * 1.18).clamp(0.0, 1.0) : musicVolume);
+        await _music!.setVolume(musicOn ? vol : 0);
+      }
     } catch (_) {}
   }
 
@@ -111,5 +157,16 @@ class AudioService {
         await HapticFeedback.heavyImpact();
       } catch (_) {}
     }
+  }
+
+  Future<void> disposePlayers() async {
+    try {
+      await _sfx?.dispose();
+    } catch (_) {}
+    try {
+      await _music?.dispose();
+    } catch (_) {}
+    _sfx = null;
+    _music = null;
   }
 }

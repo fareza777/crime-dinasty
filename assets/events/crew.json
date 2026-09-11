@@ -183,7 +183,8 @@
     "category": "crew",
     "tags": [
       "betrayal",
-      "police"
+      "police",
+      "inside_ok"
     ],
     "weight": 8,
     "once": false,
@@ -284,7 +285,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "home",
+    "art": "club",
     "choices": [
       {
         "id": "oath",
@@ -439,7 +440,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "home",
+    "art": "club",
     "choices": [
       {
         "id": "visit",
@@ -530,7 +531,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "office",
+    "art": "club",
     "choices": [
       {
         "id": "absorb",
@@ -715,7 +716,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "home",
+    "art": "club",
     "choices": [
       {
         "id": "honor",
@@ -778,7 +779,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "office",
+    "art": "club",
     "choices": [
       {
         "id": "trust",

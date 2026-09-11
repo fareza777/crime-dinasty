@@ -13,7 +13,7 @@
     "cooldownYears": 4,
     "minAge": 22,
     "maxAge": 85,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "buy",
@@ -27,8 +27,8 @@
             "body": "You take on the bills and the chance to build something that keeps its lights on.",
             "log": "Bought a neighborhood laundry.",
             "stats": {
-              "money": -6500,
-              "assets": 5000,
+              "money": -800,
+              "assets": 800,
               "reputation": 2
             },
             "addFlags": [],
@@ -66,8 +66,8 @@
             "body": "The owner stays on to teach you which machines lie and which people do.",
             "log": "Partnered in a neighborhood laundry.",
             "stats": {
-              "money": -3200,
-              "assets": 2800,
+              "money": -400,
+              "assets": 400,
               "charisma": 2
             },
             "addFlags": [],
@@ -76,7 +76,7 @@
           }
         ],
         "requires": {
-          "minMoney": 3200,
+          "minMoney": 400,
           "traitsAny": [
             "Charming",
             "Compassionate"
@@ -285,7 +285,7 @@
     "cooldownYears": 4,
     "minAge": 25,
     "maxAge": 85,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "bid",
@@ -343,7 +343,7 @@
     "cooldownYears": 4,
     "minAge": 30,
     "maxAge": 90,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "fund",
@@ -432,7 +432,7 @@
     "cooldownYears": 4,
     "minAge": 32,
     "maxAge": 90,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "join",
@@ -528,7 +528,7 @@
     "cooldownYears": 4,
     "minAge": 24,
     "maxAge": 90,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "hire",
@@ -615,7 +615,7 @@
     "cooldownYears": 4,
     "minAge": 40,
     "maxAge": 90,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "accept",

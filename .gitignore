@@ -46,3 +46,18 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Local secrets and throwaway audit output
+.env
+tool/.eleven*
+*.secrets
+tool/_audit_*
+
+# Local build cache and scratch space
+.gradle-home/
+.tmp/
+
+# Release binaries stay out of git (see artifacts/README-SRC.txt)
+artifacts/*.apk
+artifacts/*.aab
+

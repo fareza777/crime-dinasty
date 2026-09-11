@@ -1,0 +1,30 @@
+{
+  "asset": "vo/war_threat_card.mp3",
+  "lines": [
+    {
+      "text": "A rival house sent a note that is not a note.",
+      "start": 0.0,
+      "end": 2.775
+    },
+    {
+      "text": "It is a season.",
+      "start": 3.053,
+      "end": 4.029
+    },
+    {
+      "text": "The docks already know.",
+      "start": 4.18,
+      "end": 5.538
+    },
+    {
+      "text": "Heat is a smell.",
+      "start": 5.863,
+      "end": 7.024
+    },
+    {
+      "text": "You can answer, pay, or pretend the rain is louder.",
+      "start": 7.465,
+      "end": 10.681
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'game_controller.dart';
 import 'art.dart';
 import 'screens/hub.dart';
+import 'screens/opening.dart';
 import 'screens/title_screens.dart';
 import 'theme/app_theme.dart';
 import 'widgets/coach_mark.dart';
@@ -74,7 +75,52 @@ class _Root extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             Image.asset(Art.splash, fit: BoxFit.cover, errorBuilder: (_, _, _) => ColoredBox(color: Palette.navy)),
-            Center(child: CircularProgressIndicator(color: Palette.gold)),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Palette.navy.withValues(alpha: 0.15),
+                    Palette.navy.withValues(alpha: 0.55),
+                    Palette.navy.withValues(alpha: 0.78),
+                  ],
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 36),
+                child: Column(
+                  children: [
+                    const Spacer(),
+                    Image.asset(Art.logoPlate, height: 72, errorBuilder: (_, _, _) => const SizedBox.shrink()),
+                    const SizedBox(height: 16),
+                    Text(
+                      'VICE DYNASTY',
+                      style: TextStyle(
+                        fontFamily: 'Cinzel',
+                        color: Palette.gold,
+                        fontSize: 28,
+                        letterSpacing: 2.4,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'The rain is still deciding.',
+                      style: TextStyle(color: Palette.cream.withValues(alpha: 0.8), fontSize: 13),
+                    ),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(strokeWidth: 1.6, color: Palette.gold.withValues(alpha: 0.7)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -90,6 +136,9 @@ class _Root extends StatelessWidget {
       case AppView.play:
         page = HubShell(c: c);
         break;
+      case AppView.opening:
+        page = OpeningScreen(c: c);
+        break;
       case AppView.title:
       case AppView.boot:
         page = TitleScreen(c: c);
@@ -98,11 +147,12 @@ class _Root extends StatelessWidget {
     return Stack(
       children: [
         page,
-        if (c.tourActive && c.tourEnabled && !c.showHelp && (c.view == AppView.newGame || c.view == AppView.play))
+        if (c.tourActive && c.tourEnabled && !c.showHelp && c.view == AppView.play)
           Positioned.fill(
             child: CoachMarkLayer(
               stepIndex: c.tourIndex,
               targetKey: c.tourTargetKey(),
+              measureToken: c.tourMeasureToken,
               onNext: c.nextTour,
               onSkip: c.skipTour,
             ),

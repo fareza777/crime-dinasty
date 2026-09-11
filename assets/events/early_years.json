@@ -4,13 +4,16 @@
     "title": "A Folder With No Name",
     "body": "A Midtown clerk leaves a folder on a wet bench like it grew there. Inside: a shipping window and a name that is not yours yet. The rain makes the ink look older than it is.",
     "category": "life",
-    "tags": ["early", "midtown"],
+    "tags": [
+      "early",
+      "midtown"
+    ],
     "weight": 14,
     "once": false,
     "cooldownYears": 7,
     "minAge": 18,
     "maxAge": 28,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "copy",
@@ -22,7 +25,11 @@
             "title": "A quiet copy",
             "body": "You keep the hour, not the paper. A week later a crate moves when it shouldn't. Nobody thanks you. The books notice.",
             "log": "Copied a Midtown shipping window.",
-            "stats": { "money": 160, "intelligence": 3, "heat": 3 }
+            "stats": {
+              "money": 160,
+              "intelligence": 3,
+              "heat": 3
+            }
           }
         ]
       },
@@ -36,7 +43,11 @@
             "title": "A clean errand",
             "body": "The clerk looks at you like you failed a test and passed another. Vale would have liked the shoes. The city does not.",
             "log": "Returned a nameless Midtown folder.",
-            "stats": { "loyalty": 3, "stress": -2, "reputation": 1 }
+            "stats": {
+              "loyalty": 3,
+              "stress": -2,
+              "reputation": 1
+            }
           }
         ]
       }
@@ -47,13 +58,16 @@
     "title": "The Flats Owe Heat",
     "body": "A cousin of a cousin in The Flats has a stove that works and a landlord who does not. They ask if the Hart name is a shield or a story. The hallway smells like wet wool.",
     "category": "family",
-    "tags": ["early", "flats"],
+    "tags": [
+      "early",
+      "flats"
+    ],
     "weight": 12,
     "once": true,
     "cooldownYears": 12,
     "minAge": 18,
     "maxAge": 26,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "pay",
@@ -65,7 +79,11 @@
             "title": "Warm rooms remember",
             "body": "You leave cash that will not come back. They will mention your name at a table you are not invited to. That is how streets start.",
             "log": "Paid a Flats stove through the month.",
-            "stats": { "money": -90, "loyalty": 4, "reputation": 2 }
+            "stats": {
+              "money": -90,
+              "loyalty": 4,
+              "reputation": 2
+            }
           }
         ]
       },
@@ -79,7 +97,10 @@
             "title": "A colder hallway",
             "body": "They nod like they expected it. The stove goes out two nights later. You sleep fine. The Flats keep the receipt.",
             "log": "Turned down a Flats stove.",
-            "stats": { "stress": -1, "reputation": -1 }
+            "stats": {
+              "stress": -1,
+              "reputation": -1
+            }
           }
         ]
       }
@@ -90,7 +111,10 @@
     "title": "Harbor Lights Wants a Face",
     "body": "Mira Keene sends a boy with a note: one booth, one hour, no guns on the table. Harbor Lights is loud enough that a conversation can hide. She wants to know if you are still eighteen in the head.",
     "category": "life",
-    "tags": ["early", "mira"],
+    "tags": [
+      "early",
+      "mira"
+    ],
     "weight": 13,
     "once": true,
     "cooldownYears": 20,
@@ -108,7 +132,11 @@
             "title": "A booth that hears",
             "body": "Mira talks around a ferry schedule and a man who drinks too neat. You leave with a time and no handshake. That is affection, Harbor-style.",
             "log": "Sat a Harbor Lights booth with Mira Keene.",
-            "stats": { "charisma": 4, "intelligence": 2, "heat": 2 }
+            "stats": {
+              "charisma": 4,
+              "intelligence": 2,
+              "heat": 2
+            }
           }
         ]
       },
@@ -122,7 +150,9 @@
             "title": "The booth fills anyway",
             "body": "Someone else takes your hour. Mira does not write again this year. The club keeps the music. You keep your door.",
             "log": "Skipped Mira's Harbor Lights booth.",
-            "stats": { "stress": -2 }
+            "stats": {
+              "stress": -2
+            }
           }
         ]
       }
@@ -133,7 +163,10 @@
     "title": "Ironyard After Hours",
     "body": "A foundry gate is unlocked for twenty minutes because somebody got paid to forget a key. The night shift wants a lookout who does not talk. The pay is ugly. The heat is honest.",
     "category": "crime",
-    "tags": ["early", "ironyard"],
+    "tags": [
+      "early",
+      "ironyard"
+    ],
     "weight": 12,
     "once": false,
     "cooldownYears": 6,
@@ -151,7 +184,11 @@
             "title": "Ugly pay, clean exit",
             "body": "A truck leaves heavier than it arrived. You get an envelope that smells like oil. Nobody learned your face. The sirens arrive fashionable and late.",
             "log": "Looked out an Ironyard gate for ugly pay.",
-            "stats": { "money": 280, "nerve": 3, "heat": 6 }
+            "stats": {
+              "money": 280,
+              "nerve": 3,
+              "heat": 6
+            }
           },
           {
             "id": "seen",
@@ -159,7 +196,11 @@
             "title": "A light that liked you",
             "body": "A watchman turns a beam at the wrong second. You run. The envelope is thinner. Your name is not on a report, but it is in a mouth.",
             "log": "Ironyard lookout went loud.",
-            "stats": { "money": 90, "heat": 11, "stress": 4 }
+            "stats": {
+              "money": 90,
+              "heat": 11,
+              "stress": 4
+            }
           }
         ]
       },
@@ -173,7 +214,10 @@
             "title": "The gate keeps its secret",
             "body": "You hear later that the truck still moved. Someone else got paid. You kept your pulse. Ironyard does not mind.",
             "log": "Passed on an Ironyard lookout.",
-            "stats": { "stress": -3, "heat": 1 }
+            "stats": {
+              "stress": -3,
+              "heat": 1
+            }
           }
         ]
       }
@@ -184,13 +228,16 @@
     "title": "Westmere Does Not Invite",
     "body": "A card arrives with no stamp: a garden that is not a garden, a time that is not dinner. Westmere wants to see if your surname can sit still among old money. Bennett Lang's handwriting is too neat.",
     "category": "life",
-    "tags": ["early", "westmere"],
+    "tags": [
+      "early",
+      "westmere"
+    ],
     "weight": 11,
     "once": true,
     "cooldownYears": 20,
     "minAge": 19,
     "maxAge": 32,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "go",
@@ -202,7 +249,11 @@
             "title": "Old money watches",
             "body": "You do not drink what they pour first. Lang talks about daylight surnames. You leave with a number and the sense that Westmere files people like wine.",
             "log": "Sat a Westmere garden that was not a garden.",
-            "stats": { "charisma": 3, "reputation": 4, "stress": 2 }
+            "stats": {
+              "charisma": 3,
+              "reputation": 4,
+              "stress": 2
+            }
           }
         ]
       },
@@ -216,7 +267,10 @@
             "title": "Downtown keeps you",
             "body": "The card blackens in a sink. Lang will say you were afraid. The Docks will say you were busy. Both can be true.",
             "log": "Burned a Westmere card.",
-            "stats": { "loyalty": 2, "reputation": -1 }
+            "stats": {
+              "loyalty": 2,
+              "reputation": -1
+            }
           }
         ]
       }

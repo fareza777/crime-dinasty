@@ -39,86 +39,126 @@ class TitleScreen extends StatelessWidget {
             ),
           ),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(22, 28, 22, 18),
-              child: Column(
-                children: [
-                  GoldFrame(
-                    padding: EdgeInsets.zero,
-                    image: Art.titlePoster,
-                    child: Column(
-                      children: [
-                        SceneArt(Art.titlePoster, height: 168, alignment: const Alignment(0, -0.15)),
-                        TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.92, end: 1),
-                          duration: const Duration(milliseconds: 520),
-                          curve: Curves.easeOut,
-                          builder: (context, v, child) =>
-                              Opacity(opacity: v.clamp(0.0, 1.0), child: Transform.scale(scale: v, child: child)),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 8, 10, 12),
-                            child: Column(
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    'VICE DYNASTY',
-                                    textAlign: TextAlign.center,
-                                    maxLines: 1,
-                                    softWrap: false,
-                                    overflow: TextOverflow.visible,
-                                    style: TextStyle(
-                                      fontFamily: 'Cinzel',
-                                      fontSize: 28,
-                                      color: Palette.gold,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 1.1,
+            child: LayoutBuilder(
+              builder: (context, box) {
+                final compact = box.maxHeight < 680;
+                return Padding(
+                  padding: EdgeInsets.fromLTRB(22, compact ? 10 : 16, 22, compact ? 10 : 14),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: GoldFrame(
+                          padding: const EdgeInsets.all(6),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF070B14),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.asset(
+                                    Art.titlePoster,
+                                    fit: BoxFit.contain,
+                                    alignment: Alignment.center,
+                                    filterQuality: FilterQuality.medium,
+                                    errorBuilder: (_, _, _) => Image.asset(
+                                      Art.splash,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, _, _) => const ColoredBox(color: Color(0xFF0B1220)),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'CRIME LIFE SIMULATOR',
-                                  style: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    letterSpacing: 2.4,
-                                    fontSize: 11,
-                                    color: Palette.cream,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: compact ? 8 : 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'VICE DYNASTY',
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.visible,
+                                style: TextStyle(
+                                  fontFamily: 'Cinzel',
+                                  fontSize: compact ? 26 : 32,
+                                  color: Palette.gold,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: compact ? 0.8 : 1.4,
+                                  height: 1.05,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'CRIME LIFE SIMULATOR',
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.visible,
+                                style: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  letterSpacing: compact ? 1.4 : 2.2,
+                                  fontSize: 11,
+                                  color: Palette.cream,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: compact ? 8 : 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Ravenport. One year. One choice. A name that outlives you.',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(color: Palette.cream.withValues(alpha: 0.86), height: 1.35, fontSize: 13),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: compact ? 10 : 16),
+                      PrimaryButton(label: 'NEW GAME', onTap: c.goNew),
+                      SizedBox(height: compact ? 8 : 10),
+                      FutureBuilder(
+                        future: c.saves.read(0),
+                        builder: (context, snap) {
+                          final has = snap.data != null;
+                          return GhostButton(
+                            label: has ? 'Continue' : 'Continue (no save yet)',
+                            onTap: has ? () => c.loadSlot(0) : null,
+                          );
+                        },
+                      ),
+                      SizedBox(height: compact ? 8 : 10),
+                      GhostButton(label: 'Load', onTap: c.goLoad),
+                      SizedBox(height: compact ? 8 : 10),
+                      GhostButton(label: 'Watch opening', onTap: c.replayOpening),
+                      SizedBox(height: compact ? 8 : 12),
+                      Text(
+                        'Offline · Saves on this device · 1.9.11',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Palette.muted, fontSize: 12),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Ravenport. One year. One choice. A name that outlives you.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Palette.cream.withValues(alpha: 0.86), height: 1.35, fontSize: 13),
-                  ),
-                  const Spacer(),
-                  PrimaryButton(label: 'NEW GAME', onTap: c.goNew),
-                  const SizedBox(height: 10),
-                  FutureBuilder(
-                    future: c.saves.read(0),
-                    builder: (context, snap) {
-                      final has = snap.data != null;
-                      return GhostButton(
-                        label: has ? 'Continue' : 'Continue (no save yet)',
-                        onTap: has ? () => c.loadSlot(0) : null,
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  GhostButton(label: 'Load', onTap: c.goLoad),
-                  const SizedBox(height: 12),
-                  Text('Offline · Saves on this device · 1.9.3',
-                      style: TextStyle(color: Palette.muted, fontSize: 12)),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],

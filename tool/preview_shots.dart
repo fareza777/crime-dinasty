@@ -208,7 +208,6 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
     expect(c.engine!.currentEvent(), isNotNull);
-    expect(find.textContaining('pay ·'), findsNothing);
     expect(find.textContaining('2/3'), findsNothing);
     await _shot(tester, shotKey, '04_event_choice.png');
     await _shot(tester, shotKey, '04_event_choice_dark.png');

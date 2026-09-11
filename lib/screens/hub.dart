@@ -19,17 +19,39 @@ class HubShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final e = c.engine!;
+    final wash = Palette.light
+        ? Art.hall
+        : switch (c.hubIndex.clamp(0, 3)) {
+            1 => Art.hall,
+            2 => Art.header('city'),
+            3 => Art.cover,
+            _ => e.lifeStill(),
+          };
+    ColorFilter? weather;
+    if (!Palette.light) {
+      if (e.state.inPrison) {
+        weather = ColorFilter.mode(const Color(0xFF1A3355).withValues(alpha: 0.55), BlendMode.multiply);
+      } else if (e.warPhase != null) {
+        weather = ColorFilter.mode(Palette.red.withValues(alpha: 0.32), BlendMode.multiply);
+      } else if (e.state.stats.heat >= 55) {
+        weather = ColorFilter.mode(const Color(0xFF0B1220).withValues(alpha: 0.42), BlendMode.darken);
+      }
+    }
+    Widget backdrop = Image.asset(
+      wash,
+      fit: BoxFit.cover,
+      opacity: AlwaysStoppedAnimation(Palette.light ? 0.28 : 0.34),
+      errorBuilder: (_, _, _) => ColoredBox(color: Palette.navy),
+    );
+    if (weather != null) {
+      backdrop = ColorFiltered(colorFilter: weather, child: backdrop);
+    }
     return Scaffold(
       body: Stack(
         children: [
+          Positioned.fill(child: backdrop),
           Positioned.fill(
-            child: Opacity(
-              opacity: Palette.light ? 0.08 : 0.28,
-              child: Image.asset(Art.splash, fit: BoxFit.cover, errorBuilder: (_, _, _) => ColoredBox(color: Palette.navy)),
-            ),
-          ),
-          Positioned.fill(
-            child: Container(color: Palette.navy.withValues(alpha: Palette.light ? 0.96 : 0.55)),
+            child: Container(color: Palette.navy.withValues(alpha: Palette.light ? 0.72 : 0.55)),
           ),
           Column(
             children: [
@@ -47,15 +69,32 @@ class HubShell extends StatelessWidget {
               ),
             ],
           ),
-          if (e.state.phase == 'event' && e.currentEvent() != null && c.lastOutcome == null) EventLayer(c: c),
-          if (c.lastOutcome != null) OutcomeLayer(c: c),
-          if (e.state.awaitingHeir && c.lastOutcome == null) HeirLayer(c: c),
-          if (e.state.phase == 'ending' && c.lastOutcome == null) EndingLayer(c: c),
-          if (c.showHelp) HelpSheet(c: c),
-          if (c.showSideSheet) SideActionSheet(c: c),
+          if (e.state.phase == 'event' && e.currentEvent() != null && c.lastOutcome == null)
+            Positioned.fill(child: EventLayer(c: c)),
+          if (c.lastOutcome != null) Positioned.fill(child: OutcomeLayer(c: c)),
+          if (e.state.awaitingHeir && c.lastOutcome == null) Positioned.fill(child: HeirLayer(c: c)),
+          if (e.state.phase == 'ending' && c.lastOutcome == null) Positioned.fill(child: EndingLayer(c: c)),
+          if (c.showHelp) Positioned.fill(child: HelpSheet(c: c)),
+          if (c.showSideSheet) Positioned.fill(child: SideActionSheet(c: c)),
         ],
       ),
-      bottomNavigationBar: _NoirNav(c: c, index: c.hubIndex.clamp(0, 3), onSelect: c.setHub),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          c.ads.banner(
+            visible: !c.ads.adsRemoved &&
+                c.hubIndex != 0 &&
+                !c.tourActive &&
+                !c.showHelp &&
+                !c.showSideSheet &&
+                c.lastOutcome == null &&
+                !(e.state.phase == 'event' && e.currentEvent() != null) &&
+                !e.state.awaitingHeir &&
+                e.state.phase != 'ending',
+          ),
+          _NoirNav(c: c, index: c.hubIndex.clamp(0, 3), onSelect: c.setHub),
+        ],
+      ),
     );
   }
 }
@@ -169,7 +208,40 @@ class LifeScreen extends StatelessWidget {
                       ? [BoxShadow(color: Palette.gold.withValues(alpha: 0.35), blurRadius: 18)]
                       : null,
                 ),
-                child: SceneArt(s.inPrison ? Art.event('prison') : Art.event('skyline'), height: 138, textured: true),
+                child: Stack(
+                  children: [
+                    SceneArt(
+                      e.lifeStill(),
+                      height: 180,
+                      textured: s.inPrison || e.warPhase != null || s.stats.heat >= 55,
+                    ),
+                    if (c.yearFlash)
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Palette.gold.withValues(alpha: 0.16),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    Positioned(
+                      left: 10,
+                      right: 10,
+                      bottom: 8,
+                      child: Text(
+                        s.inPrison
+                            ? 'Inside · year ${s.year}'
+                            : 'Year ${s.year} · heat ${s.stats.heat}${e.warPhase != null ? ' · war' : ''}',
+                        style: TextStyle(
+                          color: Palette.cream,
+                          fontSize: 11,
+                          letterSpacing: 0.6,
+                          shadows: const [Shadow(color: Color(0xCC000000), blurRadius: 6)],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
               AnimatedSwitcher(
@@ -200,6 +272,10 @@ class LifeScreen extends StatelessWidget {
                         children: [
                           Text('THIS YEAR', style: TextStyle(color: Palette.muted, fontSize: 10, letterSpacing: 0.8)),
                           Text(e.ambition(), style: TextStyle(color: Palette.goldSoft, height: 1.35, fontSize: 14)),
+                          const SizedBox(height: 8),
+                          Text(e.chapterPin(), style: TextStyle(color: Palette.cream, fontSize: 12, height: 1.3)),
+                          const SizedBox(height: 8),
+                          Text(e.pressureLine(), style: TextStyle(color: Palette.cream, fontSize: 13, height: 1.35)),
                         ],
                       ),
                     ),
@@ -207,6 +283,7 @@ class LifeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+              _YearMoves(c: c),
               if (e.warLine() != null) ...[
                 GoldFrame(
                   accent: true,
@@ -222,7 +299,6 @@ class LifeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
               ],
-              NarrativePanel(e.cityPressure(), fontSize: 13),
               const SizedBox(height: 10),
               if (last == null)
                 GoldFrame(
@@ -277,6 +353,11 @@ class LifeScreen extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 4),
                                 child: Text('· $line', style: TextStyle(color: Palette.cream, height: 1.35, fontSize: 13)),
                               ),
+                            if (e.lastUnlocks.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              for (final u in e.lastUnlocks)
+                                Text('Unlocked: $u', style: TextStyle(color: Palette.goldSoft, fontSize: 12)),
+                            ],
                           ],
                         ),
                       ),
@@ -310,6 +391,146 @@ class LifeScreen extends StatelessWidget {
   }
 }
 
+class _YearMoves extends StatelessWidget {
+  const _YearMoves({required this.c});
+  final GameController c;
+
+  @override
+  Widget build(BuildContext context) {
+    final e = c.engine!;
+    final cardDone = e.state.eventsThisYear >= 1 && e.state.currentEventId == null;
+    final verb = e.yearVerbUsed;
+    final needVerb = e.yearVerbRequired;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: GoldFrame(
+        image: Art.header('year'),
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('THIS YEAR\'S MOVES', style: TextStyle(color: Palette.muted, fontSize: 10, letterSpacing: 1.0)),
+            const SizedBox(height: 4),
+            Text(
+              !cardDone
+                  ? 'Open the year, then live it. Next year waits until the card is read.'
+                  : (needVerb && !verb
+                      ? 'The card is in. Work or a street — one move — then close the books. Sit is a quiet hour, not the city. Honest hours feed you and the other houses.'
+                      : (e.extraBeatAvailable
+                          ? 'The city is not finished. Take the second card before Next year.'
+                          : (needVerb
+                              ? 'The year\'s move is spent. Next year is open.'
+                              : 'Prologue weather. The card is enough. Sit if you want the hour.'))),
+              style: TextStyle(color: Palette.cream, fontSize: 13, height: 1.35),
+            ),
+            const SizedBox(height: 10),
+            _YearTile(
+              art: e.lifeStill(),
+              title: 'The year\'s card',
+              body: cardDone ? 'Read.' : 'Waiting on Life.',
+              done: cardDone,
+              onTap: e.yearEventPending ? c.seeYear : null,
+            ),
+            _YearTile(
+              art: Art.activityTile('family'),
+              title: 'Sit with someone',
+              body: e.satThisYear
+                  ? 'Sat this year.'
+                  : 'Family · one Sit. Does not close the year.',
+              done: e.satThisYear,
+              onTap: e.satThisYear ? null : () => c.setHub(1),
+            ),
+            _YearTile(
+              art: Art.activityTile('earn'),
+              title: 'A job',
+              body: e.state.activityUsed && !e.streetMoveThisYear
+                  ? 'The extra hour is spent.'
+                  : (verb ? 'The year\'s move is spent.' : 'One job. Spends the year\'s move.'),
+              done: e.state.activityUsed && !e.streetMoveThisYear,
+              onTap: verb ? null : c.openSideSheet,
+            ),
+            _YearTile(
+              art: Art.activityTile('risk'),
+              title: 'A street on the board',
+              body: e.streetMoveThisYear
+                  ? 'Street move spent this year.'
+                  : (verb ? 'The year\'s move is spent.' : 'City · press, squeeze, or keep quiet. Spends the year\'s move.'),
+              done: e.streetMoveThisYear,
+              onTap: verb && !e.streetMoveThisYear ? null : () => c.setHub(2),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _YearTile extends StatelessWidget {
+  const _YearTile({
+    required this.art,
+    required this.title,
+    required this.body,
+    required this.done,
+    this.onTap,
+  });
+  final String art;
+  final String title;
+  final String body;
+  final bool done;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: done ? Palette.gold.withValues(alpha: 0.7) : Palette.line),
+              color: Palette.navy.withValues(alpha: 0.35),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 10, 8),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: PixelIcon(art, size: 44),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: TextStyle(color: Palette.cream, fontSize: 14, fontWeight: FontWeight.w600)),
+                        Text(body, style: TextStyle(color: Palette.muted, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: done ? Palette.gold : Colors.transparent,
+                      border: Border.all(color: done ? Palette.gold : Palette.muted, width: 1.2),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _YearDock extends StatelessWidget {
   const _YearDock({required this.c});
   final GameController c;
@@ -330,39 +551,84 @@ class _YearDock extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            KeyedSubtree(
-              key: c.tourKeys.yearCta,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 240),
-                decoration: BoxDecoration(
-                  boxShadow: see ? [BoxShadow(color: Palette.gold.withValues(alpha: 0.22), blurRadius: 14)] : null,
+            if (see)
+              KeyedSubtree(
+                key: c.tourKeys.yearCta,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 240),
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.22), blurRadius: 14)],
+                  ),
+                  child: PrimaryButton(
+                    label: 'What happens this year',
+                    onTap: c.seeYear,
+                  ),
                 ),
-                child: PrimaryButton(
-                  label: 'What happens this year',
-                  onTap: see ? c.seeYear : null,
+              )
+            else ...[
+              Text(
+                'THE YEAR IS OPEN',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Palette.muted, fontSize: 10, letterSpacing: 1.1),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  MiniAction(
+                    label: e.satThisYear ? 'Sat' : 'Sit',
+                    onTap: e.satThisYear
+                        ? null
+                        : () {
+                            c.setHub(1);
+                          },
+                  ),
+                  MiniAction(
+                    label: e.state.activityUsed && !e.streetMoveThisYear ? 'Job done' : 'A job',
+                    onTap: e.yearVerbUsed ? null : c.openSideSheet,
+                  ),
+                  MiniAction(
+                    label: e.streetMoveThisYear ? 'Street done' : 'A street',
+                    onTap: e.yearVerbUsed && !e.streetMoveThisYear ? null : () => c.setHub(2),
+                  ),
+                ],
+              ),
+              if (e.extraBeatAvailable) ...[
+                const SizedBox(height: 8),
+                PrimaryButton(label: 'The city is not finished', onTap: c.seeYear),
+              ],
+              const SizedBox(height: 8),
+              KeyedSubtree(
+                key: c.tourKeys.nextYear,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 240),
+                  decoration: BoxDecoration(
+                    boxShadow: next ? [BoxShadow(color: Palette.goldSoft.withValues(alpha: 0.28), blurRadius: 14)] : null,
+                  ),
+                  child: PrimaryButton(
+                    label: 'Next year',
+                    color: Palette.goldSoft,
+                    onTap: next ? c.nextYear : null,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            GhostButton(
-              label: e.state.activityUsed ? 'Already did something' : 'Do something',
-              onTap: e.state.activityUsed || e.state.currentEventId != null ? null : c.openSideSheet,
-            ),
-            const SizedBox(height: 8),
-            KeyedSubtree(
-              key: c.tourKeys.nextYear,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 240),
-                decoration: BoxDecoration(
-                  boxShadow: next ? [BoxShadow(color: Palette.goldSoft.withValues(alpha: 0.28), blurRadius: 14)] : null,
+              if (!next) ...[
+                const SizedBox(height: 6),
+                Text(
+                  e.yearEventPending
+                      ? 'Open the year first.'
+                      : (e.yearVerbRequired && !e.yearVerbUsed
+                          ? 'Work or a street first.'
+                          : (e.extraBeatAvailable
+                              ? 'The city is not finished.'
+                              : 'Finish the card first.')),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Palette.muted, fontSize: 11),
                 ),
-                child: PrimaryButton(
-                  label: 'Next year',
-                  color: Palette.goldSoft,
-                  onTap: next ? c.nextYear : null,
-                ),
-              ),
-            ),
+              ],
+            ],
           ],
         ),
       ),
@@ -394,19 +660,19 @@ class HelpSheet extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('1. Tap What happens this year.'),
+                        Text('1. Tap What happens this year and pick a line. The card never tells you what you get.'),
                         SizedBox(height: 6),
-                        Text('2. Pick one option on the card.'),
+                        Text('2. After the card, spend one move: a job or a street. Sit is a quiet hour and does not close the year. Clocking in without a street lets a house take the map.'),
                         SizedBox(height: 6),
-                        Text('3. Optionally Do something, then tap Next year.'),
+                        Text('3. Tap Next year when the year\'s move is spent. Clock-in year after year with no street, no front, no crew and the city files you under weather — Game Over, no heir.'),
                         SizedBox(height: 10),
                         Text(
-                          'Sit with only one person each year. Gift is also once per year, separate from Sit. Empire hire is cash, not the year\'s extra move. Unaffordable buttons say how much more you need.',
+                          'Prologue years only need the card. Prison needs the inside job. Gift is cash, separate from the year\'s move. Heat, war, or a midlife pinch asks a second card before Next year.',
                           style: TextStyle(color: Palette.muted, height: 1.35),
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'When this life ends, pick who sits next. Money, turf, and enemies stay with the name.',
+                          'If the name sat on the board, this life can pass the chair. Money, turf, and enemies stay with the name. If it never sat, the file just closes.',
                           style: TextStyle(color: Palette.muted, height: 1.35),
                         ),
                       ],
@@ -432,6 +698,8 @@ class SideActionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final e = c.engine!;
+    final acts = e.activities();
     return Material(
       color: Palette.scrim,
       child: Align(
@@ -444,41 +712,84 @@ class SideActionSheet extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Do something this year',
+                  Text('A job this year',
                       style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold, fontSize: 18)),
                   const SizedBox(height: 6),
-                  Text('Optional. One extra move, then you can still go to next year.',
+                  Text('One move this year: a job here or a street on City. Sit on Family is a quiet hour and does not close the year. Gift is separate cash. The card does not say what you walk away with.',
                       style: TextStyle(color: Palette.muted, fontSize: 13)),
                   const SizedBox(height: 12),
-                  for (final row in const [
-                    ('earn', 'Earn', 'A quiet payday.'),
-                    ('risk', 'Risk', 'More cash. More heat.'),
-                    ('family', 'Family', 'Open Family. One Sit per year.'),
-                    ('cool', 'Cool down', 'Let the city forget you.'),
-                  ]) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: GoldFrame(
-                        padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-                        child: Row(
-                          children: [
-                            PixelIcon(Art.activityTile(row.$1), size: 44),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.48),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: GoldFrame(
+                            padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                            child: Row(
+                              children: [
+                                PixelIcon(Art.activityTile('family'), size: 44),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Sit', style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold)),
+                                      Text('Open Family. One Sit per year. Does not close the year.',
+                                          style: TextStyle(color: Palette.muted, fontSize: 12)),
+                                    ],
+                                  ),
+                                ),
+                                PrimaryButton(
+                                  label: 'Family',
+                                  expand: false,
+                                  onTap: () {
+                                    c.closeSideSheet();
+                                    c.setHub(1);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        for (final a in acts)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: GoldFrame(
+                              padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                              child: Row(
                                 children: [
-                                  Text(row.$2, style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold)),
-                                  Text(row.$3, style: TextStyle(color: Palette.muted, fontSize: 12)),
+                                  PixelIcon(Art.event(a.art), size: 44),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(a.name, style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold)),
+                                        Text(a.description,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(color: Palette.muted, fontSize: 12)),
+                                      ],
+                                    ),
+                                  ),
+                                  PrimaryButton(
+                                    label: 'Go',
+                                    expand: false,
+                                    onTap: () {
+                                      c.closeSideSheet();
+                                      c.openActivity(a.id);
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
-                            PrimaryButton(label: row.$2, expand: false, onTap: () => c.doSide(row.$1)),
-                          ],
-                        ),
-                      ),
+                          ),
+                      ],
                     ),
-                  ],
+                  ),
+                  const SizedBox(height: 8),
                   GhostButton(label: 'Not now', onTap: c.closeSideSheet),
                 ],
               ),
@@ -551,6 +862,18 @@ class FamilyScreen extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text('Bond ${p.bond} · loyalty ${p.loyaltyToFamily}',
                                   style: TextStyle(color: Palette.goldSoft, fontSize: 12)),
+                              if (p.id == 'p_mira' || p.id == 'p_ben')
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    p.bond >= 32
+                                        ? 'Named courtship. Bond is high enough if a wedding card lands.'
+                                        : 'Named courtship. Sit raises the bond toward a wedding.',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Palette.goldSoft, fontSize: 11, height: 1.3),
+                                  ),
+                                ),
                               if (WorldContent.npcMemory(p, e.state.flags) != null)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
@@ -658,7 +981,7 @@ class CityScreen extends StatelessWidget {
         HeaderBanner(
           asset: Art.header('city'),
           title: 'Ravenport',
-          subtitle: '${c.engine!.cityPressure()} Open streets want a hand and cash. Held streets can be cooled. You do not need this screen to finish a year.',
+          subtitle: '${c.engine!.cityPressure()} Open streets want a hand and cash. Held streets: squeeze, keep quiet, or pay tribute — one city verb.',
         ),
         if (c.engine!.warLine() != null) ...[
           GoldFrame(
@@ -679,107 +1002,129 @@ class CityScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
         ],
-        for (var i = 0; i < s.territories.length; i++)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Builder(
-              builder: (context) {
-                final t = s.territories[i];
-                final card = GestureDetector(
-                  onTap: () => c.tourConsume(TourAnchor.cityDistrict),
-                  child: GoldFrame(
-              padding: EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SceneArt(Art.district(t.id), height: 92),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                t.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold),
-                              ),
+        LayoutBuilder(
+          builder: (context, _) {
+            final tiles = <Widget>[];
+            for (var i = 0; i < s.territories.length; i++) {
+              final t = s.territories[i];
+              final held = t.controller == 'player';
+              final warMark = c.engine!.warTarget()?.id == t.id;
+              final warHere = c.engine!.warRival() != null &&
+                  (t.controller == c.engine!.warRival()!.id || (held && c.engine!.warPhase != null) || warMark);
+              final tile = GestureDetector(
+                onTap: () => c.tourConsume(TourAnchor.cityDistrict),
+                child: GoldFrame(
+                  accent: held,
+                  rim: warHere ? Palette.red : null,
+                  padding: EdgeInsets.zero,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      SceneArt(
+                        Art.district(t.id),
+                        height: 188,
+                        grade: warHere
+                            ? ColorFilter.mode(Palette.red.withValues(alpha: 0.28), BlendMode.multiply)
+                            : null,
+                      ),
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Palette.navy.withValues(alpha: 0.22),
+                                Palette.navy.withValues(alpha: 0.82),
+                              ],
                             ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(
-                                owner(t),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.right,
-                                style: TextStyle(color: Palette.muted, fontSize: 12),
-                              ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 8,
+                        right: 8,
+                        bottom: 8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                if (t.controller != null && t.controller != 'player')
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 6),
+                                    child: PixelIcon(Art.crest(t.controller!), size: 18),
+                                  ),
+                                Expanded(
+                                  child: Text(
+                                    t.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold, fontSize: 13),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        Text(t.blurb, style: TextStyle(fontSize: 13, color: Palette.cream, height: 1.35)),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 6,
-                          children: [
-                            GlanceChip(label: 'Income', value: '${t.income}'),
-                            GlanceChip(label: 'Heat', value: '${t.heat}', warn: t.heat > 20),
-                            GlanceChip(label: 'Hold', value: '${t.influence}'),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        const SizedBox(height: 6),
-                        Text(
-                          t.controller == 'player'
-                              ? 'Yours. Cool it if heat is loud.'
-                              : (t.controller == null
-                                  ? (s.crew.isEmpty
-                                      ? 'Open. Hire a hand on Empire, then press.'
-                                      : 'Open. Press if the books can stand \$${GameEngine.pressCost}.')
-                                  : 'Held by a house. Pressing here starts a fight.'),
-                          style: TextStyle(color: Palette.goldSoft, fontSize: 12, height: 1.3),
-                        ),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 4,
-                          children: [
+                            Text(
+                              warMark ? '${owner(t)} · war' : owner(t),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Palette.muted, fontSize: 11),
+                            ),
+                            const SizedBox(height: 6),
                             if (t.controller != 'player')
                               MiniAction(
                                 label: s.crew.isEmpty
-                                    ? 'Hire a hand first'
-                                    : (GameEngine.unaffordable(s.stats.money, GameEngine.pressCost) ??
-                                        'Press · \$${GameEngine.pressCost}'),
-                                onTap: s.crew.isEmpty || GameEngine.unaffordable(s.stats.money, GameEngine.pressCost) != null
+                                    ? 'Hire first'
+                                    : (GameEngine.unaffordable(s.stats.money, GameEngine.pressCost) ?? 'Press'),
+                                onTap: s.crew.isEmpty ||
+                                        GameEngine.unaffordable(s.stats.money, GameEngine.pressCost) != null
                                     ? null
                                     : () => c.pressTurf(t.id),
-                              ),
-                            if (t.controller == 'player')
-                              MiniAction(
-                                label: GameEngine.unaffordable(s.stats.money, GameEngine.coolCost) ??
-                                    'Cool · \$${GameEngine.coolCost}',
-                                onTap: GameEngine.unaffordable(s.stats.money, GameEngine.coolCost) == null
-                                    ? () => c.coolTurf(t.id)
-                                    : null,
+                              )
+                            else
+                              Wrap(
+                                spacing: 4,
+                                runSpacing: 4,
+                                children: [
+                                  MiniAction(label: 'Squeeze', onTap: () => c.squeezeTurf(t.id)),
+                                  MiniAction(
+                                    label: 'Keep quiet',
+                                    icon: Art.activityTile('cool'),
+                                    onTap: () => c.quietTurf(t.id),
+                                  ),
+                                  MiniAction(
+                                    label: GameEngine.unaffordable(s.stats.money, GameEngine.tributeCost) ??
+                                        'Tribute',
+                                    onTap: GameEngine.unaffordable(s.stats.money, GameEngine.tributeCost) == null
+                                        ? () => c.tributeTurf(t.id)
+                                        : null,
+                                  ),
+                                ],
                               ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-                );
-                return i == 0 ? KeyedSubtree(key: c.tourKeys.cityDistrict, child: card) : card;
-              },
-            ),
-          ),
+                ),
+              );
+              tiles.add(i == 0 ? KeyedSubtree(key: c.tourKeys.cityDistrict, child: tile) : tile);
+            }
+            return GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              childAspectRatio: 0.72,
+              children: tiles,
+            );
+          },
+        ),
+        const SizedBox(height: 12),
         const SectionTitle('Rival families'),
         for (final r in s.rivals)
           Padding(
@@ -796,7 +1141,7 @@ class CityScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(r.name, style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold)),
-                        Text('${r.bossName} · power ${r.power} · hostility ${r.hostility}',
+                        Text('${r.bossName} · ${c.engine!.houseWeather(r)}',
                             style: TextStyle(color: Palette.muted, fontSize: 12)),
                         const SizedBox(height: 6),
                         Text(WorldContent.rivalMood(r), style: TextStyle(height: 1.35, fontSize: 13)),
@@ -833,7 +1178,11 @@ class EmpireScreen extends StatelessWidget {
         final e = c.engine!;
         final s = e.state;
         final take = s.businesses.fold<int>(0, (n, b) => n + b.yearlyIncome);
-        final hireNeed = GameEngine.unaffordable(s.stats.money, GameEngine.hireCost);
+        final hireNeed = s.inPrison
+            ? 'You cannot hire from inside.'
+            : (s.crew.length >= 5
+                ? 'Five names is a full book.'
+                : (e.empireBlock() ?? GameEngine.unaffordable(s.stats.money, GameEngine.hireCost)));
         final frontNeed = e.buyFrontReason();
         final openTypes = e.availableFrontTypes();
         final mood = s.crew.isEmpty
@@ -858,7 +1207,7 @@ class EmpireScreen extends StatelessWidget {
               HeaderBanner(
                 asset: Art.header('empire'),
                 title: 'The books',
-                subtitle: 'Hire and pay crew. Invest in fronts. This is cash, not the year\'s extra move.',
+                subtitle: 'One hire, bonus, invest, or front per year. Raise-cut stays free.',
               ),
               GoldFrame(
                 child: Column(
@@ -882,30 +1231,26 @@ class EmpireScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const SectionTitle('Crew'),
-              if (s.crew.isEmpty)
+              if (s.crew.isEmpty) ...[
                 EmptyState(
                   art: Art.empty('crew'),
                   text: s.inPrison
                       ? 'You cannot hire from inside. Finish the stretch, then fill the table.'
-                      : 'No one on the books. Play Life to earn, then hire a hand for \$${GameEngine.hireCost}. This does not spend the year\'s extra move.',
-                  cta: s.inPrison || s.crew.length >= 5
-                      ? 'Back to Life'
-                      : (hireNeed ?? 'Hire a hand · \$${GameEngine.hireCost}'),
-                  onTap: s.inPrison || s.crew.length >= 5
+                      : 'No one on the books. Play Life to earn, then hire a hand for \$${GameEngine.hireCost}. Pick the street or the books. One Empire move a year.',
+                  cta: s.inPrison ? 'Back to Life' : null,
+                  onTap: s.inPrison
                       ? () {
                           Navigator.maybePop(context);
                           c.setHub(0);
                         }
-                      : (hireNeed == null ? c.hireHand : null),
-                )
-              else ...[
+                      : null,
+                ),
+                if (!s.inPrison) _HireRoles(c: c, blocked: hireNeed),
+              ] else ...[
                 for (final m in s.crew) _CrewCard(c: c, member: m),
                 if (s.crew.length < 5 && !s.inPrison) ...[
                   const SizedBox(height: 4),
-                  PrimaryButton(
-                    label: hireNeed ?? 'Hire another hand · \$${GameEngine.hireCost}',
-                    onTap: hireNeed == null ? c.hireHand : null,
-                  ),
+                  _HireRoles(c: c, blocked: hireNeed),
                 ],
               ],
               const SizedBox(height: 18),
@@ -949,7 +1294,123 @@ class EmpireScreen extends StatelessWidget {
                   ],
                 ),
               ],
+              const SizedBox(height: 18),
+              GoldFrame(
+                image: Art.event('skyline'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('The name on the skyline',
+                        style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold, fontSize: 15)),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Retire at 55 with every box marked. The city does not hand it to you.',
+                      style: TextStyle(color: Palette.muted, fontSize: 12, height: 1.35),
+                    ),
+                    const SizedBox(height: 8),
+                    for (final check in e.empireChecks())
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          '${check.$2 ? 'Held' : 'Open'}  ·  ${check.$1}',
+                          style: TextStyle(
+                            color: check.$2 ? Palette.goldSoft : Palette.muted,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _HireRoles extends StatelessWidget {
+  const _HireRoles({required this.c, this.blocked});
+  final GameController c;
+  final String? blocked;
+
+  @override
+  Widget build(BuildContext context) {
+    final e = c.engine!;
+    if (blocked != null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(blocked!, style: TextStyle(color: Palette.muted, fontSize: 12, height: 1.35)),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        children: [
+          MiniAction(
+            label: 'Hire ${WorldContent.roleLabel(e.hireStreetRole())} · \$${GameEngine.hireCost}',
+            onTap: () => c.hireHand(e.hireStreetRole()),
+          ),
+          MiniAction(
+            label: 'Hire ${WorldContent.roleLabel(e.hireBooksRole())} · \$${GameEngine.hireCost}',
+            onTap: () => c.hireHand(e.hireBooksRole()),
+          ),
+          MiniAction(
+            label: 'Hire surprise · \$${GameEngine.hireCost}',
+            onTap: () => c.hireHand(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AssignSheet {
+  static Future<void> open(BuildContext context, GameController c, String personId) async {
+    final e = c.engine;
+    if (e == null) return;
+    if (e.state.businesses.isEmpty) {
+      await c.assignCrew(personId);
+      return;
+    }
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: GoldFrame(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('Watch a front', style: TextStyle(fontFamily: 'Cinzel', color: Palette.gold, fontSize: 18)),
+                  const SizedBox(height: 8),
+                  MiniAction(
+                    label: 'Off the floor',
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      c.assignCrew(personId, '');
+                    },
+                  ),
+                  const SizedBox(height: 6),
+                  for (final b in e.state.businesses) ...[
+                    MiniAction(
+                      label: b.name,
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        c.assignCrew(personId, b.id);
+                      },
+                    ),
+                    const SizedBox(height: 6),
+                  ],
+                ],
+              ),
+            ),
           ),
         );
       },
@@ -993,6 +1454,13 @@ class _CrewCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: Palette.goldSoft, fontSize: 12),
                       ),
+                      if (WorldContent.roleLoadout(member.role).isNotEmpty)
+                        Text(
+                          WorldContent.roleLoadout(member.role),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Palette.muted, fontSize: 11, height: 1.3),
+                        ),
                       if (member.assignedBizId != null)
                         Text(
                           'Watches ${c.s.businesses.cast<Business?>().firstWhere((b) => b!.id == member.assignedBizId, orElse: () => null)?.name ?? 'a front'}',
@@ -1017,16 +1485,20 @@ class _CrewCard extends StatelessWidget {
               runSpacing: 4,
               children: [
                 MiniAction(
-                  label: GameEngine.unaffordable(s.stats.money, GameEngine.bonusCost) ?? 'Pay · \$${GameEngine.bonusCost}',
-                  onTap: GameEngine.unaffordable(s.stats.money, GameEngine.bonusCost) == null
+                  label: (c.engine?.empireBlock() ??
+                          GameEngine.unaffordable(s.stats.money, GameEngine.bonusCost)) ??
+                      'Pay · \$${GameEngine.bonusCost}',
+                  onTap: c.engine?.empireBlock() == null &&
+                          GameEngine.unaffordable(s.stats.money, GameEngine.bonusCost) == null
                       ? () => c.payBonus(member.personId)
                       : null,
                 ),
                 MiniAction(label: 'Raise cut', onTap: () => c.bumpCut(member.personId)),
-                MiniAction(
-                  label: member.assignedBizId == null ? 'Assign' : 'Reassign',
-                  onTap: () => c.assignCrew(member.personId),
-                ),
+                if (s.businesses.isNotEmpty)
+                  MiniAction(
+                    label: member.assignedBizId == null ? 'Assign' : 'Reassign',
+                    onTap: () => _AssignSheet.open(context, c, member.personId),
+                  ),
                 MiniAction(label: 'Let go', danger: true, onTap: () => c.letGo(member.personId)),
               ],
             ),
@@ -1045,6 +1517,7 @@ class _FrontCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final risk = WorldContent.riskWord(business.cover);
+    final watched = c.s.crew.any((m) => m.assignedBizId == business.id && !m.imprisoned);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: GoldFrame(
@@ -1052,7 +1525,16 @@ class _FrontCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SceneArt(Art.businessFront(business.type), height: 100, alignment: const Alignment(0, -0.15)),
+            SceneArt(
+              watched || business.quality >= 40
+                  ? Art.businessFront(business.type)
+                  : Art.event('boarded_shop'),
+              height: 100,
+              alignment: const Alignment(0, -0.15),
+              grade: watched
+                  ? null
+                  : const ColorFilter.mode(Color(0xAA0B1220), BlendMode.saturation),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               child: Column(
@@ -1084,9 +1566,11 @@ class _FrontCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   MiniAction(
-                    label: GameEngine.unaffordable(c.s.stats.money, GameEngine.investCost) ??
+                    label: (c.engine?.empireBlock() ??
+                            GameEngine.unaffordable(c.s.stats.money, GameEngine.investCost)) ??
                         'Invest · \$${GameEngine.investCost}',
-                    onTap: GameEngine.unaffordable(c.s.stats.money, GameEngine.investCost) == null
+                    onTap: c.engine?.empireBlock() == null &&
+                            GameEngine.unaffordable(c.s.stats.money, GameEngine.investCost) == null
                         ? () => c.investFront(business.id)
                         : null,
                   ),
@@ -1209,7 +1693,7 @@ class ActivitiesPage extends StatelessWidget {
             title: 'Activities',
             subtitle: e.state.activityUsed
                 ? 'You already used this year\'s extra move.'
-                : 'Same extras as Do something on Life. One move per year.',
+                : 'Every job the year allows. Hard take needs a driver or lookout. Quiet ledger wants a hacker.',
           ),
           GhostButton(label: 'Watch for a bonus whisper (rewarded)', onTap: c.bonusWhisper),
           const SizedBox(height: 12),
@@ -1451,7 +1935,7 @@ class CourtPage extends StatelessWidget {
             asset: Art.header('court'),
             title: s.inPrison ? 'Inside' : 'Free — for now',
             subtitle:
-                'Heat ${s.stats.heat}. Lawyer ${s.lawyerQuality}. ${s.inPrison ? '${s.prisonYearsLeft} year${s.prisonYearsLeft == 1 ? '' : 's'} left. Life still plays from here.' : 'Keep heat down or keep a lawyer.'}',
+            'Heat ${s.stats.heat}. Lawyer ${s.lawyerQuality} — ${s.lawyerQuality ~/ 25} year${s.lawyerQuality ~/ 25 == 1 ? '' : 's'} shaved off a sentence. ${s.inPrison ? '${s.prisonYearsLeft} year${s.prisonYearsLeft == 1 ? '' : 's'} left. Life still plays from here.' : (s.stats.heat >= 60 ? 'Heat is loud enough to queue a raid.' : 'Keep heat down or keep a lawyer.')}',
           ),
           if (s.timeline.where((t) => t.category == 'police' || t.category == 'prison').isEmpty)
             Padding(
@@ -1550,7 +2034,7 @@ class LegacyPage extends StatelessWidget {
                               style: TextStyle(fontFamily: 'Cinzel', color: Palette.cream, fontSize: 14),
                             ),
                             Text(
-                              '${p.relation} · age ${p.ageIn(s.year)} · bond ${p.bond} · loyalty ${p.loyaltyToFamily}',
+                              '${p.relation} · age ${p.ageIn(s.year)} · ${e.heirLean(p) ?? 'unshaped'}',
                               style: TextStyle(color: Palette.muted, fontSize: 12),
                             ),
                             if (p.traits.isNotEmpty)
@@ -1662,8 +2146,8 @@ class SettingsPage extends StatelessWidget {
           Divider(color: Palette.line),
           const SectionTitle('The shop'),
           Text(
-            'No banners. The city already has enough neon. Remove Ads is a one-time ledger entry: '
-            'com.vicedynasty.life.remove_ads. Interstitials only at a generation end or a major jail door. Rewarded ads stay optional for rewriting a bad night.',
+            'A slim banner sits above the nav, and full-screen ads only at a generation end, a major jail door, or every eight years. Rewarded ads stay optional for rewriting a bad night. Remove Ads is a one-time ledger entry: '
+            'com.vicedynasty.life.remove_ads.',
             style: TextStyle(color: Palette.muted, height: 1.4),
           ),
           const SizedBox(height: 10),
@@ -1692,7 +2176,7 @@ class SettingsPage extends StatelessWidget {
             ),
           GhostButton(label: 'Back to title', onTap: c.goTitle),
           const SizedBox(height: 16),
-          Text('Vice Dynasty 1.9.3', textAlign: TextAlign.center, style: TextStyle(color: Palette.muted, fontSize: 12)),
+          Text('Vice Dynasty 1.9.11', textAlign: TextAlign.center, style: TextStyle(color: Palette.muted, fontSize: 12)),
         ],
       ),
     ),

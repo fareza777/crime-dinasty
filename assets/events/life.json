@@ -100,7 +100,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 24,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "talk",
@@ -243,7 +243,7 @@
     "cooldownYears": 4,
     "minAge": 19,
     "maxAge": 70,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "care",
@@ -302,7 +302,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "stay",
@@ -386,7 +386,7 @@
     "cooldownYears": 4,
     "minAge": 22,
     "maxAge": 70,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "rest",
@@ -445,7 +445,7 @@
     "cooldownYears": 4,
     "minAge": 20,
     "maxAge": 55,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "reply",
@@ -502,7 +502,7 @@
     "cooldownYears": 4,
     "minAge": 25,
     "maxAge": 75,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "speak",
@@ -587,7 +587,7 @@
     "cooldownYears": 4,
     "minAge": 45,
     "maxAge": 90,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "change",
@@ -688,6 +688,349 @@
             },
             "addFlags": [],
             "removeFlags": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "debt_collector",
+    "title": "A Name on the Ledger",
+    "body": "Someone who lent you weather wants it back with interest. The rain does not take IOUs. Pay, stall, or let the city write you down as thin.",
+    "category": "life",
+    "tags": [
+      "debt",
+      "midlife"
+    ],
+    "weight": 18,
+    "once": false,
+    "cooldownYears": 2,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "ledger",
+    "requires": {
+      "allFlags": [
+        "in_debt"
+      ]
+    },
+    "choices": [
+      {
+        "id": "pay",
+        "text": "Pay what you can. Keep the name.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "Ink dries",
+            "body": "Cash walks. The collector folds the paper. Heat thins because you were boring.",
+            "log": "Paid a collector year.",
+            "stats": {
+              "money": -400,
+              "stress": -4,
+              "reputation": 1
+            },
+            "removeFlags": [
+              "in_debt"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stall",
+        "text": "Stall. Promise next rain.",
+        "outcomes": [
+          {
+            "id": "stall",
+            "weight": 70,
+            "title": "A purchased week",
+            "body": "They allow a delay. Interest does not. Stress stays.",
+            "log": "Stalled a collector.",
+            "stats": {
+              "stress": 6,
+              "heat": 2
+            }
+          },
+          {
+            "id": "break",
+            "weight": 30,
+            "title": "The door comes in",
+            "body": "They do not wait. A window learns your name.",
+            "log": "A collector year went ugly.",
+            "stats": {
+              "health": -8,
+              "stress": 10,
+              "heat": 6
+            },
+            "injury": true
+          }
+        ]
+      },
+      {
+        "id": "run",
+        "text": "Run the name. Let them find empty rooms.",
+        "outcomes": [
+          {
+            "id": "run",
+            "weight": 55,
+            "title": "A moving target",
+            "body": "You are not home. Interest grows teeth. A house notices the vacancy.",
+            "log": "Ran from a collector year.",
+            "stats": {
+              "heat": 8,
+              "reputation": -4,
+              "stress": 6
+            }
+          },
+          {
+            "id": "caught",
+            "weight": 45,
+            "isHarsh": true,
+            "title": "They found the other door",
+            "body": "The collector brought friends. Cash walks whether you packed or not.",
+            "log": "A collector caught the other door.",
+            "stats": {
+              "money": -600,
+              "health": -6,
+              "heat": 10
+            },
+            "injury": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forgotten_weather",
+    "title": "The Rain Files You Under Weather",
+    "body": "A clerk who does not know your face asks if the Hart name still answers. The map has started to forget the booth. You can still sit a street. You can still open a door. Quiet years from here close the file.",
+    "category": "life",
+    "tags": [
+      "legacy"
+    ],
+    "weight": 4,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "forgotten_desk",
+    "choices": [
+      {
+        "id": "press",
+        "text": "Go back out. Make the city say the name.",
+        "outcomes": [
+          {
+            "id": "press",
+            "weight": 100,
+            "title": "A last chance at ink",
+            "body": "The clerk shrugs. The rain does not. Next year still counts.",
+            "log": "The city asked if the name still answered.",
+            "stats": {
+              "stress": 4,
+              "reputation": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Let the clerk close the drawer.",
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 70,
+            "title": "A thinner file",
+            "body": "You nod like weather. The houses keep eating. The chair gets quieter.",
+            "log": "Let a clerk file the name under weather.",
+            "stats": {
+              "reputation": -3,
+              "stress": -2
+            }
+          },
+          {
+            "id": "sting",
+            "weight": 30,
+            "title": "Already a rumor",
+            "body": "Someone at the next desk has already sold your booth. Heat without a street.",
+            "log": "The name thinned while a clerk waited.",
+            "stats": {
+              "reputation": -5,
+              "heat": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "empty_name",
+    "title": "An Empty Name on the Board",
+    "body": "No street. No front. A house ate the last open corner while you clocked in. One more quiet year and Ravenport stops asking who sits.",
+    "category": "life",
+    "tags": [
+      "legacy"
+    ],
+    "weight": 4,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "forgotten_desk",
+    "choices": [
+      {
+        "id": "stand",
+        "text": "Swear the next year will not be quiet.",
+        "outcomes": [
+          {
+            "id": "stand",
+            "weight": 100,
+            "title": "A spine with no street",
+            "body": "Talk is cheap. The map is not. Press, hire, or open a door.",
+            "log": "Swore the next year would not be quiet.",
+            "stats": {
+              "nerve": 2,
+              "stress": 6
+            }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Keep the time clock. Hope the rain is kind.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "A rented year",
+            "body": "The city files you under groceries. Kindness is not a strategy.",
+            "log": "Kept the time clock while the board emptied.",
+            "stats": {
+              "stress": -3,
+              "reputation": -4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "promotion_shift",
+    "title": "A Longer Shift, A Cleaner Envelope",
+    "body": "Five honest years and a floor boss who does not like your last name still needs someone who shows up. The envelope is thicker. It is still not a skyline.",
+    "category": "life",
+    "tags": [
+      "early"
+    ],
+    "weight": 6,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 18,
+    "maxAge": 70,
+    "art": "timeclock",
+    "choices": [
+      {
+        "id": "take",
+        "text": "Take the shift. Keep the time clock.",
+        "outcomes": [
+          {
+            "id": "take",
+            "weight": 100,
+            "title": "Daylight with a raise",
+            "body": "Honest hours pay a little more now. Rent still has opinions.",
+            "log": "Took a longer honest shift.",
+            "stats": {
+              "money": 120,
+              "stress": 3,
+              "reputation": 1
+            },
+            "addFlags": [
+              "honest_rung_1",
+              "legitimate_turn"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Walk. The night still pays faster.",
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 100,
+            "title": "Back to weather",
+            "body": "You leave the envelope. The docks do not applaud. They wait.",
+            "log": "Turned down a cleaner envelope.",
+            "stats": {
+              "nerve": 2,
+              "stress": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "promotion_shift_2",
+    "title": "Keys to a Quiet Wash",
+    "body": "Ten years of clocks. A tired man in The Flats will sell a wash-and-fold that already pretends to be legal. It is slow money. It is a name on a door.",
+    "category": "life",
+    "tags": [
+      "midlife"
+    ],
+    "weight": 6,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 22,
+    "maxAge": 70,
+    "art": "laundry",
+    "choices": [
+      {
+        "id": "take",
+        "text": "Take the keys. Keep it boring.",
+        "outcomes": [
+          {
+            "id": "take",
+            "weight": 100,
+            "title": "A legal door",
+            "body": "Harbor Wash & Fold has your name on a cheap plaque. Slow. Alive. On the board.",
+            "log": "Took keys to a quiet wash.",
+            "stats": {
+              "money": -200,
+              "heat": -4,
+              "reputation": 2
+            },
+            "addFlags": [
+              "honest_rung_2",
+              "legitimate_turn",
+              "laundry_legal_key"
+            ],
+            "businessGain": "laundry"
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "Pass. You did not come to fold shirts.",
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 70,
+            "title": "Still hungry",
+            "body": "The wash stays someone else's. Your hours stay honest and thin.",
+            "log": "Passed on a legal wash.",
+            "stats": {
+              "stress": 2
+            }
+          },
+          {
+            "id": "sting",
+            "weight": 30,
+            "title": "He sold it anyway",
+            "body": "A house bought the door by lunch. You kept the time clock.",
+            "log": "A legal wash went to another crest.",
+            "stats": {
+              "stress": 4,
+              "reputation": -2
+            }
           }
         ]
       }

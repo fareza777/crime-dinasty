@@ -13,7 +13,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "prison",
+    "art": "prison_yard",
     "choices": [
       {
         "id": "quiet",
@@ -107,7 +107,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "prison",
+    "art": "prison_yard",
     "choices": [
       {
         "id": "study",
@@ -441,7 +441,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "prison",
+    "art": "prison_yard",
     "choices": [
       {
         "id": "listen",
@@ -626,7 +626,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "prison",
+    "art": "street",
     "choices": [
       {
         "id": "home",

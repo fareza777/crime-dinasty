@@ -1,0 +1,20 @@
+{
+  "asset": "vo/detective_card.mp3",
+  "lines": [
+    {
+      "text": "A detective leaves a card under your door.",
+      "start": 0.0,
+      "end": 2.438
+    },
+    {
+      "text": "We should talk before someone else does.",
+      "start": 2.612,
+      "end": 4.609
+    },
+    {
+      "text": "Rain has smudged the ink, but not the invitation.",
+      "start": 5.05,
+      "end": 7.941
+    }
+  ]
+}

@@ -13,9 +13,10 @@ import 'services/ads_service.dart';
 import 'services/audio_service.dart';
 import 'services/iap_service.dart';
 import 'services/save_service.dart';
+import 'services/voice_over.dart';
 import 'tour.dart';
 
-enum AppView { boot, title, newGame, load, play }
+enum AppView { boot, opening, title, newGame, load, play }
 
 class GameController extends ChangeNotifier {
   GameController({
@@ -28,12 +29,14 @@ class GameController extends ChangeNotifier {
         iap = iap ?? IapService(),
         audio = audio ?? AudioService() {
     Palette.light = !darkMode;
+    vo = VoiceOverService(this.audio);
   }
 
   final SaveService saves;
   final AdsService ads;
   final IapService iap;
   final AudioService audio;
+  late final VoiceOverService vo;
 
   EventCatalog? catalog;
   GameEngine? engine;
@@ -59,6 +62,7 @@ class GameController extends ChangeNotifier {
   bool tourEnabled = true;
   bool tourActive = false;
   bool tourDone = false;
+  bool openingSeen = false;
   int tourIndex = 0;
   final tourKeys = TourKeys();
 
@@ -75,6 +79,7 @@ class GameController extends ChangeNotifier {
         darkMode = prefs?.getBool('darkMode') ?? true;
         Palette.light = !darkMode;
         tourDone = prefs?.getBool('tourDone') ?? false;
+        openingSeen = prefs?.getBool('openingSeen') ?? false;
         audio.sfxOn = sfxOn;
         audio.musicOn = musicOn;
         audio.sfxVolume = prefs?.getDouble('sfxVol') ?? 0.55;
@@ -83,14 +88,32 @@ class GameController extends ChangeNotifier {
         audio.startMusic();
       } catch (_) {}
       catalog = await EventCatalog.loadFromAssets();
-      view = AppView.title;
+      await vo.preload();
+      final splashFloor = DateTime.now().add(const Duration(milliseconds: 1400));
+      final wait = splashFloor.difference(DateTime.now());
+      if (wait > Duration.zero) await Future<void>.delayed(wait);
+      view = openingSeen ? AppView.title : AppView.opening;
     } catch (e, st) {
       bootError = '$e';
       debugPrint('$e\n$st');
-      view = AppView.title;
+      view = openingSeen ? AppView.title : AppView.opening;
     }
     notifyListeners();
     unawaited(_initMonetization());
+  }
+
+  Future<void> finishOpening() async {
+    await vo.stop();
+    openingSeen = true;
+    await prefs?.setBool('openingSeen', true);
+    view = AppView.title;
+    unawaited(audio.setBed('docks'));
+    notifyListeners();
+  }
+
+  Future<void> replayOpening() async {
+    view = AppView.opening;
+    notifyListeners();
   }
 
   Future<void> _initMonetization() async {
@@ -128,16 +151,19 @@ class GameController extends ChangeNotifier {
     showHelp = false;
     showMoreStats = false;
     showSideSheet = false;
-    if (tourActive && tourIndex == 0) {
-      tourIndex = 1;
-      _alignHubToTour();
-    } else if (tourEnabled && !tourDone && !tourActive) {
-      startTour(from: 1);
+    if (tourEnabled && !tourDone) {
+      startTour(from: 0);
     }
     await persist();
     audio.card();
     audio.startMusic();
     notifyListeners();
+    _syncBed();
+  }
+
+  void _syncBed() {
+    final e = engine;
+    unawaited(audio.setBed(e == null ? 'docks' : e.musicBed()));
   }
 
   Future<void> loadSlot(int slot) async {
@@ -153,9 +179,11 @@ class GameController extends ChangeNotifier {
     showSideSheet = false;
     await persist(slot: 0);
     notifyListeners();
+    _syncBed();
   }
 
   void goTitle() {
+    unawaited(vo.stop());
     view = AppView.title;
     if (tourActive) {
       tourActive = false;
@@ -165,13 +193,20 @@ class GameController extends ChangeNotifier {
 
   void goNew() {
     view = AppView.newGame;
-    if (tourEnabled && !tourDone) startTour();
     notifyListeners();
   }
 
   void goLoad() {
     view = AppView.load;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _toastTimer?.cancel();
+    unawaited(vo.disposePlayer());
+    unawaited(audio.disposePlayers());
+    super.dispose();
   }
 
   void setHub(int i) {
@@ -207,7 +242,7 @@ class GameController extends ChangeNotifier {
 
   void replayTour() {
     showHelp = false;
-    startTour(from: view == AppView.play ? 1 : 0);
+    startTour(from: 0);
   }
 
   void nextTour() {
@@ -239,6 +274,17 @@ class GameController extends ChangeNotifier {
     return Tour.steps[tourIndex].keyOf(tourKeys);
   }
 
+  String get tourMeasureToken => [
+        tourIndex,
+        view,
+        hubIndex,
+        engine?.state.currentEventId,
+        lastOutcome?.id,
+        engine?.state.eventsThisYear,
+        engine?.canAgeUp,
+        engine?.yearEventPending,
+      ].join('|');
+
   bool get coachActive => engine != null && coachStep < 3 && !s.tutorialDone;
 
   void openHelp() {
@@ -258,8 +304,8 @@ class GameController extends ChangeNotifier {
   }
 
   void openSideSheet() {
-    if (engine?.state.activityUsed == true) {
-      _flashToast('You already did something this year.');
+    if (engine?.yearVerbUsed == true) {
+      _flashToast('You already spent the year\'s move.');
       return;
     }
     showSideSheet = true;
@@ -304,7 +350,7 @@ class GameController extends ChangeNotifier {
     if (e.state.phase == 'summary') {
       e.state.phase = 'playing';
     }
-    if (e.yearEventPending) {
+    if (e.yearEventPending || e.extraBeatAvailable) {
       final ev = e.drawEvent();
       if (ev != null) {
         audio.card();
@@ -318,6 +364,11 @@ class GameController extends ChangeNotifier {
         await persist();
         return;
       }
+      if (e.state.eventsThisYear < 1) {
+        e.state.eventsThisYear = 1;
+      } else if (e.extraBeatAvailable) {
+        e.state.eventsThisYear = 2;
+      }
     }
     busy = false;
     notifyListeners();
@@ -326,12 +377,28 @@ class GameController extends ChangeNotifier {
   Future<void> nextYear() async {
     final e = engine;
     if (e == null || busy) return;
-    if (e.state.awaitingHeir || e.state.phase == 'ending' || e.state.currentEventId != null) {
+    if (e.state.awaitingHeir || e.state.phase == 'ending') {
       notifyListeners();
       return;
     }
-    if (!e.canAgeUp && e.yearEventPending) {
-      _flashToast('See what happens this year first.');
+    if (e.state.currentEventId != null) {
+      _flashToast('Finish the card first.');
+      return;
+    }
+    if (!e.canAgeUp) {
+      if (e.yearEventPending) {
+        _flashToast('Open the year first.');
+        return;
+      }
+      if (e.yearVerbRequired && !e.yearVerbUsed) {
+        _flashToast('Work or a street first.');
+        return;
+      }
+      if (e.extraBeatAvailable) {
+        _flashToast('The city is not finished.');
+        return;
+      }
+      _flashToast('Finish the card first.');
       return;
     }
     busy = true;
@@ -352,6 +419,18 @@ class GameController extends ChangeNotifier {
     showSideSheet = false;
     await persist();
     notifyListeners();
+    _syncBed();
+    if (e.state.yearsSinceInterstitial >= 8 &&
+        !e.state.inPrison &&
+        e.state.currentEventId == null &&
+        !e.state.awaitingHeir) {
+      unawaited(ads.maybeInterstitial(
+        reason: 'year',
+        yearsSince: e.state.yearsSinceInterstitial,
+      ).then((_) {
+        e.state.yearsSinceInterstitial = 0;
+      }));
+    }
   }
 
   Future<void> doSide(String verb) async {
@@ -361,7 +440,7 @@ class GameController extends ChangeNotifier {
     final id = e.simpleSideId(verb);
     if (id == null) return;
     if (e.state.activityUsed) {
-      _flashToast('You already did something this year.');
+      _flashToast('You already spent the year\'s move.');
       return;
     }
     final r = e.doActivity(id);
@@ -401,14 +480,19 @@ class GameController extends ChangeNotifier {
       audio.confirm();
     }
     if (e.state.awaitingHeir) {
-      await ads.maybeInterstitial(
+      unawaited(ads.maybeInterstitial(
         reason: e.state.heirReason == 'life sentence' || e.state.inPrison ? 'prison' : 'generation',
         yearsSince: e.state.yearsSinceInterstitial,
-      );
-      e.state.yearsSinceInterstitial = 0;
+      ).then((_) {
+        e.state.yearsSinceInterstitial = 0;
+      }));
     }
     await persist();
     notifyListeners();
+    _syncBed();
+    if (tourActive && Tour.steps[tourIndex].anchor == TourAnchor.choice) {
+      nextTour();
+    }
   }
 
   Future<void> retryDecision() async {
@@ -451,11 +535,13 @@ class GameController extends ChangeNotifier {
       body: 'Money, turf, and enemies stay with the name. You sit where they sat. The rain does not care which generation.',
     );
     lastEvent = EventDef(id: 'heir_rise', title: lastOutcome!.title, body: '', category: 'legacy', art: 'legacy');
+    unawaited(vo.play('heir_rise'));
     audio.legacy();
     yearFlash = true;
     hubIndex = 0;
     await persist();
     notifyListeners();
+    _syncBed();
   }
 
   Future<void> openActivity(String id) async {
@@ -473,11 +559,16 @@ class GameController extends ChangeNotifier {
   void dismissOutcome() {
     lastOutcome = null;
     lastEvent = null;
+    unawaited(vo.stop());
+    engine?.lastUnlocks = [];
     final e = engine;
     if (e != null && coachStep == 1 && e.canAgeUp) {
       coachStep = 2;
     }
-    if (tourActive && Tour.steps[tourIndex].anchor == TourAnchor.choice) {
+    if (tourActive &&
+        (Tour.steps[tourIndex].anchor == TourAnchor.outcome ||
+            Tour.steps[tourIndex].anchor == TourAnchor.choice ||
+            Tour.steps[tourIndex].anchor == TourAnchor.familyTree)) {
       nextTour();
     }
     notifyListeners();
@@ -567,14 +658,57 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> hireHand() => _ledger(() => engine!.hireHand());
+  Future<void> dismissEnding() async {
+    engine?.dismissEnding();
+    await persist();
+    notifyListeners();
+  }
+
+  Future<void> hireHand([String? role]) => _ledger(() => engine!.hireHand(role));
   Future<void> buyFront([String? type]) => _ledger(() => engine!.buyFront(type));
   Future<void> payBonus(String id) => _ledger(() => engine!.payBonus(id));
   Future<void> bumpCut(String id) => _ledger(() => engine!.bumpCut(id), moneySfx: false);
   Future<void> letGo(String id) => _ledger(() => engine!.letGo(id), moneySfx: false);
   Future<void> investFront(String id) => _ledger(() => engine!.investFront(id));
-  Future<void> pressTurf(String id) => _ledger(() => engine!.pressTurf(id));
-  Future<void> coolTurf(String id) => _ledger(() => engine!.coolTurf(id));
+  Future<void> pressTurf(String id) async {
+    final e = engine;
+    if (e == null) return;
+    await _ledger(() => e.pressTurf(id));
+    tourConsume(TourAnchor.cityDistrict);
+    final msg = e.lastPressResult;
+    if (msg != null) _flashToast(msg);
+  }
+  Future<void> coolTurf(String id) async {
+    await _ledger(() => engine!.coolTurf(id));
+    tourConsume(TourAnchor.cityDistrict);
+  }
+
+  Future<void> squeezeTurf(String id) async {
+    final e = engine;
+    if (e == null) return;
+    await _ledger(() => e.squeezeTurf(id));
+    tourConsume(TourAnchor.cityDistrict);
+    final msg = e.lastPressResult;
+    if (msg != null) _flashToast(msg);
+  }
+
+  Future<void> quietTurf(String id) async {
+    final e = engine;
+    if (e == null) return;
+    await _ledger(() => e.quietTurf(id));
+    tourConsume(TourAnchor.cityDistrict);
+    final msg = e.lastPressResult;
+    if (msg != null) _flashToast(msg);
+  }
+
+  Future<void> tributeTurf(String id) async {
+    final e = engine;
+    if (e == null) return;
+    await _ledger(() => e.tributeTurf(id));
+    tourConsume(TourAnchor.cityDistrict);
+    final msg = e.lastPressResult;
+    if (msg != null) _flashToast(msg);
+  }
   Future<void> sitWith(String id) async {
     final e = engine;
     if (e == null) return;
@@ -592,6 +726,18 @@ class GameController extends ChangeNotifier {
     await persist();
     notifyListeners();
   }
-  Future<void> giftPerson(String id) => _ledger(() => engine!.giftPerson(id));
-  Future<void> assignCrew(String id) => _ledger(() => engine!.assignCrew(id), moneySfx: false);
+  Future<void> giftPerson(String id) async {
+    final e = engine;
+    if (e == null) return;
+    final err = e.giftPerson(id);
+    if (err != null) {
+      _flashToast(err);
+      return;
+    }
+    audio.money();
+    tourConsume(TourAnchor.familyTree);
+    await persist();
+    notifyListeners();
+  }
+  Future<void> assignCrew(String id, [String? bizId]) => _ledger(() => engine!.assignCrew(id, bizId), moneySfx: false);
 }

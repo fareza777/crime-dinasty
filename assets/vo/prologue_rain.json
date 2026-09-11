@@ -1,0 +1,35 @@
+{
+  "asset": "vo/prologue_rain.mp3",
+  "lines": [
+    {
+      "text": "Nineteen ninety-eight.",
+      "start": 0.0,
+      "end": 1.347
+    },
+    {
+      "text": "The docks smell like rust and orange peels.",
+      "start": 1.788,
+      "end": 4.249
+    },
+    {
+      "text": "Silas Crowe flicks a cigarette into a puddle that already knows your last name.",
+      "start": 4.69,
+      "end": 9.021
+    },
+    {
+      "text": "A crate sits unclaimed under Pier Seven.",
+      "start": 9.462,
+      "end": 12.156
+    },
+    {
+      "text": "Somebody is coming for it.",
+      "start": 12.481,
+      "end": 13.839
+    },
+    {
+      "text": "Somebody always is.",
+      "start": 14.118,
+      "end": 15.65
+    }
+  ]
+}

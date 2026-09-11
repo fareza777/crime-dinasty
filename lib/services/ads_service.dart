@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import 'ads_impl.dart';
 
@@ -10,10 +11,12 @@ import 'ads_impl.dart';
 /// called after the first Flutter frame (see [GameController.boot]).
 class AdsConfig {
   static const testApp = 'ca-app-pub-3940256099942544~3347511713';
+  static const testBanner = 'ca-app-pub-3940256099942544/6300978111';
   static const testRewarded = 'ca-app-pub-3940256099942544/5224354917';
   static const testInterstitial = 'ca-app-pub-3940256099942544/1033173712';
 
   static const appId = String.fromEnvironment('ADMOB_APP_ID', defaultValue: testApp);
+  static const bannerId = String.fromEnvironment('ADMOB_BANNER_ID', defaultValue: testBanner);
   static const rewardedId =
       String.fromEnvironment('ADMOB_REWARDED_ID', defaultValue: testRewarded);
   static const interstitialId =
@@ -65,8 +68,10 @@ class AdsService {
   /// Interstitials only at natural pauses, throttled.
   Future<void> maybeInterstitial({required String reason, required int yearsSince}) async {
     if (adsRemoved || !available) return;
-    if (reason != 'generation' && reason != 'prison') return;
-    if (yearsSince < 4) return;
+    const ok = {'generation', 'prison', 'year'};
+    if (!ok.contains(reason)) return;
+    if (reason == 'year' && yearsSince < 8) return;
+    if (reason != 'year' && yearsSince < 4) return;
     final last = lastInterstitial;
     if (last != null && DateTime.now().difference(last).inMinutes < 8) return;
     if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
@@ -79,5 +84,13 @@ class AdsService {
     } catch (e) {
       debugPrint('Interstitial skipped: $e');
     }
+  }
+
+  Widget banner({required bool visible}) {
+    if (!visible || adsRemoved || !available) return const SizedBox.shrink();
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+      return const SizedBox.shrink();
+    }
+    return buildAdsBanner(AdsConfig.bannerId);
   }
 }

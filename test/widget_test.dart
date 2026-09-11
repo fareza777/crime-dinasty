@@ -8,6 +8,7 @@ import 'package:vice_dynasty/screens/hub.dart';
 import 'package:vice_dynasty/services/save_service.dart';
 import 'package:vice_dynasty/theme/app_theme.dart';
 import 'package:vice_dynasty/tour.dart';
+import 'package:vice_dynasty/widgets/common.dart';
 
 import 'game_engine_test.dart' show loadCatalog;
 
@@ -27,6 +28,9 @@ void main() {
     await tester.pumpWidget(ViceApp(controller: c));
     expect(find.text('VICE DYNASTY'), findsOneWidget);
     expect(find.text('CRIME LIFE SIMULATOR'), findsOneWidget);
+    final lockup = tester.renderObject<RenderParagraph>(find.text('VICE DYNASTY'));
+    expect(lockup.didExceedMaxLines, isFalse);
+    expect(lockup.size.width, greaterThan(80));
     await tester.tap(find.text('NEW GAME'));
     await tester.pumpAndSettle();
     expect(find.text('New game'), findsOneWidget);
@@ -39,10 +43,33 @@ void main() {
     expect(c.view, AppView.play);
     expect(find.text('Life'), findsOneWidget);
     expect(find.text('Family'), findsWidgets);
-    expect(find.text('City'), findsOneWidget);
+    expect(find.text('City'), findsWidgets);
     expect(find.text('What happens this year'), findsWidgets);
-    expect(find.text('Do something'), findsOneWidget);
-    expect(find.text('Next year'), findsOneWidget);
+    expect(find.text('THIS YEAR\'S MOVES'), findsOneWidget);
+    expect(find.text('Sit with someone'), findsOneWidget);
+    expect(find.text('Do something'), findsNothing);
+    expect(c.engine!.yearEventPending, isTrue);
+    expect(find.text('Next year'), findsNothing);
+  });
+
+  testWidgets('title lockup stays whole on a short phone', (tester) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final c = GameController(saves: SaveService(memory: {}));
+    c.catalog = loadCatalog();
+    c.tourEnabled = false;
+    c.view = AppView.title;
+    await tester.pumpWidget(ViceApp(controller: c));
+    expect(find.text('VICE DYNASTY'), findsOneWidget);
+    expect(find.text('CRIME LIFE SIMULATOR'), findsOneWidget);
+    expect(find.textContaining('…'), findsNothing);
+    final lockup = tester.renderObject<RenderParagraph>(find.text('VICE DYNASTY'));
+    expect(lockup.didExceedMaxLines, isFalse);
+    expect(lockup.size.width, greaterThan(80));
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('hub more grid opens family history without dead ends', (tester) async {
@@ -94,14 +121,16 @@ void main() {
     await tester.pumpWidget(ViceApp(controller: c));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('How to play'));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(find.text('How to play'), findsOneWidget);
-    expect(find.text('1. Tap What happens this year.'), findsOneWidget);
-    expect(find.textContaining('Sit with only one person each year'), findsOneWidget);
+    expect(find.textContaining('Tap What happens this year'), findsOneWidget);
+    expect(find.textContaining('a job or a street'), findsOneWidget);
+    expect(find.textContaining('Prologue years only need the card'), findsOneWidget);
+    expect(find.textContaining('Game Over, no heir'), findsOneWidget);
     expect(find.text('Replay tour'), findsOneWidget);
   });
 
-  testWidgets('tour overlay is skippable from new game', (tester) async {
+  testWidgets('new game Start works while the tour is still pending', (tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.resetPhysicalSize);
@@ -110,13 +139,26 @@ void main() {
     final c = GameController(saves: SaveService(memory: {}));
     c.catalog = loadCatalog();
     c.view = AppView.title;
+    expect(c.tourEnabled, isTrue);
+    expect(c.tourDone, isFalse);
     await tester.pumpWidget(ViceApp(controller: c));
     await tester.tap(find.text('NEW GAME'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
+    expect(c.tourActive, isFalse);
+    expect(find.text('Start here'), findsNothing);
+    expect(find.text('Fill a sample character'), findsOneWidget);
+    await tester.tap(find.text('Fill a sample character'));
+    await tester.pump();
+    expect(find.text('Start'), findsOneWidget);
+    await tester.tap(find.text('Start'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(c.view, AppView.play);
     expect(c.tourActive, isTrue);
-    expect(find.text('Start here'), findsOneWidget);
-    expect(find.text('Step 1 of 14'), findsOneWidget);
+    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.yearCta);
+    expect(find.text('Open the year'), findsOneWidget);
+    expect(find.textContaining('Step 1 of ${Tour.length}'), findsOneWidget);
     await tester.tap(find.text('Skip'));
     await tester.pump();
     expect(c.tourActive, isFalse);
@@ -136,9 +178,7 @@ void main() {
     await tester.tap(find.text('NEW GAME'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
-    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.newGame);
-    expect(c.tourTargetKey(), c.tourKeys.newGame);
-    expect(c.tourTargetKey()!.currentContext, isNotNull);
+    expect(c.tourActive, isFalse);
 
     await c.startNewGame(
       first: 'Julian',
@@ -153,11 +193,21 @@ void main() {
     expect(c.tourTargetKey()!.currentContext, isNotNull);
     expect(c.hubIndex, 0);
 
-    c.nextTour();
+    await c.seeYear();
     await tester.pump();
     expect(Tour.steps[c.tourIndex].anchor, TourAnchor.choice);
+    expect(c.tourTargetKey(), c.tourKeys.choice);
+    expect(c.tourTargetKey()!.currentContext, isNotNull);
 
-    c.nextTour();
+    final ev = c.engine!.currentEvent();
+    expect(ev, isNotNull);
+    await c.choose(c.engine!.choicesFor(ev!).firstWhere((ch) => ch.enabled).choice.id);
+    await tester.pump();
+    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.outcome);
+    expect(c.tourTargetKey(), c.tourKeys.outcome);
+    expect(c.tourTargetKey()!.currentContext, isNotNull);
+
+    c.dismissOutcome();
     await tester.pump();
     expect(Tour.steps[c.tourIndex].anchor, TourAnchor.nextYear);
     expect(c.tourTargetKey(), c.tourKeys.nextYear);
@@ -191,10 +241,6 @@ void main() {
     c.nextTour();
     await tester.pump();
     expect(Tour.steps[c.tourIndex].anchor, TourAnchor.navMore);
-    c.nextTour();
-    await tester.pump();
-    expect(c.hubIndex, 3);
-    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.moreActivities);
     expect(c.tourTargetKey()!.currentContext, isNotNull);
   });
 
@@ -222,7 +268,7 @@ void main() {
 
     expect(find.text('The books'), findsOneWidget);
     expect(find.textContaining('No one on the books'), findsOneWidget);
-    expect(find.textContaining('Hire a hand'), findsWidgets);
+    expect(find.textContaining('hire a hand'), findsWidgets);
     final empireScroll = find.descendant(of: find.byType(EmpireScreen), matching: find.byType(Scrollable));
     await tester.scrollUntilVisible(find.textContaining('No fronts yet'), 240, scrollable: empireScroll);
     expect(find.textContaining('No fronts yet'), findsOneWidget);
@@ -247,6 +293,7 @@ void main() {
     );
     c.engine!.state.stats.money = 8000;
     expect(c.engine!.hireHand(), isNull);
+    c.engine!.state.flags.remove('empire_year_${c.engine!.state.year}');
     c.engine!.debugBusiness('club');
     await tester.pumpWidget(ViceApp(controller: c));
     await tester.pumpAndSettle();
@@ -260,6 +307,12 @@ void main() {
     expect(find.textContaining('Pay'), findsOneWidget);
     expect(find.text('Raise cut'), findsOneWidget);
     expect(find.text('Let go'), findsOneWidget);
+    final hired = c.engine!.state.people[c.engine!.state.crew.first.personId]!;
+    expect(hired.portraitKey, isNotEmpty);
+    expect(
+      find.byWidgetPredicate((w) => w is PixelPortrait && w.person.id == hired.id),
+      findsOneWidget,
+    );
     final empireList = find.descendant(of: find.byType(EmpireScreen), matching: find.byType(Scrollable));
     await tester.scrollUntilVisible(find.text('The Lantern Room'), 240, scrollable: empireList);
     expect(find.text('Fronts'), findsOneWidget);
@@ -438,15 +491,122 @@ void main() {
     expect(ev, isNotNull);
     expect(find.textContaining('2/3'), findsNothing);
     expect(find.textContaining('Pick one. Gold is suggested'), findsNothing);
+    expect(find.textContaining('Suggested —'), findsNothing);
     expect(find.textContaining('pay ·'), findsNothing);
-    expect(find.text('heat · bond'), findsNothing);
     for (final ch in c.engine!.choicesFor(ev!)) {
       final hint = GameEngine.choiceHint(ch.choice);
       if (hint.isNotEmpty) {
         expect(find.text(hint), findsNothing);
       }
+      expect(find.text('${ch.choice.text}  (${ch.reason})'), findsNothing);
     }
-    expect(find.textContaining('Suggested —'), findsWidgets);
+    expect(find.textContaining('Need nerve'), findsNothing);
+    expect(find.textContaining('Need \$'), findsNothing);
+  });
+
+  testWidgets('next year continues after the year card', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final c = GameController(saves: SaveService(memory: {}));
+    c.catalog = loadCatalog();
+    c.tourEnabled = false;
+    await c.startNewGame(
+      first: 'Julian',
+      last: 'Hart',
+      gender: 'man',
+      traits: const ['Ambitious', 'Cunning'],
+    );
+    final year = c.engine!.state.year;
+    await tester.pumpWidget(ViceApp(controller: c));
+    await tester.pump();
+    await c.seeYear();
+    await tester.pump();
+    final ev = c.engine!.currentEvent();
+    expect(ev, isNotNull);
+    await c.choose(c.engine!.choicesFor(ev!).firstWhere((ch) => ch.enabled).choice.id);
+    c.dismissOutcome();
+    await tester.pump();
+    expect(c.engine!.canAgeUp, isTrue);
+    expect(find.text('Next year'), findsWidgets);
+    await tester.tap(find.text('Next year'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(c.engine!.state.year, year + 1);
+    expect(find.text('What happens this year'), findsWidgets);
+  });
+
+  testWidgets('tour glow walk can close a year', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final c = GameController(saves: SaveService(memory: {}));
+    c.catalog = loadCatalog();
+    c.view = AppView.title;
+    await tester.pumpWidget(ViceApp(controller: c));
+    await tester.tap(find.text('NEW GAME'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+    await c.startNewGame(
+      first: 'Julian',
+      last: 'Hart',
+      gender: 'man',
+      traits: const ['Ambitious', 'Cunning'],
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.yearCta);
+    final year = c.engine!.state.year;
+    await tester.tap(find.text('What happens this year'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(c.engine!.currentEvent(), isNotNull);
+    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.choice);
+    final ev = c.engine!.currentEvent()!;
+    await c.choose(c.engine!.choicesFor(ev).firstWhere((ch) => ch.enabled).choice.id);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.outcome);
+    c.dismissOutcome();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(Tour.steps[c.tourIndex].anchor, TourAnchor.nextYear);
+    expect(c.engine!.canAgeUp, isTrue);
+    await tester.tap(find.text('Next year'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(c.engine!.state.year, year + 1);
+  });
+
+  testWidgets('missing tour spotlight does not block the year button', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final c = GameController(saves: SaveService(memory: {}));
+    c.catalog = loadCatalog();
+    c.tourEnabled = true;
+    await c.startNewGame(
+      first: 'Julian',
+      last: 'Hart',
+      gender: 'man',
+      traits: const ['Ambitious', 'Cunning'],
+    );
+    c.tourActive = true;
+    c.tourIndex = Tour.steps.indexWhere((s) => s.anchor == TourAnchor.choice);
+    await tester.pumpWidget(ViceApp(controller: c));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(c.engine!.currentEvent(), isNull);
+    await tester.tap(find.text('What happens this year'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(c.engine!.currentEvent(), isNotNull);
   });
 
   testWidgets('Settings defaults to dark and can toggle paper', (tester) async {
@@ -481,8 +641,8 @@ void main() {
     expect(Palette.light, isTrue);
     expect(find.textContaining('Soft paper'), findsOneWidget);
     final settingsScroll = find.descendant(of: find.byType(SettingsPage), matching: find.byType(Scrollable));
-    await tester.scrollUntilVisible(find.text('Vice Dynasty 1.9.3'), 240, scrollable: settingsScroll);
-    expect(find.text('Vice Dynasty 1.9.3'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Vice Dynasty 1.9.11'), 240, scrollable: settingsScroll);
+    expect(find.text('Vice Dynasty 1.9.11'), findsOneWidget);
   });
 
   testWidgets('Dynasty label is fully visible on a narrow phone', (tester) async {

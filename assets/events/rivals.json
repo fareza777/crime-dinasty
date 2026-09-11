@@ -22,7 +22,7 @@
         "outcomes": [
           {
             "id": "terms",
-            "weight": 100,
+            "weight": 72,
             "title": "Cold hospitality",
             "body": "The Calderas speak politely about boundaries and remember every answer.",
             "log": "Met the Calderas for dinner.",
@@ -37,6 +37,23 @@
             "rivalDelta": {
               "calderas": -2
             }
+          },
+          {
+            "id": "terms_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Met the Calderas for dinner. It ran hot.",
+            "stats": {
+              "charisma": 2,
+              "stress": 6,
+              "heat": 8
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "calderas": -2
+            },
+            "injury": false
           }
         ]
       },
@@ -121,7 +138,7 @@
         "outcomes": [
           {
             "id": "read",
-            "weight": 100,
+            "weight": 72,
             "title": "Read the room",
             "body": "You leave with a small loss and a clearer sense of who answers to Rooke.",
             "log": "Read the Rooke cardroom.",
@@ -136,6 +153,24 @@
             "rivalDelta": {
               "rooke": -1
             }
+          },
+          {
+            "id": "read_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Read the Rooke cardroom. It ran hot.",
+            "stats": {
+              "money": -360,
+              "intelligence": 2,
+              "heat": 8,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -1
+            },
+            "injury": false
           }
         ]
       },
@@ -216,7 +251,7 @@
         "outcomes": [
           {
             "id": "vex",
-            "weight": 100,
+            "weight": 72,
             "title": "A polished offer",
             "body": "You leave with a contact and the sense that Vex has already profiled you.",
             "log": "Heard out House Vex.",
@@ -231,6 +266,24 @@
             "rivalDelta": {
               "vex": -2
             }
+          },
+          {
+            "id": "vex_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Heard out House Vex. It ran hot.",
+            "stats": {
+              "intelligence": 3,
+              "reputation": 1,
+              "heat": 8,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": -2
+            },
+            "injury": false
           }
         ]
       },
@@ -310,7 +363,7 @@
         "outcomes": [
           {
             "id": "listen",
-            "weight": 100,
+            "weight": 72,
             "title": "Night intelligence",
             "body": "You hear a rumor about a rival before it has a chance to become public.",
             "log": "Gathered intelligence at a Marrow room.",
@@ -322,6 +375,23 @@
             "rivalDelta": {
               "marrow": -1
             }
+          },
+          {
+            "id": "listen_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Gathered intelligence at a Marrow room. It ran hot.",
+            "stats": {
+              "intelligence": 3,
+              "heat": 8,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -1
+            },
+            "injury": false
           }
         ]
       },
@@ -401,7 +471,7 @@
         "outcomes": [
           {
             "id": "paid",
-            "weight": 100,
+            "weight": 72,
             "title": "Peace rented",
             "body": "The payment buys time, not respect.",
             "log": "Paid rival tribute.",
@@ -416,6 +486,23 @@
             "rivalDelta": {
               "rooke": -2
             }
+          },
+          {
+            "id": "paid_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Paid rival tribute. It ran hot.",
+            "stats": {
+              "money": -1920,
+              "stress": 3,
+              "heat": 8
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "rooke": -2
+            },
+            "injury": false
           }
         ]
       },
@@ -496,7 +583,7 @@
         "outcomes": [
           {
             "id": "cool",
-            "weight": 100,
+            "weight": 72,
             "title": "A cooler tide",
             "body": "The worker accepts your words without warmth, but the immediate pressure eases.",
             "log": "Eased a Caldera confrontation.",
@@ -510,6 +597,25 @@
             "rivalDelta": {
               "calderas": -3
             }
+          },
+          {
+            "id": "cool_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Eased a Caldera confrontation. It ran hot.",
+            "stats": {
+              "charisma": 2,
+              "heat": 8,
+              "stress": 4
+            },
+            "removeFlags": [
+              "caldera_slight"
+            ],
+            "rivalDelta": {
+              "calderas": -3
+            },
+            "injury": false
           }
         ]
       },

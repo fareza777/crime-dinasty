@@ -1,0 +1,50 @@
+{
+  "asset": "vo/opening.mp3",
+  "lines": [
+    {
+      "text": "Ravenport keeps two calendars.",
+      "start": 0.0,
+      "end": 1.823
+    },
+    {
+      "text": "One for the rain.",
+      "start": 1.997,
+      "end": 2.856
+    },
+    {
+      "text": "One for the names that outlast it.",
+      "start": 3.007,
+      "end": 4.725
+    },
+    {
+      "text": "You inherit a chair, not a pardon.",
+      "start": 5.329,
+      "end": 7.361
+    },
+    {
+      "text": "Sit with the living.",
+      "start": 7.802,
+      "end": 8.707
+    },
+    {
+      "text": "Press a street.",
+      "start": 8.824,
+      "end": 9.741
+    },
+    {
+      "text": "Or let the year close on you.",
+      "start": 10.066,
+      "end": 11.598
+    },
+    {
+      "text": "This is the Harts' weather.",
+      "start": 11.923,
+      "end": 13.235
+    },
+    {
+      "text": "Vice Dynasty.",
+      "start": 13.386,
+      "end": 14.629
+    }
+  ]
+}

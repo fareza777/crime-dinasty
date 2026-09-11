@@ -3,9 +3,10 @@ import 'models/game_models.dart';
 /// Asset paths for the neo-noir art pack.
 class Art {
   static const splash = 'assets/images/splash.png';
+  static const openingStill = 'assets/images/opening_still.png';
   static const logoPlate = 'assets/images/logo_plate.png';
   static const cover = 'assets/images/cover.png';
-  static const titlePoster = 'assets/images/headers/title.png';
+  static const titlePoster = 'assets/images/title_poster.png';
   static const eventPanel = 'assets/images/events/panel_rain.png';
   static const hall = 'assets/images/hall.png';
   static const emptyChair = 'assets/images/empty_chair.png';
@@ -68,8 +69,21 @@ class Art {
     'cousin',
   ];
 
+  static const agedPortraitKeys = <String>[
+    'player_man_old',
+    'player_woman_old',
+    'player_nb_old',
+  ];
+
+  static String agedKeyFor(Person p) {
+    if (p.gender == 'woman') return 'player_woman_old';
+    if (p.gender == 'nonbinary') return 'player_nb_old';
+    return 'player_man_old';
+  }
+
   static String portrait(String key) {
-    final k = portraitKeys.contains(key) ? key : 'player_man';
+    final known = [...portraitKeys, ...agedPortraitKeys];
+    final k = known.contains(key) ? key : 'player_man';
     return 'assets/images/portraits/$k.png';
   }
 
@@ -93,6 +107,11 @@ class Art {
 
     final age = p.ageIn(year);
     if (p.relation == 'self') {
+      if (age >= 52) {
+        if (p.gender == 'woman') return const ['player_woman_old', 'matriarch', 'nessa', 'player_woman'];
+        if (p.gender == 'nonbinary') return const ['player_nb_old', 'vex', 'player_nb', 'cass'];
+        return const ['player_man_old', 'parent_man', 'mentor', 'player_man'];
+      }
       if (p.gender == 'woman') return const ['player_woman', 'spouse_woman', 'mira', 'cass'];
       if (p.gender == 'nonbinary') return const ['player_nb', 'cass', 'vex', 'cousin'];
       return const ['player_man', 'spouse_man', 'ben', 'sibling'];
@@ -141,6 +160,7 @@ class Art {
   }
 
   static String portraitKeyFor(Person p, {int year = 1998}) {
+    if (p.relation == 'self' && p.ageIn(year) >= 52) return agedKeyFor(p);
     if (p.portraitKey.isNotEmpty && portraitKeys.contains(p.portraitKey)) {
       return p.portraitKey;
     }
@@ -183,20 +203,31 @@ class Art {
     return map[key.toLowerCase()] ?? 'assets/icons/stat_rep.png';
   }
 
+  static const districtIds = {
+    'docks',
+    'glassridge',
+    'harbor_lights',
+    'ironyard',
+    'midtown',
+    'old_quarter',
+    'the_flats',
+    'westmere',
+  };
+
   static String district(String id) => 'assets/images/districts/$id.png';
 
   static String crest(String id) => 'assets/images/crests/$id.png';
 
+  static String lifeStill(String key) => districtIds.contains(key) ? district(key) : event(key);
+
   static String event(String key) {
     const aliases = {
-      'street': 'crime_night',
       'crime': 'crime_night',
       'family': 'family_dinner',
-      'heist': 'docks_heist',
-      'docks': 'docks_heist',
-      'court': 'courtroom',
-      'legacy': 'funeral',
+      'rival': 'betrayal',
     };
+    if (key == 'legacy') return emptyChair;
+    if (key == 'laundry') return businessFront('laundry');
     final file = aliases[key] ?? key;
     return 'assets/images/events/$file.png';
   }

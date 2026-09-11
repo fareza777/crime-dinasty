@@ -12,7 +12,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 70,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "shelter",
@@ -100,7 +100,7 @@
     "cooldownYears": 4,
     "minAge": 20,
     "maxAge": 75,
-    "art": "home",
+    "art": "sit",
     "choices": [
       {
         "id": "honest",
@@ -185,7 +185,7 @@
     "cooldownYears": 4,
     "minAge": 22,
     "maxAge": 50,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "hope",
@@ -243,7 +243,7 @@
     "cooldownYears": 4,
     "minAge": 28,
     "maxAge": 75,
-    "art": "home",
+    "art": "sit",
     "choices": [
       {
         "id": "attend",
@@ -330,14 +330,15 @@
     "body": "Your spouse sees another late-night call flash across the room. The question they ask is simple; the answer is not.",
     "category": "family",
     "tags": [
-      "marriage"
+      "marriage",
+      "inside_ok"
     ],
     "weight": 8,
     "once": false,
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "talk",
@@ -429,7 +430,7 @@
     "cooldownYears": 4,
     "minAge": 18,
     "maxAge": 90,
-    "art": "home",
+    "art": "sit",
     "choices": [
       {
         "id": "stay",
@@ -520,7 +521,7 @@
     "cooldownYears": 4,
     "minAge": 25,
     "maxAge": 90,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "read",
@@ -601,7 +602,8 @@
     "category": "family",
     "tags": [
       "legacy",
-      "law"
+      "law",
+      "inside_ok"
     ],
     "weight": 6,
     "once": false,
@@ -673,7 +675,7 @@
     "cooldownYears": 4,
     "minAge": 22,
     "maxAge": 60,
-    "art": "home",
+    "art": "sit",
     "choices": [
       {
         "id": "hold",
@@ -738,7 +740,7 @@
     "cooldownYears": 4,
     "minAge": 38,
     "maxAge": 90,
-    "art": "home",
+    "art": "family_dinner",
     "choices": [
       {
         "id": "legal",
@@ -835,7 +837,7 @@
     "cooldownYears": 4,
     "minAge": 30,
     "maxAge": 90,
-    "art": "home",
+    "art": "sit",
     "choices": [
       {
         "id": "smile",

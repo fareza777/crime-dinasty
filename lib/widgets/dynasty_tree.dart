@@ -15,6 +15,7 @@ class DynastyTreeLayout {
     required this.heirIds,
     required this.firstHeirId,
     required this.chairId,
+    required this.leans,
   });
 
   final List<Person> elders;
@@ -24,6 +25,7 @@ class DynastyTreeLayout {
   final Set<String> heirIds;
   final String? firstHeirId;
   final String chairId;
+  final Map<String, String> leans;
 
   static DynastyTreeLayout from(GameEngine e) {
     final s = e.state;
@@ -90,6 +92,10 @@ class DynastyTreeLayout {
       heirIds: heirs.map((p) => p.id).toSet(),
       firstHeirId: heirs.isEmpty ? null : heirs.first.id,
       chairId: s.playerId,
+      leans: {
+        for (final p in s.people.values)
+          if (e.heirLean(p) != null) p.id: e.heirLean(p)!,
+      },
     );
   }
 }
@@ -199,13 +205,14 @@ class _TreeNode extends StatelessWidget {
     final inLine = layout.heirIds.contains(person.id);
     final dead = !person.isAlive;
     final size = compact ? 48.0 : 56.0;
+    final lean = layout.leans[person.id];
     final status = dead
         ? 'dead'
         : (chair
             ? 'chair'
             : (heir
                 ? 'heir'
-                : (inLine ? 'in line' : person.relation.replaceAll('_', ' '))));
+                : (inLine ? 'in line' : (lean ?? person.relation.replaceAll('_', ' ')))));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

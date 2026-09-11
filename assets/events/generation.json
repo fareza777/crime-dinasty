@@ -1,0 +1,1222 @@
+[
+  {
+    "id": "gen2_chair_test",
+    "title": "The Chair Still Smells Like Them",
+    "body": "The first morning in the chair, a hand who remembers the last blood asks if the name still bites. The rain on the window is the same rain. The city is not. They are waiting to see if you inherited a pardon.",
+    "category": "legacy",
+    "tags": [
+      "generation",
+      "legacy"
+    ],
+    "weight": 28,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 16,
+    "maxAge": 90,
+    "art": "legacy",
+    "requires": {
+      "minGeneration": 2
+    },
+    "choices": [
+      {
+        "id": "bite",
+        "text": "Let the name bite. Keep the weather.",
+        "outcomes": [
+          {
+            "id": "bite",
+            "weight": 100,
+            "title": "The chair accepts you",
+            "body": "You do not apologize for sitting. The hand nods like a invoice stamped paid. Heat notices.",
+            "log": "Took the chair with teeth. The crew filed you as weather.",
+            "stats": {
+              "reputation": 5,
+              "nerve": 4,
+              "heat": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "softer",
+        "text": "Promise a quieter book than the last blood.",
+        "outcomes": [
+          {
+            "id": "softer",
+            "weight": 100,
+            "title": "A different invoice",
+            "body": "Some hands like the promise. Some hear weakness. The rain does not vote.",
+            "log": "Promised a quieter generation. The crew split in the silence.",
+            "stats": {
+              "loyalty": 4,
+              "stress": 3,
+              "reputation": -1
+            },
+            "crewLoyaltyDelta": -4
+          }
+        ]
+      },
+      {
+        "id": "listen",
+        "text": "Ask who still owes the last name a night.",
+        "outcomes": [
+          {
+            "id": "listen",
+            "weight": 100,
+            "title": "Debts with faces",
+            "body": "They give you three names and a street that flinches. Intelligence is a kind of weapon the last blood underused.",
+            "log": "Mapped the last generation's unpaid nights.",
+            "stats": {
+              "intelligence": 5,
+              "heat": 2
+            },
+            "addFlags": [
+              "gen2_debts"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_old_heat",
+    "title": "A File With a New Name",
+    "body": "Vale — or the woman who inherited her drawer — slides a folder across a diner that still never learned to close. Your predecessor's photograph is clipped to yours. 'Dynasties are a filing problem,' she says.",
+    "category": "police",
+    "tags": [
+      "generation",
+      "vale",
+      "detective"
+    ],
+    "weight": 16,
+    "once": true,
+    "cooldownYears": 8,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prosecutor",
+    "requires": {
+      "minGeneration": 2,
+      "anyFlags": [
+        "vale_file",
+        "da_file",
+        "first_heat"
+      ]
+    },
+    "choices": [
+      {
+        "id": "lawyer",
+        "text": "Call counsel before you sit.",
+        "outcomes": [
+          {
+            "id": "counsel",
+            "weight": 100,
+            "title": "Two generations of ink",
+            "body": "The lawyer treats the folder like weather. Vale's heir treats you like unfinished business with a new face.",
+            "log": "Met the inherited file through counsel.",
+            "stats": {
+              "money": -1400,
+              "intelligence": 2,
+              "heat": -3
+            },
+            "addFlags": [
+              "lawyered"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "truth",
+        "text": "Say you are not them. Mean it or don't.",
+        "outcomes": [
+          {
+            "id": "truth",
+            "weight": 100,
+            "title": "A distinction she files",
+            "body": "She writes a new line. It is not a pardon. It is a separate drawer.",
+            "log": "Told Vale's heir the name was inherited, not the crimes.",
+            "stats": {
+              "charisma": 3,
+              "heat": 4,
+              "stress": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "text": "Leave the coffee. Leave the folder.",
+        "outcomes": [
+          {
+            "id": "walk",
+            "weight": 100,
+            "title": "The file follows",
+            "body": "Walking is a family tradition too. The folder does not stay on the counter.",
+            "log": "Walked out on an inherited detective file.",
+            "stats": {
+              "heat": 6,
+              "nerve": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_crew_doubt",
+    "title": "Hands Who Remember",
+    "body": "A lookout who buried someone for the last blood asks, over bad coffee, whether you sit the same chair or a costume. The crew is listening even if they pretend not to.",
+    "category": "crew",
+    "tags": [
+      "generation",
+      "crew"
+    ],
+    "weight": 14,
+    "once": true,
+    "cooldownYears": 6,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "sit",
+    "requires": {
+      "minGeneration": 2,
+      "minCrew": 1
+    },
+    "choices": [
+      {
+        "id": "bonus",
+        "text": "Pay the doubt into silence.",
+        "outcomes": [
+          {
+            "id": "bonus",
+            "weight": 70,
+            "title": "Loyalty, itemized",
+            "body": "Money is a language the last blood spoke fluently. They pocket it. They do not forget the question.",
+            "log": "Bought a generation of crew doubt down a notch.",
+            "stats": {
+              "money": -400,
+              "loyalty": 3
+            },
+            "crewLoyaltyDelta": 8
+          },
+          {
+            "id": "short",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "They took the cash and the doubt",
+            "body": "The envelope closed. The question did not.",
+            "log": "Crew doubt outlived the bonus.",
+            "stats": {
+              "money": -400,
+              "stress": 4
+            },
+            "crewLoyaltyDelta": -4
+          }
+        ]
+      },
+      {
+        "id": "story",
+        "text": "Tell them the night you actually inherited.",
+        "outcomes": [
+          {
+            "id": "story",
+            "weight": 65,
+            "title": "A true weather report",
+            "body": "You do not make it pretty. A few hands stay because ugly honesty is rarer than gold.",
+            "log": "Told the crew the inherited night without perfume.",
+            "stats": {
+              "charisma": 3,
+              "stress": -2
+            },
+            "crewLoyaltyDelta": 5
+          },
+          {
+            "id": "ugly",
+            "weight": 35,
+            "isHarsh": true,
+            "title": "Too true for the table",
+            "body": "Honesty made one hand walk. The rest sat straighter and meaner.",
+            "log": "An inherited night told too true.",
+            "stats": {
+              "stress": 6,
+              "heat": 3
+            },
+            "crewLoyaltyDelta": -6
+          }
+        ]
+      },
+      {
+        "id": "cut",
+        "text": "Let the doubter walk.",
+        "outcomes": [
+          {
+            "id": "cut",
+            "weight": 70,
+            "title": "A thinner book",
+            "body": "They leave with a story. The remaining hands sit straighter. Heat likes a vacuum.",
+            "log": "Cut a hand who remembered the last blood too loudly.",
+            "stats": {
+              "heat": 3,
+              "nerve": 2
+            },
+            "betrayCrew": true
+          },
+          {
+            "id": "mutiny",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "The book slammed",
+            "body": "Two more walk with them. The chair feels larger and stupider.",
+            "log": "Cutting inherited doubt started a walkout.",
+            "stats": {
+              "heat": 6,
+              "stress": 8,
+              "reputation": -3
+            },
+            "betrayCrew": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_rival_wedding",
+    "title": "A Crest at the Table",
+    "body": "A rival house sends a wedding invitation that is also a census. Your name is on the card in a font that looks like a dare. Missing it is an answer. Sitting it is another.",
+    "category": "rival",
+    "tags": [
+      "generation",
+      "war"
+    ],
+    "weight": 13,
+    "once": true,
+    "cooldownYears": 8,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "wedding",
+    "requires": {
+      "minGeneration": 2
+    },
+    "choices": [
+      {
+        "id": "sit",
+        "text": "Sit the table. Drink their wine.",
+        "outcomes": [
+          {
+            "id": "sit",
+            "weight": 100,
+            "title": "A public chair",
+            "body": "You are seen. Hostility thins an inch and sharpens an inch. The city loves a sequel.",
+            "log": "Sat a rival wedding as the new blood.",
+            "stats": {
+              "reputation": 4,
+              "charisma": 3,
+              "heat": 3,
+              "money": -180
+            }
+          }
+        ]
+      },
+      {
+        "id": "gift",
+        "text": "Send gold. Do not send a body.",
+        "outcomes": [
+          {
+            "id": "gift",
+            "weight": 100,
+            "title": "Tribute with manners",
+            "body": "The gift is filed as respect. You are filed as busy. Sometimes busy lives.",
+            "log": "Sent a wedding gift instead of a face.",
+            "stats": {
+              "money": -500,
+              "reputation": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "pass",
+        "text": "The rain is invitation enough.",
+        "outcomes": [
+          {
+            "id": "pass",
+            "weight": 100,
+            "title": "An empty chair they noticed",
+            "body": "They toast your absence like a threat. The map remembers who skipped the census.",
+            "log": "Skipped a rival wedding. The crest noticed.",
+            "stats": {
+              "heat": 2,
+              "reputation": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_front_audit",
+    "title": "Books That Remember Two Lives",
+    "body": "An accountant who kept the last blood's fronts finds a column that only works if you keep lying the same lie. The machines in the laundry still rattle like old secrets.",
+    "category": "business",
+    "tags": [
+      "generation",
+      "business"
+    ],
+    "weight": 12,
+    "once": true,
+    "cooldownYears": 8,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "ledger",
+    "requires": {
+      "minGeneration": 2,
+      "hasBusiness": true
+    },
+    "choices": [
+      {
+        "id": "keep",
+        "text": "Keep the inherited lie. Keep the lights.",
+        "outcomes": [
+          {
+            "id": "keep",
+            "weight": 100,
+            "title": "The same ink",
+            "body": "Quality holds. Heat holds. You are your predecessor with a younger jaw.",
+            "log": "Kept the inherited books dirty and lit.",
+            "stats": {
+              "money": 600,
+              "heat": 4,
+              "assets": 400
+            }
+          }
+        ]
+      },
+      {
+        "id": "clean",
+        "text": "Scrub a column. Pay the year in honesty.",
+        "outcomes": [
+          {
+            "id": "clean",
+            "weight": 100,
+            "title": "A more expensive daylight",
+            "body": "The laundry looks like a laundry. Income coughs. Vale's drawer gets thinner.",
+            "log": "Cleaned an inherited column. The fronts coughed.",
+            "stats": {
+              "money": -300,
+              "heat": -8,
+              "intelligence": 2
+            },
+            "addFlags": [
+              "legitimate_turn"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fire",
+        "text": "Fire the memory. Hire new eyes.",
+        "outcomes": [
+          {
+            "id": "fire",
+            "weight": 100,
+            "title": "A colder office",
+            "body": "The old accountant leaves with a story. New eyes cost cash and buy a year of not being known.",
+            "log": "Fired the last blood's bookkeeper.",
+            "stats": {
+              "money": -250,
+              "heat": -3,
+              "stress": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_sibling_claim",
+    "title": "Blood That Did Not Sit",
+    "body": "A sibling or cousin who did not take the chair asks, without raising their voice, whether the name still feeds the people who share it. The question is a will with the dates left blank.",
+    "category": "family",
+    "tags": [
+      "generation",
+      "family",
+      "legacy"
+    ],
+    "weight": 14,
+    "once": true,
+    "cooldownYears": 10,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "family_dinner",
+    "requires": {
+      "minGeneration": 2
+    },
+    "choices": [
+      {
+        "id": "share",
+        "text": "Cut them into the year.",
+        "outcomes": [
+          {
+            "id": "share",
+            "weight": 100,
+            "title": "A wider table",
+            "body": "Cash leaves. Loyalty arrives. The chair feels less lonely and more expensive.",
+            "log": "Cut unused blood into the new generation's take.",
+            "stats": {
+              "money": -800,
+              "loyalty": 5,
+              "stress": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "chair",
+        "text": "The chair is not a committee.",
+        "outcomes": [
+          {
+            "id": "chair",
+            "weight": 100,
+            "title": "A closed door",
+            "body": "They hear you. They will remember this dinner when you need a spare heir.",
+            "log": "Told unused blood the chair was not a committee.",
+            "stats": {
+              "nerve": 3,
+              "loyalty": -2,
+              "reputation": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "listen",
+        "text": "Ask what they would have done with the rain.",
+        "outcomes": [
+          {
+            "id": "listen",
+            "weight": 100,
+            "title": "A second weather report",
+            "body": "They wanted fewer streets and more daylight. You do not have to obey. You have to have heard.",
+            "log": "Listened to unused blood's unused campaign.",
+            "stats": {
+              "intelligence": 3,
+              "charisma": 2
+            },
+            "addFlags": [
+              "kid_wish_warn"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_war_echo",
+    "title": "The Tooth the Last War Left",
+    "body": "A street still painted in last generation's colors asks who collects now. The house that lost it has a child old enough to be angry. War seasons inherit too.",
+    "category": "rival",
+    "tags": [
+      "generation",
+      "war"
+    ],
+    "weight": 15,
+    "once": true,
+    "cooldownYears": 8,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "crime_night",
+    "requires": {
+      "minGeneration": 2,
+      "hasTerritory": true
+    },
+    "choices": [
+      {
+        "id": "hold",
+        "text": "Hold it. Paint it again.",
+        "outcomes": [
+          {
+            "id": "hold",
+            "weight": 70,
+            "title": "The same corner, new jaw",
+            "body": "You keep the street. Hostility wakes up like a dog that knows the old whistle.",
+            "log": "Held an inherited street against a new angry house.",
+            "stats": {
+              "heat": 6,
+              "reputation": 3,
+              "nerve": 3
+            }
+          },
+          {
+            "id": "hurt",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "A tooth for a tooth",
+            "body": "You keep the paint. You lose blood. The map does not apologize.",
+            "log": "An inherited street fight went ugly.",
+            "stats": {
+              "health": -8,
+              "heat": 8,
+              "stress": 6
+            },
+            "injury": true
+          }
+        ]
+      },
+      {
+        "id": "sell",
+        "text": "Sell the corner back. Buy a quieter year.",
+        "outcomes": [
+          {
+            "id": "sell",
+            "weight": 100,
+            "title": "Cash for a ghost",
+            "body": "They take the street like an apology they did not earn. You take money like a person who wants to see forty.",
+            "log": "Sold an inherited street back to the house that still wanted it.",
+            "stats": {
+              "money": 700,
+              "heat": -4,
+              "reputation": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "talk",
+        "text": "Meet the angry child. Talk like weather.",
+        "outcomes": [
+          {
+            "id": "talk",
+            "weight": 100,
+            "title": "Two new bloods",
+            "body": "You do not promise peace. You promise a season. Sometimes that is the whole treaty.",
+            "log": "Talked an inherited war down to a season.",
+            "stats": {
+              "charisma": 4,
+              "heat": -2,
+              "stress": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen2_skyline",
+    "title": "A Name on Someone Else's Skyline",
+    "body": "From a Midtown window you did not pay for, the city says your surname like a weather warning — and then says the last blood's first name by accident. Sequels are judged in public.",
+    "category": "life",
+    "tags": [
+      "generation",
+      "legacy",
+      "late"
+    ],
+    "weight": 10,
+    "once": true,
+    "cooldownYears": 12,
+    "minAge": 28,
+    "maxAge": 90,
+    "art": "skyline",
+    "requires": {
+      "minGeneration": 2
+    },
+    "choices": [
+      {
+        "id": "claim",
+        "text": "Correct them. The name is yours now.",
+        "outcomes": [
+          {
+            "id": "claim",
+            "weight": 100,
+            "title": "A public correction",
+            "body": "You make them say it right. Reputation climbs. The dead do not get a vote. The living take notes.",
+            "log": "Corrected the city: the name sits with this generation.",
+            "stats": {
+              "reputation": 6,
+              "nerve": 3,
+              "stress": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "share",
+        "text": "Let both names stand in the rain.",
+        "outcomes": [
+          {
+            "id": "share",
+            "weight": 100,
+            "title": "A doubled weather warning",
+            "body": "You do not erase them. You add a line. Dynasties are sentences, not gravestones.",
+            "log": "Let the last blood's name share the skyline.",
+            "stats": {
+              "loyalty": 4,
+              "charisma": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Stay a rumor a little longer.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "A quieter sequel",
+            "body": "The window does not get your face. Vale's drawer stays a generation behind. Sometimes that is the win.",
+            "log": "Kept the new generation a rumor on the skyline.",
+            "stats": {
+              "heat": -4,
+              "reputation": -1,
+              "stress": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_chair_test",
+    "title": "The Chair Has Two Ghosts",
+    "body": "The first blood built the table. The second sat it through a war. You are the third name the rain has to learn. A cousin who remembers both chairs asks if the dynasty is a sentence or a rumor.",
+    "category": "legacy",
+    "tags": [
+      "generation",
+      "legacy"
+    ],
+    "weight": 30,
+    "once": true,
+    "cooldownYears": 99,
+    "minAge": 16,
+    "maxAge": 90,
+    "art": "legacy",
+    "requires": {
+      "minGeneration": 3
+    },
+    "choices": [
+      {
+        "id": "sentence",
+        "text": "Tell them the name is a sentence. It keeps going.",
+        "outcomes": [
+          {
+            "id": "sentence",
+            "weight": 100,
+            "title": "A third line in the ledger",
+            "body": "You do not apologize for inheriting weather. The cousin files you as inevitable. Heat notices the third verse.",
+            "log": "Took the third chair as a sentence, not a rumor.",
+            "stats": {
+              "reputation": 6,
+              "nerve": 3,
+              "heat": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "softer",
+        "text": "Promise the third verse is quieter.",
+        "outcomes": [
+          {
+            "id": "softer",
+            "weight": 100,
+            "title": "A borrowed truce",
+            "body": "Some hands like the promise. The houses that hated the last two bloods will test it anyway.",
+            "log": "Promised a quieter third generation.",
+            "stats": {
+              "loyalty": 5,
+              "stress": 2,
+              "reputation": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Let the cousin talk. Keep the chair a rumor a week longer.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "A delayed coronation",
+            "body": "The rain does not wait. A house that was measuring the last blood starts measuring you in pencil.",
+            "log": "Delayed sitting the third chair. A house took notes.",
+            "stats": {
+              "heat": -2,
+              "reputation": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_empty_crowe",
+    "title": "The Raincoat Is Empty",
+    "body": "The peg by the pier still has a hook. No coat. Someone left coffee that went cold two bloods ago. The city is waiting to see if you invent a new Crowe or bury the name.",
+    "category": "legacy",
+    "tags": [
+      "generation",
+      "legacy"
+    ],
+    "weight": 16,
+    "once": true,
+    "cooldownYears": 20,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "docks",
+    "requires": {
+      "minGeneration": 3
+    },
+    "choices": [
+      {
+        "id": "invent",
+        "text": "Put a new coat on the peg. Train a new weather man.",
+        "outcomes": [
+          {
+            "id": "invent",
+            "weight": 72,
+            "title": "A hired raincoat",
+            "body": "You pay for a voice that talks around the job. It is not Crowe. It is a shape the docks recognize.",
+            "log": "Hired a new raincoat for the pier.",
+            "stats": {
+              "money": -400,
+              "loyalty": 3,
+              "intelligence": 2
+            },
+            "spawnCrew": true
+          },
+          {
+            "id": "invent_thin",
+            "weight": 28,
+            "title": "A coat that does not fit",
+            "body": "The new voice talks too loud. The docks file him as costume. You still paid.",
+            "log": "Tried to replace Crowe. The docks were not convinced.",
+            "stats": {
+              "money": -400,
+              "stress": 4,
+              "reputation": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "bury",
+        "text": "Leave the peg empty. The rain can work without a priest.",
+        "outcomes": [
+          {
+            "id": "bury",
+            "weight": 100,
+            "title": "An unblessed pier",
+            "body": "No coat. No sermon. The work still happens. It just sounds like a third generation.",
+            "log": "Left Crowe's peg empty. The pier did not applaud.",
+            "stats": {
+              "stress": -3,
+              "loyalty": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_vale_desk",
+    "title": "Vale Has a Desk Now",
+    "body": "The detective who knew the first blood as a diner regular is a lieutenant who knows the name as a file. She does not stand in the rain anymore. She sends people who do.",
+    "category": "police",
+    "tags": [
+      "generation",
+      "police"
+    ],
+    "weight": 18,
+    "once": true,
+    "cooldownYears": 16,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "prosecutor",
+    "requires": {
+      "minGeneration": 3,
+      "anyFlags": [
+        "vale_file",
+        "da_file",
+        "first_heat",
+        "lied_to_vale",
+        "vale_respect"
+      ]
+    },
+    "choices": [
+      {
+        "id": "visit",
+        "text": "Walk into the office like the diner still exists.",
+        "outcomes": [
+          {
+            "id": "visit",
+            "weight": 70,
+            "title": "A pencil, not a warrant",
+            "body": "She lets you sit. She does not take out a notebook. That is a kind of mercy the first blood never got in writing.",
+            "log": "Sat with Lieutenant Vale. The file stayed closed for an hour.",
+            "stats": {
+              "heat": -4,
+              "stress": 3,
+              "charisma": 2
+            },
+            "addFlags": [
+              "vale_respect"
+            ]
+          },
+          {
+            "id": "visit_hot",
+            "weight": 30,
+            "title": "The file was already open",
+            "body": "She lets you sit so she can watch your hands. A younger detective takes notes in the hall.",
+            "log": "Visited Vale's desk. The file learned a new face.",
+            "stats": {
+              "heat": 6,
+              "stress": 5
+            },
+            "addFlags": [
+              "vale_file"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "lawyer",
+        "text": "Send counsel. Do not give her a face.",
+        "outcomes": [
+          {
+            "id": "lawyer",
+            "weight": 100,
+            "title": "A voice she already hates",
+            "body": "The lawyer does not like you. Vale likes that even less. The meter still ticks.",
+            "log": "Sent counsel to Vale's desk instead of a face.",
+            "stats": {
+              "money": -1200,
+              "heat": -3
+            }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Stay a rumor on her blotter.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "A name in a drawer",
+            "body": "She does not chase you this season. The file does not close. Third verses rarely vanish.",
+            "log": "Stayed off Vale's blotter. The drawer kept the name.",
+            "stats": {
+              "heat": 2,
+              "stress": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_old_ledger",
+    "title": "Two Handwritings in the Books",
+    "body": "The front's ledger has the first blood's numbers and the second's corrections. An accountant who outlived both asks which column you are.",
+    "category": "business",
+    "tags": [
+      "generation",
+      "business"
+    ],
+    "weight": 14,
+    "once": true,
+    "cooldownYears": 14,
+    "minAge": 20,
+    "maxAge": 90,
+    "art": "ledger",
+    "requires": {
+      "minGeneration": 3,
+      "hasBusiness": true
+    },
+    "choices": [
+      {
+        "id": "keep",
+        "text": "Keep both columns. Add a third in the margin.",
+        "outcomes": [
+          {
+            "id": "keep",
+            "weight": 100,
+            "title": "A triple entry",
+            "body": "The books look like a family. Cover ticks up. The city almost believes three names can share a till.",
+            "log": "Kept two generations of ink and added a margin.",
+            "stats": {
+              "intelligence": 3,
+              "heat": -3,
+              "money": 200
+            }
+          }
+        ]
+      },
+      {
+        "id": "burn",
+        "text": "Start a clean book. Pretend the last two were weather.",
+        "outcomes": [
+          {
+            "id": "burn",
+            "weight": 72,
+            "title": "Fresh paper",
+            "body": "The accountant does not like it. The numbers sit quieter without ghosts.",
+            "log": "Burned the old columns. The front started over.",
+            "stats": {
+              "heat": -6,
+              "loyalty": -3,
+              "intelligence": 1
+            }
+          },
+          {
+            "id": "burn_trace",
+            "weight": 28,
+            "title": "Ash still counts",
+            "body": "Someone kept a copy. House Vex or a bored clerk. The clean book has a shadow.",
+            "log": "Tried to start a clean book. A copy walked.",
+            "stats": {
+              "heat": 8,
+              "stress": 4
+            },
+            "addFlags": [
+              "da_file"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_rival_dinner",
+    "title": "Dinner With the House That Waited",
+    "body": "A rival heir who grew up hating your last two bloods offers a table. They want to know if the third verse inherited the war or only the silver.",
+    "category": "rival",
+    "tags": [
+      "generation",
+      "war"
+    ],
+    "weight": 16,
+    "once": true,
+    "cooldownYears": 12,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "rival",
+    "requires": {
+      "minGeneration": 3
+    },
+    "choices": [
+      {
+        "id": "attend",
+        "text": "Sit. Eat. Do not apologize for the name.",
+        "outcomes": [
+          {
+            "id": "attend",
+            "weight": 70,
+            "title": "Salt and measurement",
+            "body": "They do not toast you. They measure the chair. Hostility holds. You leave with a map of who still wants a street.",
+            "log": "Dined with a house that hated two generations.",
+            "stats": {
+              "charisma": 3,
+              "stress": 3,
+              "reputation": 2
+            }
+          },
+          {
+            "id": "attend_cut",
+            "weight": 30,
+            "title": "A toast that filed teeth",
+            "body": "The wine was fine. The question after dessert was not. A street you thought was quiet is now a topic.",
+            "log": "Dinner turned into a measurement. A street got named.",
+            "stats": {
+              "stress": 6,
+              "heat": 3
+            },
+            "rivalDelta": {
+              "calderas": 6
+            }
+          }
+        ]
+      },
+      {
+        "id": "pay",
+        "text": "Send a gift instead of a face.",
+        "outcomes": [
+          {
+            "id": "pay",
+            "weight": 100,
+            "title": "Tribute with better stationery",
+            "body": "They take the box. They do not take the insult personally. This year.",
+            "log": "Bought a year of quiet from a house that can wait.",
+            "stats": {
+              "money": -600,
+              "heat": -2
+            }
+          }
+        ]
+      },
+      {
+        "id": "yield",
+        "text": "Decline. Let them write the invitation off.",
+        "outcomes": [
+          {
+            "id": "yield",
+            "weight": 100,
+            "title": "An empty chair at their table",
+            "body": "They notice. Houses that wait three generations do not forget a refused dinner.",
+            "log": "Refused a rival dinner. The house filed it.",
+            "stats": {
+              "reputation": 1,
+              "stress": -1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_thin_blood",
+    "title": "The Cousin Who Sat First",
+    "body": "If the line ever went thin, someone borrowed the chair. They are older now. They want to know if the third verse is going to thank them or replace them.",
+    "category": "family",
+    "tags": [
+      "generation",
+      "family"
+    ],
+    "weight": 12,
+    "once": true,
+    "cooldownYears": 18,
+    "minAge": 18,
+    "maxAge": 90,
+    "art": "family",
+    "requires": {
+      "minGeneration": 3
+    },
+    "choices": [
+      {
+        "id": "thank",
+        "text": "Thank them. Keep them near the books.",
+        "outcomes": [
+          {
+            "id": "thank",
+            "weight": 100,
+            "title": "A living appendix",
+            "body": "They do not want the chair. They want to be useful. Loyalty holds if you mean it.",
+            "log": "Kept the thin-blood cousin near the books.",
+            "stats": {
+              "loyalty": 5,
+              "stress": -2
+            },
+            "addFlags": [
+              "thin_blood"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "replace",
+        "text": "Pay them off. The chair is not a timeshare.",
+        "outcomes": [
+          {
+            "id": "replace",
+            "weight": 72,
+            "title": "A quiet buyout",
+            "body": "They take the envelope. Family dinners get shorter. The name gets cleaner.",
+            "log": "Bought the thin-blood cousin out of the chair's orbit.",
+            "stats": {
+              "money": -800,
+              "reputation": 2,
+              "loyalty": -3
+            }
+          },
+          {
+            "id": "replace_rift",
+            "weight": 28,
+            "title": "A relative with another crest",
+            "body": "They take the envelope and a story. Someone across the water likes cousins who feel unpaid.",
+            "log": "Tried to buy out a cousin. They left with a story.",
+            "stats": {
+              "money": -800,
+              "heat": 4
+            },
+            "addFlags": [
+              "family_rift"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gen3_name_stone",
+    "title": "The Name in Someone Else's Mouth",
+    "body": "A paper on Midtown still prints the last blood as if they were sitting. Your face is a correction they have not typeset. The rain does not care which generation the headline uses.",
+    "category": "life",
+    "tags": [
+      "generation",
+      "legacy",
+      "late"
+    ],
+    "weight": 10,
+    "once": true,
+    "cooldownYears": 12,
+    "minAge": 22,
+    "maxAge": 90,
+    "art": "skyline",
+    "requires": {
+      "minGeneration": 3
+    },
+    "choices": [
+      {
+        "id": "correct",
+        "text": "Correct them. The name sits here now.",
+        "outcomes": [
+          {
+            "id": "correct",
+            "weight": 100,
+            "title": "A typeset third verse",
+            "body": "They print it right. Reputation climbs. The dead do not get a vote. The living take notes twice.",
+            "log": "Corrected the city: the third generation sits.",
+            "stats": {
+              "reputation": 6,
+              "nerve": 2,
+              "stress": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "share",
+        "text": "Let three names stand in the rain.",
+        "outcomes": [
+          {
+            "id": "share",
+            "weight": 100,
+            "title": "A weather warning with footnotes",
+            "body": "You do not erase them. You add a line. Dynasties are paragraphs.",
+            "log": "Let three generations share the skyline.",
+            "stats": {
+              "loyalty": 4,
+              "charisma": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "hide",
+        "text": "Stay a rumor a little longer.",
+        "outcomes": [
+          {
+            "id": "hide",
+            "weight": 100,
+            "title": "A quieter third verse",
+            "body": "The window does not get your face. Vale's drawer stays a generation behind. Sometimes that is the win.",
+            "log": "Kept the third generation a rumor on the skyline.",
+            "stats": {
+              "heat": -4,
+              "reputation": -1,
+              "stress": -2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

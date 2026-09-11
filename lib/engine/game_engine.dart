@@ -34,6 +34,8 @@ class GameEngine {
   GameState state;
   final EventCatalog catalog;
   SeededRng rng;
+  List<String> lastUnlocks = [];
+  String? lastPressResult;
 
   static GameEngine newGame({
     required EventCatalog catalog,
@@ -245,6 +247,7 @@ class GameEngine {
     st.pending.add(PendingEvent(eventId: 'prologue_rain', triggerYear: year));
     final engine = GameEngine(state: st, catalog: catalog, rng: rng);
     engine._applyTraitStatNudge();
+    engine._setYearBeats();
     return engine;
   }
 
@@ -314,9 +317,8 @@ class GameEngine {
     if (e.once && state.seenEvents.contains(e.id)) return false;
     final cd = state.cooldowns[e.id];
     if (!ignoreCooldown && cd != null && cd > state.year) return false;
-    if (state.inPrison && e.requires.inPrison != true && e.category != 'prison') {
-      // prison catalog uses inPrison: true; allow prison category always
-      if (e.category != 'prison') return false;
+    if (state.inPrison && e.requires.inPrison != true && e.category != 'prison' && !e.tags.contains('inside_ok')) {
+      return false;
     }
     if (!state.inPrison && (e.requires.inPrison == true || e.category == 'prison')) {
       return false;
@@ -355,7 +357,9 @@ class GameEngine {
       return 'Need an adult heir.';
     }
     if (r.inPrison == true && !state.inPrison) return 'Not inside.';
-    if (r.inPrison == false && state.inPrison) return 'Not while locked up.';
+    if (r.inPrison == false && state.inPrison && event?.tags.contains('inside_ok') != true) {
+      return 'Not while locked up.';
+    }
     if (r.hasBusiness == true && state.businesses.isEmpty) return 'Need a business.';
     if (r.hasTerritory == true && !state.territories.any((t) => t.controller == 'player')) {
       return 'Need turf.';
@@ -435,24 +439,257 @@ class GameEngine {
 
   /// Primary life-loop label (plain verbs).
   String continueLabel() {
+    if (state.phase == 'ending') {
+      return state.endingId == 'forgotten' ? 'Game over' : 'See how it ended';
+    }
     if (state.awaitingHeir) return 'Choose who takes over';
-    if (state.phase == 'ending') return 'See how it ended';
     if (state.currentEventId != null) return 'Finish this card';
     if (yearEventPending) return 'What happens this year';
     return 'Next year';
+  }
+
+  void _setYearBeats() {
+    final hot = state.inPrison || warPhase != null || state.stats.heat >= 55 || midlifePinch;
+    state.eventTarget = hot ? 2 : 1;
+  }
+
+  int sentenceAfterCounsel(int years) => max(0, years - (state.lawyerQuality ~/ 25));
+
+  bool _hasRole(List<String> roles) =>
+      state.crew.any((c) => !c.imprisoned && roles.contains(c.role));
+
+  String _neededRole() {
+    final have = state.crew.map((c) => c.role).toSet();
+    const order = ['lookout', 'driver', 'hacker', 'accountant', 'muscle', 'enforcer'];
+    for (final r in order) {
+      if (!have.contains(r)) return r;
+    }
+    return rng.pick(WorldContent.crewRoles);
+  }
+
+  bool _satRecently(String id, int years) {
+    for (var y = state.year - years; y <= state.year; y++) {
+      if (state.flags.contains('sat_who_${y}_$id')) return true;
+    }
+    return false;
+  }
+
+  void _queueOnce(String eventId, {int yearsAhead = 0}) {
+    if (state.pending.any((p) => p.eventId == eventId)) return;
+    state.pending.add(PendingEvent(eventId: eventId, triggerYear: state.year + yearsAhead));
+  }
+
+  String chapterPin() {
+    final f = state.flags;
+    if (f.contains('chapter_prologue')) return 'Prologue · The rain is still deciding.';
+    if (f.contains('quiet_pier_looked') && !f.contains('quiet_pier_crate_done') && !f.contains('quiet_pier_done')) {
+      return 'Chapter · The Quiet Pier';
+    }
+    if (f.contains('crow_ledger') || f.contains('crowe_secret')) return 'Chapter · The Crow Ledger';
+    if (f.contains('glassridge_lead') || f.contains('heist_planned')) return 'Chapter · Glassridge';
+    if (f.contains('da_file') || f.contains('vale_file')) return 'Chapter · Crown weather';
+    if (warPhase != null) return 'Chapter · War season';
+    if (state.inPrison) return 'Chapter · The corridor';
+    if (f.contains('empire_ready')) return 'Chapter · The name on the skyline';
+    if (state.age >= 48) return 'Chapter · Late weather';
+    if (state.age >= 32) return 'Chapter · Midlife books';
+    return 'Chapter · Early years in Ravenport';
+  }
+
+  List<(String, bool)> empireChecks() {
+    return [
+      ('Three fronts', state.businesses.length >= 3),
+      ('Three streets', state.territories.where((t) => t.controller == 'player').length >= 3),
+      ('Third generation', state.generation >= 3),
+      ('Adult heir', eligibleHeirs().isNotEmpty),
+    ];
+  }
+
+  String lifeArt() {
+    if (state.inPrison) return 'prison';
+    if (state.phase == 'ending' || state.awaitingHeir) return 'funeral';
+    if (warPhase != null) return 'docks';
+    if (state.stats.heat >= 60) return 'crime_night';
+    final held = state.territories.where((t) => t.controller == 'player').toList();
+    if (held.isNotEmpty) {
+      held.sort((a, b) => b.influence.compareTo(a.influence));
+      return held.first.id;
+    }
+    return 'skyline';
+  }
+
+  String lifeStill() => Art.lifeStill(lifeArt());
+
+  int quietStreak() => _flagInt('quiet_streak_');
+
+  int _flagInt(String prefix) {
+    for (final f in state.flags) {
+      if (f.startsWith(prefix)) {
+        return int.tryParse(f.substring(prefix.length)) ?? 0;
+      }
+    }
+    return 0;
+  }
+
+  void _setFlagInt(String prefix, int n) {
+    state.flags.removeWhere((f) => f.startsWith(prefix));
+    if (n > 0) state.flags.add('$prefix$n');
+  }
+
+  void _tickHonestClimb() {
+    var n = _flagInt('honest_streak_') + 1;
+    _setFlagInt('honest_streak_', n);
+    if (n == 5 && !state.flags.contains('honest_rung_1')) {
+      state.flags.add('honest_rung_1');
+      _queueOnce('promotion_shift', yearsAhead: 1);
+      state.log('Five honest years. A quieter door opened.', category: 'life');
+    } else if (n == 10 && !state.flags.contains('honest_rung_2')) {
+      state.flags.add('honest_rung_2');
+      _queueOnce('promotion_shift_2', yearsAhead: 1);
+      state.log('Ten honest years. Daylight started to look like a living.', category: 'life');
+    }
+  }
+
+  int _sitCount(String id, int years) {
+    var n = 0;
+    for (var y = state.year - years; y <= state.year; y++) {
+      if (state.flags.contains('sat_who_${y}_$id')) n++;
+    }
+    return n;
+  }
+
+  String? heirLean(Person p) {
+    if (!p.isAlive) return null;
+    if (p.lifePath == 'legal') return 'daylight';
+    if (p.lifePath == 'rival') return 'other crest';
+    if (state.flags.contains('lean_legal_${p.id}')) return 'leans daylight';
+    if (state.flags.contains('lean_family_${p.id}')) return 'leans the table';
+    if (p.relation == 'child' && p.adultIn(state.year) && p.lifePath == 'family') return 'the table';
+    return null;
+  }
+
+  String houseWeather(RivalFamily r) {
+    return switch (r.id) {
+      'calderas' => 'buys the year with manners',
+      'rooke' => 'breaks a door and calls it weather',
+      'vex' => 'traces a name through glass',
+      'marrow' => 'asks for blood like rent',
+      _ => 'is moving',
+    };
+  }
+
+  String houseTakeVerb(RivalFamily r) {
+    return switch (r.id) {
+      'calderas' => 'bought',
+      'rooke' => 'broke into',
+      'vex' => 'filed a claim on',
+      'marrow' => 'bled',
+      _ => 'took',
+    };
+  }
+
+  String musicBed() {
+    if (state.inPrison) return 'prison';
+    if (warPhase != null || state.stats.heat >= 55) return 'war';
+    return 'docks';
+  }
+
+  Person? eventFace(EventDef ev) {
+    final id = ev.id.toLowerCase();
+    Person? take(String pid) {
+      final p = state.people[pid];
+      return p == null || !p.isAlive ? null : p;
+    }
+
+    if (id.contains('vale') || id.contains('prosecutor') || id.contains('detective') || ev.art == 'prosecutor') {
+      return take('p_foil');
+    }
+    if (id.contains('crowe') || id.contains('mentor') || id.contains('crow_')) return take('p_mentor');
+    if (id.contains('cass') || id.contains('caldera')) return take('p_cass');
+    if (id.contains('mira') || (id.contains('harbor') && ev.category == 'family')) return take('p_mira');
+    if (id.contains('ben') || (id.contains('glassridge') && ev.category == 'family')) return take('p_ben');
+    if (ev.category == 'crew' && state.crew.isNotEmpty) {
+      return take(state.crew.first.personId);
+    }
+    if (ev.category == 'family') {
+      final spouse = _spouse();
+      if (spouse != null) return spouse;
+      final kid = state.people.values.where((p) => p.relation == 'child' && p.isAlive).toList();
+      if (kid.isNotEmpty) return kid.first;
+      return take('p_mira') ?? take('p_ben');
+    }
+    if (ev.category == 'rival') return take('p_cass') ?? take('p_foil');
+    if (ev.category == 'police') return take('p_foil');
+    return null;
   }
 
   bool get yearEventPending =>
       state.currentEventId == null &&
       !state.awaitingHeir &&
       state.phase != 'ending' &&
-      state.eventsThisYear < state.eventTarget;
+      state.eventsThisYear < 1;
+
+  bool get extraBeatAvailable {
+    if (state.currentEventId != null || state.awaitingHeir || state.phase == 'ending') return false;
+    if (state.eventsThisYear < 1) return false;
+    if (state.inPrison || state.flags.contains('chapter_prologue')) return false;
+    final hot = warPhase != null || state.stats.heat >= 55 || midlifePinch;
+    if (!hot || state.eventsThisYear >= 2) return false;
+    return catalog.events.any(eventEligible);
+  }
+
+  bool get midlifePinch {
+    if (state.age < 32 || state.age > 48) return false;
+    if (warPhase != null || state.stats.heat >= 45) return true;
+    return state.people.values.any((p) {
+      if (p.relation != 'child' || !p.isAlive) return false;
+      final age = p.ageIn(state.year);
+      return age >= 12 && age <= 18;
+    });
+  }
+
+  bool get yearVerbRequired => !state.flags.contains('chapter_prologue');
+
+  bool get streetMoveThisYear => state.flags.contains('street_year_${state.year}');
+
+  bool get yearVerbUsed => state.activityUsed || streetMoveThisYear;
+
+  bool get empireUsed => state.flags.contains('empire_year_${state.year}');
 
   bool get canAgeUp =>
       state.currentEventId == null &&
       !state.awaitingHeir &&
       state.phase != 'ending' &&
-      state.eventsThisYear >= state.eventTarget;
+      state.eventsThisYear >= 1 &&
+      (!yearVerbRequired || yearVerbUsed) &&
+      !extraBeatAvailable;
+
+  String? yearVerbBlock(String kind) {
+    if (!yearVerbUsed) return null;
+    if (kind == 'street' && streetMoveThisYear) return 'You already spent the year\'s street.';
+    if (kind == 'job' && state.activityUsed && !streetMoveThisYear) {
+      return 'You already spent the year\'s move.';
+    }
+    return 'You already spent the year\'s move.';
+  }
+
+  String? empireBlock() {
+    if (empireUsed) return 'The books already moved this year.';
+    return null;
+  }
+
+  void _spendEmpire() {
+    state.flags.add('empire_year_${state.year}');
+  }
+
+  void _spendYearVerb(String kind) {
+    if (kind == 'street') {
+      state.flags.add('street_year_${state.year}');
+      state.activityUsed = true;
+    } else if (kind == 'job') {
+      state.activityUsed = true;
+    }
+  }
 
   bool get guidedStart =>
       state.generation == 1 && state.year <= WorldContent.startYear + 2;
@@ -499,16 +736,18 @@ class GameEngine {
       return null;
     }
     if (state.currentEventId != null) return null;
-    if (state.eventsThisYear < state.eventTarget) {
+    if (state.eventsThisYear < 1) {
       final e = drawEvent();
       if (e != null) return null;
-      // no event available — close year
+      state.eventsThisYear = 1;
     }
+    if (!canAgeUp) return null;
     ageUp();
     return null;
   }
 
   ResolveResult choose(String choiceId, {bool retry = false}) {
+    lastUnlocks = [];
     final event = currentEvent();
     if (event == null) {
       return ResolveResult(
@@ -583,8 +822,54 @@ class GameEngine {
       if (player.traits.contains('Patient') && !o.isHarsh) w += 8;
       return w;
     });
+    _noteSpecialChoice(event, choice);
+    _stingYield(event, choice);
     _applyOutcome(event, choice, outcome);
     return ResolveResult(event: event, outcome: outcome);
+  }
+
+  void _noteSpecialChoice(EventDef event, ChoiceDef choice) {
+    if (event.id.startsWith('war_')) {
+      state.flags.removeWhere((f) => f.startsWith('war_choice_'));
+      state.flags.add('war_choice_${choice.id}');
+    }
+    if (event.id == 'adult_child_question') {
+      state.flags.removeWhere((f) => f.startsWith('kid_wish_') && f != 'kid_wish_applied');
+      Person? kid;
+      final kids = state.people.values.where((p) => p.relation == 'child' && p.isAlive).toList()
+        ..sort((a, b) => b.ageIn(state.year).compareTo(a.ageIn(state.year)));
+      if (kids.isNotEmpty) kid = kids.first;
+      void stamp(String kind) {
+        state.flags.add('kid_wish_$kind');
+        if (kid != null) state.flags.add('kid_wish_${kid.id}_$kind');
+      }
+
+      if (choice.id == 'legal') stamp('legal');
+      if (choice.id == 'family') stamp('family');
+      if (choice.id == 'warn') stamp('warn');
+    }
+    if ((event.id == 'detective_card' || event.id == 'gen2_old_heat' || event.id == 'gen3_vale_desk') && choice.id == 'lawyer') {
+      state.lawyerQuality = min(100, state.lawyerQuality + 25);
+    }
+  }
+
+  void _stingYield(EventDef event, ChoiceDef choice) {
+    const yieldIds = {'walk', 'pass', 'yield', 'hide', 'ignore'};
+    if (!yieldIds.contains(choice.id)) return;
+    if (event.id.startsWith('act_')) return;
+    final hot = hottestRival();
+    if (hot != null) hot.hostility = min(100, hot.hostility + 4);
+    state.stats.reputation = max(0, state.stats.reputation - 2);
+    var n = yieldCount();
+    state.flags.removeWhere((f) => f.startsWith('yield_count_'));
+    state.flags.add('yield_count_${n + 1}');
+    if (state.eventsThisYear >= 1) {
+      final held = state.territories.where((t) => t.controller == 'player').toList();
+      if (held.isNotEmpty) {
+        final t = rng.pick(held);
+        t.influence = max(0, t.influence - 8);
+      }
+    }
   }
 
   bool outcomeLooksClean(OutcomeDef o) => !o.arrest && !o.death && !o.injury && !o.lifeSentence;
@@ -638,11 +923,21 @@ class GameEngine {
       state.stats.health = max(1, state.stats.health - (8 + rng.nextInt(10)));
       state.stats.stress = min(100, state.stats.stress + 8);
     }
+    if (event.id == 'act_court') {
+      bumpBond('p_mira', 12);
+      bumpBond('p_ben', 10);
+    }
     var enterPrison = false;
     if (o.arrest || o.setPrisonYears != null) {
-      final years = o.setPrisonYears ?? (1 + rng.nextInt(3));
-      _enterPrison(years);
-      enterPrison = true;
+      var years = o.setPrisonYears ?? (1 + rng.nextInt(3));
+      years = sentenceAfterCounsel(years);
+      if (years <= 0) {
+        state.log('Counsel kept the door from closing.', category: 'police');
+        state.stats.heat = max(0, state.stats.heat - 6);
+      } else {
+        _enterPrison(years);
+        enterPrison = true;
+      }
     }
     if (o.lifeSentence) {
       _enterPrison(99);
@@ -681,13 +976,51 @@ class GameEngine {
       state.eventsThisYear += 1;
     } else if (choice.id != 'skip') {
       state.activityUsed = true;
+      const risk = {
+        'act_petty_theft',
+        'act_smuggle',
+        'act_robbery',
+        'act_cyber',
+        'act_prison_politics',
+      };
+      if (risk.contains(event.id)) {
+        state.flags.add('risk_job_${state.year}');
+        state.flags.removeWhere((f) => f.startsWith('honest_streak_'));
+        if (event.id == 'act_cyber') {
+          final n = _flagInt('cyber_count_') + 1;
+          _setFlagInt('cyber_count_', n);
+          if (n > 1) {
+            state.stats.heat = min(100, state.stats.heat + 3 * (n - 1));
+            state.log('The glass remembers previous ledgers.', category: 'crime');
+          }
+        }
+      } else {
+        state.flags.add('quiet_job_${state.year}');
+        if (event.id == 'act_lay_low') {
+          state.flags.add('hid_year_${state.year}');
+        }
+        if (event.id == 'act_side_hustle') {
+          _tickHonestClimb();
+          if (state.flags.contains('honest_rung_2')) {
+            state.stats.money += 160;
+          } else if (state.flags.contains('honest_rung_1')) {
+            state.stats.money += 80;
+          }
+        }
+        if (event.id == 'act_manage') {
+          for (final b in state.businesses) {
+            b.quality = min(100, b.quality + 8);
+            b.cover = min(24, b.cover + 2);
+          }
+        }
+      }
     }
     if (state.stats.health <= 0 && player.isAlive) {
       _killPlayer('The body gave out.');
     }
     _peaks();
     _checkAchievements();
-    if (!state.awaitingHeir) state.phase = 'playing';
+    if (!state.awaitingHeir && state.phase != 'ending') state.phase = 'playing';
     if (enterPrison) state.generationBreakPending = true;
     _recomputeAssets();
   }
@@ -725,41 +1058,123 @@ class GameEngine {
     player.deathYear = state.year;
     player.deathCause = cause;
     player.lifePath = 'deceased';
-    _beginHeir(cause.toLowerCase().contains('age') || state.age >= 70 ? 'died' : 'died');
+    if (!state.flags.contains('chapter_prologue') && !_nameEarnedContinue) {
+      _beginGameOver('forgotten');
+      return;
+    }
+    _beginHeir('died');
+  }
+
+  bool get _nameEarnedContinue {
+    if (state.generation >= 2) return true;
+    if (state.flags.contains('name_on_board')) return true;
+    if (state.flags.contains('did_first_score')) return true;
+    if (state.businesses.isNotEmpty) return true;
+    if (state.crew.isNotEmpty) return true;
+    if (state.territories.any((t) => t.controller == 'player')) return true;
+    return false;
+  }
+
+  bool get _emptyCityBoard =>
+      state.businesses.isEmpty &&
+      state.crew.isEmpty &&
+      !state.territories.any((t) => t.controller == 'player');
+
+  int yieldCount() {
+    for (final f in state.flags) {
+      if (f.startsWith('yield_count_')) {
+        return int.tryParse(f.substring('yield_count_'.length)) ?? 0;
+      }
+    }
+    return 0;
+  }
+
+  void _beginGameOver(String id) {
+    if (state.phase == 'ending' && state.endingId != null) return;
+    _recordLegacy('forgotten');
+    state.endingId = id;
+    state.heirReason = 'forgotten';
+    state.awaitingHeir = false;
+    state.currentEventId = null;
+    state.generationBreakPending = false;
+    state.phase = 'ending';
+    if (player.isAlive) player.lifePath = 'forgotten';
+    state.log('The city closed the file. Nobody sits the chair.', category: 'legacy');
   }
 
   void _beginHeir(String reason) {
-    if (state.awaitingHeir) return;
+    if (state.awaitingHeir || state.phase == 'ending') return;
+    if (!state.flags.contains('chapter_prologue') && !_nameEarnedContinue) {
+      _beginGameOver('forgotten');
+      return;
+    }
     _recordLegacy(reason);
-    state.awaitingHeir = true;
+    _assignEnding(reason);
     state.heirReason = reason;
-    state.phase = 'heir';
     state.currentEventId = null;
     state.generationBreakPending = true;
-    // If nobody eligible, spawn a distant cousin as last-ditch blood.
     if (eligibleHeirs().isEmpty) {
-      final g = NameBank.gender(rng);
-      final cousin = Person(
-        id: 'p_cousin_${state.year}',
-        firstName: NameBank.first(rng, g),
-        lastName: state.dynastyName,
-        gender: g,
-        birthYear: state.year - (18 + rng.nextInt(8)),
-        traits: [rng.pick(WorldContent.traits), rng.pick(WorldContent.traits)],
-        relation: 'cousin',
-        lifePath: 'family',
-        loyaltyToFamily: 35 + rng.nextInt(25),
-      );
-      cousin.personalStats = _statsForHeir(cousin);
-      _stampPortrait(cousin);
-      state.people[cousin.id] = cousin;
-      state.flags.add('thin_blood');
-      state.log('A thin-blood cousin surfaced when the chair went empty.', category: 'family');
+      if (state.flags.contains('chapter_prologue')) {
+        final g = NameBank.gender(rng);
+        final cousin = Person(
+          id: 'p_cousin_${state.year}',
+          firstName: NameBank.first(rng, g),
+          lastName: state.dynastyName,
+          gender: g,
+          birthYear: state.year - (18 + rng.nextInt(8)),
+          traits: [rng.pick(WorldContent.traits), rng.pick(WorldContent.traits)],
+          relation: 'cousin',
+          lifePath: 'family',
+          loyaltyToFamily: 35 + rng.nextInt(25),
+        );
+        cousin.personalStats = _statsForHeir(cousin);
+        _stampPortrait(cousin);
+        state.people[cousin.id] = cousin;
+        state.flags.add('thin_blood');
+        state.log('A thin-blood cousin surfaced when the chair went empty.', category: 'family');
+        state.awaitingHeir = true;
+        state.phase = 'ending';
+        return;
+      }
+      state.endingId = 'bloodline_ends';
+      state.awaitingHeir = false;
+      state.phase = 'ending';
+      return;
     }
+    state.awaitingHeir = true;
+    state.phase = 'ending';
+  }
+
+  void _assignEnding(String reason) {
+    if (state.endingId != null) return;
+    if (reason == 'life sentence') {
+      state.endingId = 'life_inside';
+    } else if (reason == 'retired') {
+      if (state.flags.contains('empire_ready')) {
+        state.endingId = 'empire';
+      } else if (state.flags.contains('legitimate_turn')) {
+        state.endingId = 'gone_straight';
+      } else {
+        state.endingId = 'retired_quiet';
+      }
+    } else if (state.age >= 70 || (player.deathCause ?? '').toLowerCase().contains('old')) {
+      state.endingId = 'died_old';
+    } else {
+      state.endingId = 'died_street';
+    }
+  }
+
+  void dismissEnding() {
+    if (state.awaitingHeir && eligibleHeirs().isNotEmpty) {
+      state.phase = 'heir';
+      return;
+    }
+    state.phase = 'ending';
   }
 
   void _recordLegacy(String fate) {
     final epitaph = switch (fate) {
+      'forgotten' => 'The city closed the file. Nobody sat the chair.',
       'retired' => 'Stepped back while the city was still listening.',
       'life sentence' => 'The state took the remaining years.',
       'died' => player.deathCause ?? 'Ended under Ravenport rain.',
@@ -810,11 +1225,11 @@ class GameEngine {
     state.prisonYearsLeft = 0;
     state.eventsThisYear = 0;
     state.activityUsed = false;
-    state.eventTarget = 1;
     state.currentEventId = null;
     state.phase = 'playing';
     state.notableThisLife = [];
     state.peakWealth = state.stats.money + state.stats.assets;
+    state.endingId = null;
     state.flags.remove('inside');
     state.flags.remove('new_blood');
     // Personal flags drop; family flags stay.
@@ -832,11 +1247,15 @@ class GameEngine {
     state.stats.reputation = ((state.stats.reputation * 0.7).round() + (heir.loyaltyToFamily ~/ 10)).clamp(0, 100);
     state.stats.heat = (state.stats.heat * 0.5).round().clamp(0, 100);
     final hs = heir.personalStats ?? _statsForHeir(heir);
+    var crimeYears = 0;
+    for (final f in state.flags) {
+      if (f.startsWith('risk_job_')) crimeYears++;
+    }
     state.stats.health = hs.health;
-    state.stats.intelligence = hs.intelligence;
+    state.stats.intelligence = min(100, hs.intelligence + (heir.lifePath == 'legal' ? 8 : 0));
     state.stats.charisma = hs.charisma;
-    state.stats.nerve = hs.nerve;
-    state.stats.loyalty = hs.loyalty;
+    state.stats.nerve = min(100, hs.nerve + min(14, crimeYears));
+    state.stats.loyalty = min(100, hs.loyalty + (heir.lifePath == 'family' ? 6 : 0));
     state.stats.stress = 18;
     // Crew tests the new blood.
     state.crew.removeWhere((c) {
@@ -851,6 +1270,23 @@ class GameEngine {
     for (final r in state.rivals) {
       r.hostility = min(100, r.hostility + 4 + rng.nextInt(6));
     }
+    final hot = hottestRival();
+    if (hot != null) {
+      if (hot.hostility >= 40) {
+        hot.hostility = min(100, hot.hostility + 14);
+        if (hot.hostility >= 52 && warPhase == null) {
+          _setWar('threat', hot);
+          _queueOnce('war_threat_card');
+        }
+      } else {
+        hot.hostility = min(100, hot.hostility + 8);
+      }
+    }
+    if (state.generation == 2) {
+      _queueOnce('gen2_chair_test');
+    } else if (state.generation >= 3) {
+      _queueOnce('gen3_chair_test');
+    }
     state.log(
       '${heir.name} took the chair after ${old.firstName}. The city tested the new blood immediately.',
       category: 'family',
@@ -859,6 +1295,7 @@ class GameEngine {
     if (state.generation >= 3) unlock('generation_three');
     _checkAchievements();
     _recomputeAssets();
+    _setYearBeats();
   }
 
   Stats _statsForHeir(Person heir) {
@@ -885,7 +1322,7 @@ class GameEngine {
     Art.claimKey(p, used, year: state.year);
   }
 
-  void _recruitCrew() {
+  void _recruitCrew({String? role}) {
     final g = NameBank.gender(rng);
     final p = Person(
       id: 'crew_${state.year}_${rng.nextInt(9999)}',
@@ -903,36 +1340,56 @@ class GameEngine {
     state.crew.add(
       CrewMember(
         personId: p.id,
-        role: rng.pick(WorldContent.crewRoles),
+        role: role ?? _neededRole(),
         skill: 35 + rng.nextInt(40),
         loyalty: 45 + rng.nextInt(30) + (player.traits.contains('Loyal') ? 10 : 0),
         cut: 8 + rng.nextInt(8),
       ),
     );
     state.flags.add('has_crew');
+    state.flags.add('name_on_board');
     state.log('${p.name} signed on as ${state.crew.last.role}.', category: 'crew');
     if (state.crew.length >= 3) unlock('crew_of_three');
   }
 
   void _marry() {
     if (_spouse() != null) return;
-    final g = player.gender == 'woman' ? 'man' : (player.gender == 'man' ? 'woman' : NameBank.gender(rng));
-    final p = Person(
-      id: 'spouse_${state.year}',
-      firstName: NameBank.first(rng, g),
-      lastName: rng.chance(40) ? state.dynastyName : NameBank.last(rng),
-      gender: g,
-      birthYear: player.birthYear + rng.nextInt(7) - 3,
-      traits: [rng.pick(WorldContent.traits), rng.pick(WorldContent.traits)],
-      relation: 'spouse',
-      spouseId: player.id,
-      lifePath: rng.chance(35) ? 'legal' : 'family',
-      loyaltyToFamily: 50 + rng.nextInt(30),
-      bond: 60,
-    );
+    Person? p;
+    final named = state.people.values.where((x) {
+      if (!x.isAlive || x.id == player.id || x.spouseId != null) return false;
+      if (x.relation == 'spouse' || x.relation == 'child' || x.relation == 'parent' || x.relation == 'mentor') {
+        return false;
+      }
+      if (x.relation == 'crew') return false;
+      return x.bond >= 32 && (x.relation == 'acquaintance' || x.id == 'p_mira' || x.id == 'p_ben' || x.relation == 'foil');
+    }).toList()
+      ..sort((a, b) => b.bond.compareTo(a.bond));
+    if (named.isNotEmpty) {
+      p = named.first;
+      p.relation = 'spouse';
+      p.spouseId = player.id;
+      p.lifePath = p.lifePath == 'rival' ? 'family' : p.lifePath;
+      p.bond = min(100, p.bond + 20);
+      p.loyaltyToFamily = min(100, p.loyaltyToFamily + 15);
+    } else {
+      final g = player.gender == 'woman' ? 'man' : (player.gender == 'man' ? 'woman' : NameBank.gender(rng));
+      p = Person(
+        id: 'spouse_${state.year}',
+        firstName: NameBank.first(rng, g),
+        lastName: rng.chance(40) ? state.dynastyName : NameBank.last(rng),
+        gender: g,
+        birthYear: player.birthYear + rng.nextInt(7) - 3,
+        traits: [rng.pick(WorldContent.traits), rng.pick(WorldContent.traits)],
+        relation: 'spouse',
+        spouseId: player.id,
+        lifePath: rng.chance(35) ? 'legal' : 'family',
+        loyaltyToFamily: 50 + rng.nextInt(30),
+        bond: 60,
+      );
+      state.people[p.id] = p;
+      _stampPortrait(p);
+    }
     player.spouseId = p.id;
-    state.people[p.id] = p;
-    _stampPortrait(p);
     state.flags.add('married');
     state.log('Married ${p.name} under Ravenport rain.', category: 'family');
     unlock('married');
@@ -975,7 +1432,11 @@ class GameEngine {
 
   void _betrayCrew() {
     if (state.crew.isEmpty) return;
-    state.crew.sort((a, b) => a.loyalty.compareTo(b.loyalty));
+    state.crew.sort((a, b) {
+      final ascore = a.loyalty - (a.assignedBizId == null ? 12 : 0) + a.cut;
+      final bscore = b.loyalty - (b.assignedBizId == null ? 12 : 0) + b.cut;
+      return ascore.compareTo(bscore);
+    });
     final c = state.crew.first;
     final p = state.people[c.personId];
     final steal = min(state.stats.money, 400 + rng.nextInt(900));
@@ -1007,10 +1468,12 @@ class GameEngine {
       districtId: meta[4] as String,
       value: meta[1] as int,
       yearlyIncome: meta[2] as int,
-      cover: meta[3] as int,
+      cover: max(2, (meta[3] as int) ~/ 2),
       legalFront: true,
+      quality: 22,
     );
     state.businesses.add(b);
+    state.flags.add('name_on_board');
     state.log('Opened ${b.name}.', category: 'business');
     if (type == 'club') state.flags.add('club_open');
     if (type == 'shipping') state.flags.add('shipping_front');
@@ -1023,6 +1486,7 @@ class GameEngine {
     final prev = t.controller;
     t.controller = 'player';
     t.influence = max(t.influence, 50);
+    state.flags.add('name_on_board');
     if (prev != null && prev != 'player') {
       final r = state.rivals.cast<RivalFamily?>().firstWhere((e) => e!.id == prev, orElse: () => null);
       if (r != null) {
@@ -1073,7 +1537,7 @@ class GameEngine {
             title: 'Pockets heavier',
             body: 'You are gone before the argument starts. The take is small and clean enough.',
             log: 'Pulled a street lift.',
-            stats: {'money': 640, 'heat': 6, 'nerve': 3, 'reputation': 1, 'stress': 3},
+            stats: {'money': 420, 'heat': 6, 'nerve': 3, 'reputation': 1, 'stress': 3},
             addFlags: ['thief', 'did_first_score'],
           ),
           OutcomeDef(
@@ -1112,7 +1576,7 @@ class GameEngine {
             title: 'The pier stays dark',
             body: 'The crates change hands. Nobody writes a poem about it.',
             log: 'Finished a night run on the water.',
-            stats: {'money': 1600, 'heat': 9, 'nerve': 3, 'reputation': 3},
+            stats: {'money': 1100, 'heat': 12, 'nerve': 3, 'reputation': 3},
             addFlags: ['smuggler', 'docks_interest', 'did_first_score'],
           ),
           OutcomeDef(
@@ -1150,7 +1614,7 @@ class GameEngine {
             title: 'Loud and paid',
             body: 'The crew holds. The take is ugly money with a short memory.',
             log: 'Hit a hard take with the crew.',
-            stats: {'money': 4200, 'heat': 18, 'reputation': 6, 'nerve': 4, 'stress': 10},
+            stats: {'money': 1600, 'heat': 20, 'reputation': 6, 'nerve': 4, 'stress': 10},
             addFlags: ['robber', 'made_name'],
             crewLoyaltyDelta: 4,
           ),
@@ -1192,24 +1656,35 @@ class GameEngine {
         category: 'crime',
         art: 'office',
         requires: RequireDef(minStats: {'intelligence': 42}),
-        outcomes: [
+            outcomes: [
           OutcomeDef(
             id: 'ok',
-            weight: 64,
+            weight: 58,
             title: 'Numbers walk',
             body: 'A sleepy account wakes up poorer. You were never in the building.',
             log: 'Lifted a quiet ledger.',
-            stats: {'money': 2800, 'heat': 7, 'intelligence': 3, 'reputation': 2},
+            stats: {'money': 1200, 'heat': 14, 'intelligence': 3, 'reputation': 2},
             addFlags: ['cyber_debut', 'did_first_score'],
             rivalDelta: {'vex': 4},
           ),
           OutcomeDef(
             id: 'trace',
-            weight: 36,
+            weight: 30,
             title: 'A breadcrumb',
             body: 'House Vex or a bored analyst notices the pattern. Heat without handcuffs — for now.',
             log: 'A quiet ledger left a trace.',
-            stats: {'money': 400, 'heat': 16, 'stress': 8, 'intelligence': 1},
+            stats: {'money': 200, 'heat': 22, 'stress': 8, 'intelligence': 1},
+            addFlags: ['cyber_debut', 'da_file'],
+          ),
+          OutcomeDef(
+            id: 'busted',
+            weight: 12,
+            title: 'The glass remembered',
+            body: 'A login that should have been weather becomes a booking number.',
+            log: 'A quiet ledger ended at a desk.',
+            stats: {'heat': 18, 'reputation': -3, 'stress': 10, 'money': -120},
+            arrest: true,
+            setPrisonYears: 1,
             addFlags: ['cyber_debut', 'da_file'],
           ),
         ],
@@ -1357,11 +1832,20 @@ class GameEngine {
         outcomes: [
           OutcomeDef(
             id: 'ok',
-            weight: 100,
+            weight: 72,
             title: 'Paycheck weather',
             body: 'It is not a skyline. It is groceries.',
             log: 'Worked honest hours.',
-            stats: {'money': 900, 'stress': 6, 'heat': -3, 'reputation': -1},
+            stats: {'money': 360, 'stress': 6, 'heat': -3, 'reputation': -1},
+            addFlags: ['legitimate_turn'],
+          ),
+          OutcomeDef(
+            id: 'cut',
+            weight: 28,
+            title: 'The shift was cut',
+            body: 'They sent people home early. Rent does not care.',
+            log: 'Honest hours came up short.',
+            stats: {'money': 90, 'stress': 8, 'heat': -1},
             addFlags: ['legitimate_turn'],
           ),
         ],
@@ -1398,9 +1882,9 @@ class GameEngine {
             id: 'ok',
             weight: 100,
             title: 'Ink and keys',
-            body: 'Quality ticks up. Heat ticks down. The city almost believes you.',
-            log: 'Managed the fronts.',
-            stats: {'money': 400, 'heat': -5, 'intelligence': 1, 'assets': 800},
+            body: 'Cover thickens. Quality ticks. The take still comes from the front, not from this walk.',
+            log: 'Walked the books. Cover and quality, not a paycheck.',
+            stats: {'heat': -3, 'intelligence': 1},
           ),
         ],
       ),
@@ -1435,11 +1919,21 @@ class GameEngine {
         outcomes: [
           OutcomeDef(
             id: 'ok',
-            weight: 100,
+            weight: 70,
             title: 'The hours behave',
             body: 'You keep your head down and your name small.',
             log: 'Worked a prison detail.',
             stats: {'stress': -4, 'loyalty': 1, 'money': 40},
+            addFlags: ['prison_rep'],
+          ),
+          OutcomeDef(
+            id: 'bruise',
+            weight: 30,
+            title: 'A lesson in the steam',
+            body: 'Someone wanted the easy station. You leave the kitchen heavier.',
+            log: 'The work detail turned ugly.',
+            stats: {'health': -8, 'stress': 6, 'money': 10},
+            injury: true,
             addFlags: ['prison_rep'],
           ),
         ],
@@ -1455,12 +1949,20 @@ class GameEngine {
         outcomes: [
           OutcomeDef(
             id: 'ok',
-            weight: 100,
+            weight: 68,
             title: 'Pages',
             body: 'You learn the shape of the door even if it stays shut.',
             log: 'Studied inside.',
             stats: {'intelligence': 4, 'stress': -2},
             addFlags: ['appealed'],
+          ),
+          OutcomeDef(
+            id: 'miss',
+            weight: 32,
+            title: 'The cart skipped you',
+            body: 'The books went to another table. You sit with the same year.',
+            log: 'The library cart passed you by.',
+            stats: {'stress': 4, 'intelligence': 1},
           ),
         ],
       ),
@@ -1501,15 +2003,17 @@ class GameEngine {
       if (a.freeWorldOnly && state.inPrison) return false;
       if (a.id == 'retire' && eligibleHeirs().isEmpty) return false;
       if (a.id == 'court' && _spouse() != null) return false;
-      if (a.id == 'lawyer') {
-        // always show if money, handled in requires
+      if (a.id == 'robbery' && !_hasRole(['driver', 'lookout'])) return false;
+      if (a.id == 'cyber' && !_hasRole(['hacker']) && state.stats.intelligence < 55) return false;
+      if (a.id == 'smuggle' && state.crew.isNotEmpty && !_hasRole(['driver', 'lookout', 'muscle'])) {
+        return false;
       }
       return _unmetReason(a.requires) == null || a.id == 'retire';
     }).toList();
   }
 
   bool openActivity(String id) {
-    if (state.activityUsed) return false;
+    if (yearVerbUsed) return false;
     if (state.currentEventId != null) return false;
     final acts = activities();
     final a = acts.cast<ActivityDef?>().firstWhere((e) => e!.id == id, orElse: () => null);
@@ -1523,6 +2027,13 @@ class GameEngine {
   }
 
   ResolveResult doActivity(String id) {
+    if (yearVerbUsed) {
+      return ResolveResult(
+        event: EventDef(id: 'none', title: '', body: ''),
+        outcome: OutcomeDef(title: 'Not now', body: 'You already spent the year\'s move.'),
+        skipped: true,
+      );
+    }
     final acts = activities();
     final a = acts.cast<ActivityDef?>().firstWhere((e) => e!.id == id, orElse: () => null);
     if (a == null) {
@@ -1531,15 +2042,6 @@ class GameEngine {
         outcome: OutcomeDef(title: 'Not now', body: 'That door is closed this year.'),
         skipped: true,
       );
-    }
-    if (a.id == 'lawyer') {
-      state.lawyerQuality = min(100, state.lawyerQuality + 25);
-    }
-    if (a.id == 'family_time') {
-      for (final p in state.people.values.where((p) => p.isAlive && p.id != player.id && _isFamily(p))) {
-        p.loyaltyToFamily = min(100, p.loyaltyToFamily + 6);
-        p.bond = min(100, p.bond + 8);
-      }
     }
     final fake = catalog.activityAsEvent(a);
     state.currentEventId = fake.id;
@@ -1557,6 +2059,7 @@ class GameEngine {
   static const coolCost = 220;
   static const giftCost = 150;
   static const frontCost = 800;
+  static const tributeCost = 400;
 
   static String? unaffordable(int have, int cost) {
     if (have >= cost) return null;
@@ -1585,21 +2088,41 @@ class GameEngine {
     ].join(' · ');
   }
 
-  String? hireHand() {
+  String hireStreetRole() {
+    final have = state.crew.map((c) => c.role).toSet();
+    if (!have.contains('enforcer')) return 'enforcer';
+    if (!have.contains('muscle')) return 'muscle';
+    return 'lookout';
+  }
+
+  String hireBooksRole() {
+    final have = state.crew.map((c) => c.role).toSet();
+    if (!have.contains('accountant')) return 'accountant';
+    if (!have.contains('hacker')) return 'hacker';
+    return 'driver';
+  }
+
+  String? hireHand([String? role]) {
     if (state.inPrison) return 'You cannot hire from inside.';
     if (state.crew.length >= 5) return 'Five names is a full book.';
+    final books = empireBlock();
+    if (books != null) return books;
     if (state.stats.money < hireCost) return 'Need \$$hireCost to hire.';
     state.stats.money -= hireCost;
-    _recruitCrew();
+    _recruitCrew(role: role ?? _neededRole());
+    _spendEmpire();
     return null;
   }
 
   String? payBonus(String personId) {
     final m = _crewOf(personId);
     if (m == null) return 'They already walked.';
+    final books = empireBlock();
+    if (books != null) return books;
     if (state.stats.money < bonusCost) return 'Need \$$bonusCost.';
     state.stats.money -= bonusCost;
     m.loyalty = min(100, m.loyalty + 12);
+    _spendEmpire();
     state.log('Paid a quiet bonus to ${state.people[personId]?.firstName ?? 'a hand'}.', category: 'crew');
     return null;
   }
@@ -1633,6 +2156,8 @@ class GameEngine {
   String? buyFrontReason() {
     if (state.inPrison) return 'You cannot open a front from inside.';
     if (availableFrontTypes().isEmpty) return 'Every front is already open.';
+    final books = empireBlock();
+    if (books != null) return books;
     return unaffordable(state.stats.money, frontCost);
   }
 
@@ -1640,21 +2165,29 @@ class GameEngine {
     if (state.inPrison) return 'You cannot open a front from inside.';
     final types = availableFrontTypes();
     if (types.isEmpty) return 'Every front is already open.';
+    final books = empireBlock();
+    if (books != null) return books;
     if (state.stats.money < frontCost) return 'Need \$$frontCost to open a front.';
     final pick = (type != null && types.contains(type)) ? type : types.first;
     state.stats.money -= frontCost;
     _gainBusiness(pick);
+    _spendEmpire();
     return null;
   }
 
   String? investFront(String bizId) {
     final b = state.businesses.cast<Business?>().firstWhere((e) => e!.id == bizId, orElse: () => null);
     if (b == null) return 'That front is gone.';
+    final books = empireBlock();
+    if (books != null) return books;
+    if (b.quality >= 100) return 'That front is as good as the rain allows.';
     if (state.stats.money < investCost) return 'Need \$$investCost to invest.';
     state.stats.money -= investCost;
-    b.yearlyIncome += 180;
-    b.value += 900;
-    b.quality = min(100, b.quality + 6);
+    final fat = b.quality >= 80;
+    b.yearlyIncome += fat ? 80 : 180;
+    b.value += fat ? 400 : 900;
+    b.quality = min(100, b.quality + (fat ? 2 : 6));
+    _spendEmpire();
     state.log('Poured cash into ${b.name}.', category: 'business');
     _recomputeAssets();
     return null;
@@ -1662,6 +2195,8 @@ class GameEngine {
 
   String? pressTurf(String id) {
     if (state.inPrison) return 'You cannot press turf from inside.';
+    final blocked = yearVerbBlock('street');
+    if (blocked != null) return blocked;
     if (state.crew.isEmpty) return 'Need at least one hand.';
     if (state.stats.money < pressCost) return 'Need \$$pressCost to press a street.';
     final t = state.territories.cast<Territory?>().firstWhere((e) => e!.id == id, orElse: () => null);
@@ -1669,11 +2204,39 @@ class GameEngine {
     if (t.controller == 'player') return 'You already hold it.';
     state.stats.money -= pressCost;
     state.stats.heat = min(100, state.stats.heat + 8);
+    _spendYearVerb('street');
+    lastPressResult = null;
+    if (t.controller != null && t.controller != 'player') {
+      final r = state.rivals.cast<RivalFamily?>().firstWhere((e) => e!.id == t.controller, orElse: () => null);
+      if (r != null) {
+        final skill = state.crew.isEmpty
+            ? 0
+            : state.crew.fold<int>(0, (n, c) => n + c.skill) ~/ state.crew.length;
+        var bonus = state.stats.nerve ~/ 4;
+        if (_hasRole(['muscle', 'enforcer'])) bonus += 10;
+        if (r.personality == 'aggressive') bonus -= 8;
+        if (r.personality == 'calculating') bonus -= 4;
+        if (r.personality == 'opportunistic') bonus += 2;
+        final roll = skill ~/ 3 + bonus + rng.nextInt(50);
+        final dc = 36 + r.power ~/ 2;
+        r.hostility = min(100, r.hostility + 6);
+        if (roll < dc) {
+          state.stats.health = max(1, state.stats.health - 6);
+          state.stats.stress = min(100, state.stats.stress + 6);
+          lastPressResult = '${r.name} held ${t.name}. The press failed.';
+          state.log(lastPressResult!, category: 'rival');
+          return null;
+        }
+      }
+    }
     _gainTerritory(id);
+    lastPressResult = 'The ${state.dynastyName} name holds ${t.name}.';
     return null;
   }
 
   String? coolTurf(String id) {
+    final blocked = yearVerbBlock('street');
+    if (blocked != null) return blocked;
     final t = state.territories.cast<Territory?>().firstWhere((e) => e!.id == id, orElse: () => null);
     if (t == null) return 'No such street.';
     if (t.controller != 'player') return 'You do not hold it.';
@@ -1681,7 +2244,58 @@ class GameEngine {
     state.stats.money -= coolCost;
     t.heat = max(0, t.heat - 8);
     state.stats.heat = max(0, state.stats.heat - 4);
+    _spendYearVerb('street');
     state.log('${t.name} went quieter for a night.', category: 'rival');
+    return null;
+  }
+
+  String? squeezeTurf(String id) {
+    final blocked = yearVerbBlock('street');
+    if (blocked != null) return blocked;
+    final t = state.territories.cast<Territory?>().firstWhere((e) => e!.id == id, orElse: () => null);
+    if (t == null) return 'No such street.';
+    if (t.controller != 'player') return 'You do not hold it.';
+    t.income += 90;
+    t.heat = min(40, t.heat + 10);
+    state.stats.heat = min(100, state.stats.heat + 6);
+    state.stats.money += 80;
+    _spendYearVerb('street');
+    lastPressResult = '${t.name} was squeezed. Louder take. Louder heat.';
+    state.log(lastPressResult!, category: 'rival');
+    return null;
+  }
+
+  String? quietTurf(String id) {
+    final blocked = yearVerbBlock('street');
+    if (blocked != null) return blocked;
+    final t = state.territories.cast<Territory?>().firstWhere((e) => e!.id == id, orElse: () => null);
+    if (t == null) return 'No such street.';
+    if (t.controller != 'player') return 'You do not hold it.';
+    t.income = max(180, t.income - 70);
+    t.heat = max(0, t.heat - 10);
+    t.influence = min(100, t.influence + 4);
+    state.stats.heat = max(0, state.stats.heat - 6);
+    _spendYearVerb('street');
+    lastPressResult = '${t.name} went quiet. Less take. The crest sits.';
+    state.log(lastPressResult!, category: 'rival');
+    return null;
+  }
+
+  String? tributeTurf(String id) {
+    final blocked = yearVerbBlock('street');
+    if (blocked != null) return blocked;
+    final t = state.territories.cast<Territory?>().firstWhere((e) => e!.id == id, orElse: () => null);
+    if (t == null) return 'No such street.';
+    if (t.controller != 'player') return 'You do not hold it.';
+    if (state.stats.money < tributeCost) return 'Need \$$tributeCost to pay tribute.';
+    final r = hottestRival();
+    if (r == null) return 'No house to pay.';
+    state.stats.money -= tributeCost;
+    r.hostility = max(0, r.hostility - 10);
+    t.heat = max(0, t.heat - 4);
+    _spendYearVerb('street');
+    lastPressResult = 'Tribute walked to ${r.name}. ${t.name} bought a quieter week.';
+    state.log(lastPressResult!, category: 'rival');
     return null;
   }
 
@@ -1725,13 +2339,39 @@ class GameEngine {
   }
 
   OutcomeDef sitScene(Person p) {
-    final line = switch (p.relation) {
-      'sibling' => 'You split a bottle like you used to steal streetlights.',
-      'mentor' => 'Crowe talked around the job and still said everything.',
-      'foil' => 'Vale let the silence work. You both pretended it was coffee.',
-      'spouse' => 'The table held. For an hour the city was someone else\'s.',
-      'child' => 'They asked a question you answered like a person, not a boss.',
-      _ => 'Rain on the glass. Two cups. No ledger between you.',
+    final flags = state.flags;
+    final line = switch (p.id) {
+      'p_mentor' => flags.contains('will_burn_crowe')
+          ? 'He still poured the coffee. You both pretended the ferry name was weather.'
+          : (flags.contains('sat_ever_p_mentor')
+              ? 'The second hour is quieter. Crowe still talks around the job.'
+              : 'Crowe talked around the job and still said everything.'),
+      'p_foil' => flags.contains('lied_to_vale')
+          ? 'She let the lie sit between the cups. The photograph stayed in her coat.'
+          : (flags.contains('vale_respect')
+              ? 'Vale did not take out a notebook. That is a kind of mercy.'
+              : 'Vale let the silence work. You both pretended it was coffee.'),
+      'p_cass' => flags.contains('cass_notice')
+          ? 'Cass smiled like the gold card had already been opened.'
+          : 'Cass smiled like a contract. The gold caught the rain.',
+      'p_mira' => flags.contains('courted')
+          ? 'She ordered the second drink before you sat down. Harbor Lights already knew the tab.'
+          : (flags.contains('sat_ever_p_mira')
+              ? 'The booth was the same. Mira did not ask what the year cost.'
+              : 'Harbor Lights after midnight. She remembered the second drink.'),
+      'p_ben' => flags.contains('courted')
+          ? 'Bennett talked like a surname was a lease you could still sign.'
+          : (flags.contains('sat_ever_p_ben')
+              ? 'He still wanted daylight. He waited to see if you had brought any.'
+              : 'Bennett wanted a daylight surname and waited to see if yours would do.'),
+      _ => switch (p.relation) {
+          'sibling' => 'You split a bottle like you used to steal streetlights.',
+          'mentor' => 'Crowe talked around the job and still said everything.',
+          'foil' => 'Vale let the silence work. You both pretended it was coffee.',
+          'spouse' => 'The table held. For an hour the city was someone else\'s.',
+          'child' => 'They asked a question you answered like a person, not a boss.',
+          _ => 'Rain on the glass. Two cups. No ledger between you.',
+        },
     };
     return OutcomeDef(
       id: 'sit',
@@ -1748,8 +2388,23 @@ class GameEngine {
     if (satThisYear) return 'You already sat with someone this year.';
     state.flags.add('sat_year_${state.year}');
     state.flags.add('sat_who_${state.year}_$personId');
+    state.flags.add('sat_ever_$personId');
     p.bond = min(100, p.bond + 10);
     p.loyaltyToFamily = min(100, p.loyaltyToFamily + 6);
+    if (_sitCount(personId, 5) >= 3) {
+      if (p.id == 'p_foil' || p.lifePath == 'legal') {
+        state.flags.add('lean_legal_$personId');
+        state.flags.remove('lean_family_$personId');
+      } else {
+        state.flags.add('lean_family_$personId');
+        state.flags.remove('lean_legal_$personId');
+      }
+    }
+    if (p.lifePath == 'rival' && p.bond >= 45) {
+      p.lifePath = 'family';
+      p.rivalFamilyId = null;
+      state.log('${p.firstName} came back to the table after enough quiet hours.', category: 'family');
+    }
     state.stats.stress = max(0, state.stats.stress - 5);
     state.stats.loyalty = min(100, state.stats.loyalty + 2);
     state.log('Sat with ${p.firstName}. The year felt less sharp.', category: 'family');
@@ -1770,10 +2425,22 @@ class GameEngine {
     return null;
   }
 
-  String? assignCrew(String personId) {
+  String? assignCrew(String personId, [String? bizId]) {
     final m = _crewOf(personId);
     if (m == null) return 'They already walked.';
     if (state.businesses.isEmpty) return 'No front to assign.';
+    if (bizId != null) {
+      if (bizId.isEmpty) {
+        m.assignedBizId = null;
+        state.log('${state.people[personId]?.firstName ?? 'A hand'} is off the shop floor.', category: 'crew');
+        return null;
+      }
+      final named = state.businesses.cast<Business?>().firstWhere((e) => e!.id == bizId, orElse: () => null);
+      if (named == null) return 'No front by that name.';
+      m.assignedBizId = named.id;
+      state.log('${state.people[personId]?.firstName ?? 'A hand'} watches ${named.name}.', category: 'crew');
+      return null;
+    }
     final ids = <String?>[null, ...state.businesses.map((b) => b.id)];
     final i = ids.indexOf(m.assignedBizId);
     m.assignedBizId = ids[(i + 1) % ids.length];
@@ -1787,6 +2454,16 @@ class GameEngine {
 
   String ambition() {
     if (state.inPrison) return 'Finish the stretch. The city will wait.';
+    if (midlifePinch) {
+      return pressureLine();
+    }
+    if (!state.flags.contains('chapter_prologue') && _emptyCityBoard && quietStreak() >= 3) {
+      return 'One more quiet year and Ravenport files you under weather. Press a street.';
+    }
+    if (quietStreak() >= 3) return 'Three quiet years. Press a street or the houses keep the map.';
+    if (quietStreak() >= 1 && !state.territories.any((t) => t.controller == 'player')) {
+      return 'Honest hours fed you. They also fed the houses. Press a street.';
+    }
     final war = warLine();
     if (war != null) return war;
     if (state.crew.isEmpty && state.stats.money < hireCost) return 'Earn enough to hire a hand.';
@@ -1803,9 +2480,61 @@ class GameEngine {
     final thin = state.people.values.where((p) => p.isAlive && p.id != player.id && p.bond < 28).toList();
     if (thin.isNotEmpty) return 'Sit with ${thin.first.firstName}. The bond is thin.';
     final hot = hottestRival();
-    if (hot != null && hot.hostility >= 45) return '${hot.name} is pressing. Watch City.';
+    if (hot != null && hot.hostility >= 45) return '${hot.name} ${houseWeather(hot)}. Watch City.';
     if (state.stats.money < 1500) return 'Keep the books green this year.';
     return 'Hold the name. The rain is watching.';
+  }
+
+  String pressureLine() {
+    if (state.inPrison) return 'The corridor is the only weather that counts.';
+    if (!state.flags.contains('chapter_prologue') && _emptyCityBoard && (quietStreak() >= 2 || yieldCount() >= 3)) {
+      return 'No street, no front, no crew. Quiet years now close the file — Game Over, not a dynasty.';
+    }
+    if (quietStreak() >= 1) {
+      return 'A quiet job left the map moving. Press, cool, or take a risk — or a house keeps eating streets.';
+    }
+    if (warPhase != null) {
+      return 'The war is the year\'s invoice. Stand on the card, or a street walks.';
+    }
+    if (state.stats.heat >= 60) {
+      return 'Heat is loud. Cool a street or keep counsel — ignore it and Vale finds the year.';
+    }
+    if (state.crew.isEmpty) {
+      return 'No hands on the book. Hire, or a house will invoice the empty year.';
+    }
+    final hotTurf = state.territories.where((t) => t.controller == 'player' && t.heat >= 16);
+    if (hotTurf.isNotEmpty) {
+      return '${hotTurf.first.name} is running hot. Cool it or the crest slips.';
+    }
+    if (state.businesses.isEmpty && !state.territories.any((t) => t.controller == 'player')) {
+      return 'No front, no street. Ignore that and the year bills you for being small.';
+    }
+    final thin = state.people.values
+        .where((p) => p.isAlive && p.id != player.id && _isFamily(p) && p.bond < 28)
+        .toList();
+    if (thin.isNotEmpty) return '${thin.first.firstName} is drifting. Sit, or the name thins.';
+    final hot = hottestRival();
+    if (hot != null && hot.hostility >= 45) {
+      return '${hot.name} ${houseWeather(hot)}. A war season is weather you can still spend.';
+    }
+    if (state.stats.money < 400) return 'The books are thin. Honest hours or a louder night.';
+    return 'Hold the name. The rain is watching.';
+  }
+
+  String? pressureId() {
+    if (state.inPrison || state.flags.contains('chapter_prologue')) return null;
+    if (warPhase != null) return null;
+    if (state.stats.heat >= 60) return 'heat';
+    if (state.crew.isEmpty) return 'crew';
+    if (state.territories.any((t) => t.controller == 'player' && t.heat >= 16)) return 'turf_heat';
+    if (state.businesses.isEmpty && !state.territories.any((t) => t.controller == 'player')) {
+      return 'hold';
+    }
+    final thin = state.people.values
+        .where((p) => p.isAlive && p.id != player.id && _isFamily(p) && p.bond < 28)
+        .toList();
+    if (thin.isNotEmpty) return 'family_${thin.first.id}';
+    return null;
   }
 
   String inheritBlurb() {
@@ -1861,12 +2590,34 @@ class GameEngine {
     final phase = warPhase;
     if (phase == null) return null;
     final name = warRival()?.name ?? hottestRival()?.name ?? 'A rival house';
+    final marked = warTarget()?.name;
+    final stake = marked ?? 'the docks';
     return switch (phase) {
-      'threat' => '$name is watching the docks. War season.',
-      'escalate' => '$name is taking streets. The war is hot.',
-      'resolve' => 'The war with $name is breaking.',
+      'threat' => '$name marked $stake. War season.',
+      'escalate' => '$name is taking $stake. The war is hot.',
+      'resolve' => 'The war with $name is breaking over $stake.',
       _ => '$name has not forgotten you.',
     };
+  }
+
+  Territory? warTarget() {
+    for (final f in state.flags) {
+      if (f.startsWith('war_target_')) {
+        final id = f.substring('war_target_'.length);
+        return state.territories.cast<Territory?>().firstWhere((e) => e!.id == id, orElse: () => null);
+      }
+    }
+    return null;
+  }
+
+  void _markWarStreet(RivalFamily r, List<String> logs) {
+    state.flags.removeWhere((f) => f.startsWith('war_target_'));
+    final mine = state.territories.where((t) => t.controller == 'player').toList();
+    final open = state.territories.where((t) => t.controller == null).toList();
+    final pick = mine.isNotEmpty ? rng.pick(mine) : (open.isNotEmpty ? rng.pick(open) : null);
+    if (pick == null) return;
+    state.flags.add('war_target_${pick.id}');
+    logs.add('${r.name} marked ${pick.name}. ${r.name} ${houseWeather(r)}.');
   }
 
   String cityPressure() {
@@ -1877,7 +2628,33 @@ class GameEngine {
     if (hot == null) return 'No houses on the board.';
     final streets = hot.territories.length;
     if (hot.hostility < 20) return 'The houses are quiet tonight.';
-    return '${hot.name} · hostility ${hot.hostility} · $streets street${streets == 1 ? '' : 's'}.';
+    return '${hot.name} ${houseWeather(hot)}. $streets street${streets == 1 ? '' : 's'} on their book.';
+  }
+
+  String? _warChoice() {
+    for (final f in state.flags) {
+      if (f.startsWith('war_choice_')) return f.substring('war_choice_'.length);
+    }
+    return null;
+  }
+
+  void _clearWarChoice() {
+    state.flags.removeWhere((f) => f.startsWith('war_choice_'));
+  }
+
+  void _tryTakeBack(RivalFamily rival, List<String> logs, {bool guaranteed = false}) {
+    final stolen = state.territories.where((t) => t.controller == rival.id).toList();
+    if (stolen.isEmpty) return;
+    if (!guaranteed && !_hasRole(['muscle', 'enforcer']) && !rng.chance(45 + state.stats.nerve ~/ 4)) {
+      logs.add('You pressed back. ${rival.name} kept the corner.');
+      return;
+    }
+    final t = rng.pick(stolen);
+    t.controller = 'player';
+    t.influence = max(t.influence, 48);
+    rival.territories.remove(t.id);
+    rival.hostility = min(100, rival.hostility + 8);
+    logs.add('You took ${t.name} back from ${rival.name}.');
   }
 
   void tickWarSeason(List<String> logs) {
@@ -1892,37 +2669,81 @@ class GameEngine {
       if (coolUntil != null && state.year >= coolUntil) {
         state.flags.removeWhere((f) => f.startsWith('war_cool_until_'));
       }
-      if (rival.hostility >= 70 || (rival.hostility >= 52 && state.year % 3 == 0)) {
+      final extra = rival.personality == 'aggressive'
+          ? 10
+          : (rival.personality == 'opportunistic' ? 4 : 0);
+      if (rival.hostility >= (70 - extra) || (rival.hostility >= (52 - extra) && state.year % 3 == 0)) {
         _setWar('threat', rival);
         rival.hostility = min(100, rival.hostility + 8);
         state.stats.heat = min(100, state.stats.heat + 3);
         logs.add('${rival.name} sent a warning. War season opens.');
+        _markWarStreet(rival, logs);
+        _queueOnce('war_threat_card');
       }
       return;
     }
 
     if (phase == 'threat') {
       _setWar('escalate', rival);
-      final pinch = min(state.stats.money, 180 + rng.nextInt(80));
+      final choice = _warChoice();
+      var pinchBase = rival.personality == 'calculating' ? 260 : 180;
+      var takeChance = rival.personality == 'calculating' ? 30 : (rival.personality == 'aggressive' ? 70 : 55);
+      if (choice == 'stand') {
+        takeChance = max(10, takeChance - 25);
+      } else if (choice == 'pay') {
+        pinchBase = 0;
+        takeChance = max(8, takeChance - 18);
+      } else if (choice == 'hide') {
+        takeChance = min(90, takeChance + 20);
+      } else if (choice == null) {
+        if (rival.personality == 'calculating') {
+          pinchBase = 300;
+          takeChance = 22;
+        } else if (rival.personality == 'aggressive') {
+          takeChance = 78;
+        }
+      }
+      final pinch = pinchBase == 0 ? 0 : min(state.stats.money, pinchBase + rng.nextInt(80));
       state.stats.money -= pinch;
       state.stats.heat = min(100, state.stats.heat + 6);
       rival.hostility = min(100, rival.hostility + 10);
       final mine = state.territories.where((t) => t.controller == 'player').toList();
-      if (mine.isNotEmpty && rng.chance(55)) {
-        final t = rng.pick(mine);
+      final marked = warTarget();
+      if (mine.isNotEmpty && rng.chance(takeChance)) {
+        final t = (marked != null && marked.controller == 'player') ? marked : rng.pick(mine);
         t.controller = rival.id;
         t.influence = 35;
         if (!rival.territories.contains(t.id)) rival.territories.add(t.id);
-        logs.add('${rival.name} took ${t.name}. The war is hot.');
-      } else {
+        logs.add('${rival.name} ${houseTakeVerb(rival)} ${t.name}. The war is hot.');
+      } else if (pinch > 0) {
         logs.add('${rival.name} pressed the year. \$$pinch walked. Heat climbed.');
+      } else {
+        logs.add('${rival.name} pressed the year. You had already paid for weather.');
       }
+      _queueOnce('war_escalate_card');
+      _clearWarChoice();
       return;
     }
 
     if (phase == 'escalate') {
       _setWar('resolve', rival);
-      if (rival.hostility >= 80 && rng.chance(30)) {
+      final choice = _warChoice();
+      if (choice == 'fight') {
+        _tryTakeBack(rival, logs);
+      } else if (choice == 'buy') {
+        _tryTakeBack(rival, logs, guaranteed: true);
+      } else if (choice == 'yield') {
+        rival.hostility = max(0, rival.hostility - 6);
+        final t = warTarget();
+        if (t != null && t.controller == 'player') {
+          t.controller = rival.id;
+          t.influence = 35;
+          if (!rival.territories.contains(t.id)) rival.territories.add(t.id);
+          logs.add('You yielded ${t.name}. ${rival.name} kept the map.');
+        } else {
+          logs.add('You yielded the hot night. ${rival.name} kept the map.');
+        }
+      } else if (rival.hostility >= 80 && rng.chance(30)) {
         state.stats.heat = min(100, state.stats.heat + 4);
         logs.add('The war with ${rival.name} broke ugly.');
       } else {
@@ -1931,13 +2752,22 @@ class GameEngine {
         state.stats.reputation = min(100, state.stats.reputation + 3);
         logs.add('The war with ${rival.name} cooled. Streets remember who stood.');
       }
+      _queueOnce('war_resolve_card');
+      _clearWarChoice();
       return;
     }
 
     if (phase == 'resolve') {
+      final choice = _warChoice();
+      if (choice == 'truce') {
+        rival.hostility = max(0, rival.hostility - 10);
+      } else if (choice == 'tooth') {
+        rival.hostility = min(100, rival.hostility + 6);
+      }
       _clearWar();
-      state.flags.removeWhere((f) => f.startsWith('war_cool_until_'));
-      state.flags.add('war_cool_until_${state.year + 3}');
+      _clearWarChoice();
+      state.flags.removeWhere((f) => f.startsWith('war_cool_until_') || f.startsWith('war_target_'));
+      state.flags.add('war_cool_until_${state.year + 1}');
       logs.add('War season closed. The houses count their dead quietly.');
     }
   }
@@ -1947,6 +2777,7 @@ class GameEngine {
     r.hostility = max(r.hostility, 70);
     _setWar('threat', r);
     state.stats.heat = min(100, state.stats.heat + 3);
+    _markWarStreet(r, []);
   }
 
   CrewMember? _crewOf(String personId) {
@@ -1961,11 +2792,18 @@ class GameEngine {
   void debugTerritory(String id) => _gainTerritory(id);
 
   void ageUp() {
+    if (state.phase == 'ending') return;
+    lastUnlocks = [];
     final logs = <String>[];
     void note(String s) {
       logs.add(s);
       state.log(s);
     }
+
+    _resolveIgnoredPressure(logs);
+
+    // Quiet honest years donate the map. Must run before the year rolls.
+    _quietCityBite(logs);
 
     // Prison tick
     if (state.inPrison) {
@@ -1983,7 +2821,6 @@ class GameEngine {
         _beginHeir('life sentence');
         state.lastYearLog = logs;
         state.lastSummary = logs.join(' ');
-        state.phase = 'heir';
         return;
       }
     }
@@ -1992,23 +2829,32 @@ class GameEngine {
     state.yearsSinceInterstitial += 1;
     state.eventsThisYear = 0;
     state.activityUsed = false;
-    state.eventTarget = 1;
 
     // Economy
     if (!state.inPrison) {
       var income = 0;
       for (final b in state.businesses) {
         final hands = state.crew.where((c) => c.assignedBizId == b.id && !c.imprisoned).toList();
-        final watch = hands.fold<int>(0, (n, c) => n + 40 + c.skill ~/ 2);
-        final pay = (b.yearlyIncome * (0.7 + b.quality / 200)).round() + watch;
-        income += pay;
-        state.stats.heat = max(0, state.stats.heat - (b.cover ~/ 4) - hands.length);
-        if (hands.isNotEmpty) {
+        final watch = hands.fold<int>(0, (n, c) {
+          var add = 40 + c.skill ~/ 2;
+          if (c.role == 'accountant') add += 40;
+          if (c.role == 'enforcer') add += 12;
+          if (c.role == 'lookout') add += 8;
+          return n + add;
+        });
+        var pay = (b.yearlyIncome * (0.7 + b.quality / 200)).round() + watch;
+        if (hands.isEmpty) {
+          pay = (pay * 0.5).round();
+          b.quality = max(0, b.quality - 4);
+          logs.add('${b.name} ran without a hand. Half the take. Cover thinned.');
+        } else {
           logs.add('${hands.length} hand${hands.length == 1 ? '' : 's'} watched ${b.name} (+$watch).');
           for (final c in hands) {
             c.loyalty = min(100, c.loyalty + 1);
           }
         }
+        income += pay;
+        state.stats.heat = max(0, state.stats.heat - (b.cover ~/ 4) - hands.length - (hands.any((c) => c.role == 'enforcer') ? 2 : 0));
       }
       for (final t in state.territories.where((t) => t.controller == 'player')) {
         income += t.income;
@@ -2027,7 +2873,7 @@ class GameEngine {
         logs.add('The books were quiet. No take this year.');
       }
       // living costs
-      final live = 280 + state.age * 2 + (state.businesses.length * 80);
+      final live = 320 + state.age * 2 + (state.businesses.length * 80);
       state.stats.money -= live;
       logs.add('Rent and bread took \$$live.');
     } else {
@@ -2035,14 +2881,35 @@ class GameEngine {
     }
 
     if (state.stats.money < 0) {
+      final stacked = state.flags.contains('in_debt');
       state.debt += -state.stats.money;
       state.stats.money = 0;
       state.flags.add('in_debt');
       logs.add('The year ended in debt.');
+      _queueOnce('debt_collector', yearsAhead: 1);
+      if (stacked) {
+        logs.add('Debt stacked. The year grew teeth.');
+        final r = hottestRival();
+        if (r != null) r.hostility = min(100, r.hostility + 8);
+      }
     }
 
     // Heat / stress / health drift
-    state.stats.heat = max(0, state.stats.heat - (state.inPrison ? 4 : 3));
+    if (state.inPrison) {
+      // Prison tick already cooled heat.
+    } else {
+      final lastRisk = state.flags.contains('risk_job_${state.year - 1}');
+      var residue = 0;
+      for (var y = state.year - 1; y >= state.year - 3; y--) {
+        if (state.flags.contains('risk_job_$y')) residue += 2;
+      }
+      if (lastRisk) {
+        state.stats.heat = min(100, state.stats.heat + residue);
+        if (residue > 0) logs.add('Last year\'s risk left residue in the rain.');
+      } else {
+        state.stats.heat = max(0, state.stats.heat - 1 + residue);
+      }
+    }
     if (player.traits.contains('Paranoid')) state.stats.stress = min(100, state.stats.stress + 2);
     if (player.traits.contains('Compassionate')) state.stats.loyalty = min(100, state.stats.loyalty + 1);
     if (state.stats.stress > 70) {
@@ -2053,13 +2920,25 @@ class GameEngine {
     }
     if (state.age > 50) state.stats.health = max(0, state.stats.health - ((state.age - 50) ~/ 8));
 
+    if (!state.inPrison && state.stats.heat >= 80) {
+      _queueOnce('detective_card', yearsAhead: 1);
+      logs.add('Heat loud enough for a detective card.');
+    } else if (!state.inPrison && state.stats.heat >= 60) {
+      _queueOnce('patrol_stop', yearsAhead: 1);
+    }
+
     _ageFamily(logs);
     _tickCrew(logs);
+    _tickHeldStreets(logs);
     _tickRivals(logs);
     tickWarSeason(logs);
     _maybeRandomBirth(logs);
     _peaks();
     _recomputeAssets();
+    if (state.age == 52) {
+      player.portraitKey = '';
+      _stampPortrait(player);
+    }
     _checkAchievements();
 
     // Death by age / health
@@ -2082,11 +2961,14 @@ class GameEngine {
     if (state.flags.contains('glassridge_done')) unlock('heist');
     if (state.flags.contains('did_first_score')) unlock('first_score');
 
+    _checkGameOver(logs);
     _checkEndings();
+    _setYearBeats();
 
     state.lastYearLog = logs;
     state.yearHeadline = _yearHeadline(logs);
     state.lastSummary = state.yearHeadline;
+    _stampPressure();
     if (!state.awaitingHeir && state.phase != 'ending') {
       state.phase = 'playing';
     }
@@ -2123,11 +3005,18 @@ class GameEngine {
       if (p.relation == 'child') {
         if (age == 12 && p.traits.isEmpty) {
           final pool = [...player.traits, rng.pick(WorldContent.traits)];
-          p.traits.add(rng.pick(pool));
-          logs.add('${p.firstName} showed a ${p.traits.first.toLowerCase()} streak at twelve.');
+          if (_satRecently(p.id, 3) && player.traits.isNotEmpty) {
+            p.traits.add(player.traits.first);
+            logs.add('${p.firstName} took after you — ${p.traits.first.toLowerCase()} — at twelve.');
+          } else {
+            p.traits.add(rng.pick(pool));
+            logs.add('${p.firstName} showed a ${p.traits.first.toLowerCase()} streak at twelve.');
+          }
         }
         if (age == 16 && p.traits.length < 2) {
-          var extra = rng.pick(WorldContent.traits);
+          var extra = _satRecently(p.id, 4) && player.traits.length > 1
+              ? player.traits[1]
+              : rng.pick(WorldContent.traits);
           while (p.traits.contains(extra)) {
             extra = rng.pick(WorldContent.traits);
           }
@@ -2156,11 +3045,43 @@ class GameEngine {
 
   void _adultPath(Person p, List<String> logs) {
     p.personalStats = _statsForHeir(p);
-    final loyal = p.loyaltyToFamily + (player.traits.contains('Loyal') ? 10 : 0);
-    final legalPull = p.traits.contains('Compassionate') || p.traits.contains('Patient') ? 20 : 0;
-    final rivalPull = p.traits.contains('Greedy') || p.traits.contains('Ambitious') ? 12 : 0;
+    final sit = _satRecently(p.id, 8) ? 14 : 0;
+    final locked = _sitCount(p.id, 5) >= 3 || state.flags.contains('lean_family_${p.id}');
+    var loyal = p.loyaltyToFamily + (player.traits.contains('Loyal') ? 10 : 0) + sit + (p.bond ~/ 8);
+    if (locked) loyal += 28;
+    var legalPull = p.traits.contains('Compassionate') || p.traits.contains('Patient') ? 20 : 0;
+    var rivalPull = p.traits.contains('Greedy') || p.traits.contains('Ambitious') ? 12 : 0;
+    bool wished(String kind) {
+      if (state.flags.contains('kid_wish_${p.id}_$kind')) return true;
+      final personal = state.flags.any((f) => f.startsWith('kid_wish_${p.id}_'));
+      if (personal) return false;
+      return state.flags.contains('kid_wish_$kind');
+    }
+
+    if (wished('legal')) legalPull += 40;
+    if (wished('family')) loyal += 22;
+    if (wished('warn')) {
+      legalPull += 12;
+      rivalPull = max(0, rivalPull - 8);
+    }
+    if (wished('legal') || wished('family') || wished('warn')) {
+      state.flags.add('kid_wish_applied');
+    }
     final roll = rng.nextInt(100);
-    if (p.traits.contains('Reckless') && roll > 80) {
+    if (wished('legal') && loyal < 70 && !locked) {
+      p.lifePath = 'legal';
+      state.flags.add('kid_legal');
+      logs.add('${p.firstName} came of age on the daylight path you named.');
+      state.pending.add(PendingEvent(eventId: 'family_fracture_seed', triggerYear: state.year));
+      return;
+    }
+    if (wished('family') && loyal >= 40) {
+      p.lifePath = 'family';
+      logs.add('${p.firstName} came of age hungry for the family table you offered.');
+      state.flags.add('has_heir_child');
+      return;
+    }
+    if ((p.traits.contains('Reckless') && roll > 80) || loyal >= 72) {
       p.lifePath = 'family';
       logs.add('${p.firstName} came of age hungry for the family table.');
       state.flags.add('has_heir_child');
@@ -2188,6 +3109,12 @@ class GameEngine {
       var drift = player.traits.contains('Loyal') ? 2 : -1;
       if (player.traits.contains('Greedy')) drift -= 2;
       c.loyalty = (c.loyalty + drift - (state.stats.stress > 60 ? 2 : 0)).clamp(0, 100);
+      if (c.assignedBizId == null && c.loyalty < 50 && rng.chance(12)) {
+        state.flags.add('sold_story');
+        state.stats.heat = min(100, state.stats.heat + 6);
+        state.stats.money = max(0, state.stats.money - 400);
+        logs.add('${p?.name ?? 'A hand'} sold a story. An idle name still costs.');
+      }
       if (c.loyalty < 28 && rng.chance(18 + (player.traits.contains('Paranoid') ? -8 : 0))) {
         if (p != null) {
           p.lifePath = 'rival';
@@ -2204,25 +3131,200 @@ class GameEngine {
     if (state.crew.length >= 3) state.flags.add('loyal_crew');
   }
 
-  void _reactNpcs(OutcomeDef o) {
-    void bump(String id, int d) {
-      final p = state.people[id];
-      if (p == null) return;
-      p.bond = (p.bond + d).clamp(-100, 100);
-    }
+  void bumpBond(String id, int d) {
+    final p = state.people[id];
+    if (p == null) return;
+    p.bond = (p.bond + d).clamp(-100, 100);
+  }
 
+  void _reactNpcs(OutcomeDef o) {
     final f = o.addFlags.toSet();
     if (f.contains('mentor_crowe') || f.contains('first_loyalty') || f.contains('crowe_secret')) {
-      bump('p_mentor', 10);
+      bumpBond('p_mentor', 10);
     }
-    if (f.contains('will_burn_crowe') || f.contains('crowe_cold')) bump('p_mentor', -18);
-    if (f.contains('vale_file')) bump('p_foil', 6);
-    if (f.contains('lied_to_vale')) bump('p_foil', -8);
-    if (f.contains('vale_respect')) bump('p_foil', 12);
-    if (f.contains('cass_notice')) bump('p_cass', 8);
+    if (f.contains('will_burn_crowe') || f.contains('crowe_cold')) bumpBond('p_mentor', -18);
+    if (f.contains('vale_file')) bumpBond('p_foil', 6);
+    if (f.contains('lied_to_vale')) bumpBond('p_foil', -8);
+    if (f.contains('vale_respect')) bumpBond('p_foil', 12);
+    if (f.contains('cass_notice')) bumpBond('p_cass', 8);
+    if (f.contains('courted')) {
+      bumpBond('p_mira', 8);
+      bumpBond('p_ben', 6);
+    }
     if (f.contains('prologue_done')) {
-      bump('p_mira', 4);
-      bump('p_ben', 3);
+      bumpBond('p_mira', 4);
+      bumpBond('p_ben', 3);
+    }
+  }
+
+  void _stampPressure() {
+    state.flags.removeWhere((f) => f.startsWith('pressure_now_'));
+    final id = pressureId();
+    if (id != null) state.flags.add('pressure_now_$id');
+  }
+
+  void _clearQuietStreak() {
+    state.flags.removeWhere((f) => f.startsWith('quiet_streak_'));
+  }
+
+  void _quietCityBite(List<String> logs) {
+    if (state.inPrison || state.flags.contains('chapter_prologue')) return;
+    if (state.year <= WorldContent.startYear + 2) return;
+    if (state.flags.contains('street_year_${state.year}') || state.flags.contains('risk_job_${state.year}')) {
+      _clearQuietStreak();
+      return;
+    }
+    if (!state.flags.contains('quiet_job_${state.year}') && !state.activityUsed) return;
+
+    var streak = quietStreak();
+    _clearQuietStreak();
+    streak += 1;
+    state.flags.add('quiet_streak_$streak');
+
+    final hot = hottestRival();
+    if (hot != null) {
+      hot.hostility = min(100, hot.hostility + 6 + (streak >= 3 ? 8 : 0));
+    }
+
+    final hid = state.flags.contains('hid_year_${state.year}');
+    final how = hid ? 'while you laid low' : 'while you clocked in';
+
+    final open = state.territories.where((t) => t.controller == null).toList();
+    if (open.isNotEmpty && hot != null) {
+      final t = rng.pick(open);
+      t.controller = hot.id;
+      t.influence = 40;
+      if (!hot.territories.contains(t.id)) hot.territories.add(t.id);
+      hot.power = min(100, hot.power + 3);
+      logs.add('${hot.name} ${houseTakeVerb(hot)} ${t.name} $how. The city did not wait.');
+    } else if (hot != null) {
+      final held = state.territories.where((t) => t.controller == 'player').toList();
+      if (held.isNotEmpty) {
+        final t = rng.pick(held);
+        t.influence = max(0, t.influence - 18);
+        logs.add('${hot.name} pressed ${t.name} $how.');
+        if (t.influence <= 0) {
+          t.controller = hot.id;
+          t.influence = 35;
+          if (!hot.territories.contains(t.id)) hot.territories.add(t.id);
+          logs.add('${t.name} slipped. Hiding does not hold a street.');
+        }
+      } else {
+        logs.add('No street, no fight. ${hot.name} ${houseWeather(hot)} $how.');
+      }
+    }
+
+    final sepi = state.businesses.where((b) {
+      return !state.crew.any((c) => c.assignedBizId == b.id && !c.imprisoned);
+    }).toList();
+    if (sepi.isNotEmpty && hot != null && rng.chance(25)) {
+      final b = rng.pick(sepi);
+      b.quality = max(0, b.quality - 20);
+      if (b.quality < 15) {
+        for (final c in state.crew) {
+          if (c.assignedBizId == b.id) c.assignedBizId = null;
+        }
+        state.businesses.remove(b);
+        logs.add('${hot.name} razed ${b.name} $how. An empty front does not keep.');
+      } else {
+        logs.add('${hot.name} raided ${b.name} $how. Quality bled.');
+      }
+    }
+
+    if (streak == 2 && _emptyCityBoard) {
+      _queueOnce('forgotten_weather', yearsAhead: 1);
+    }
+    if (streak == 3 && _emptyCityBoard) {
+      _queueOnce('empty_name', yearsAhead: 1);
+    }
+
+    if (streak >= 3 && hot != null) {
+      logs.add('Three quiet years. The houses stopped asking.');
+      _queueOnce(_rivalEvent(hot.id), yearsAhead: 1);
+    }
+  }
+
+  void _resolveIgnoredPressure(List<String> logs) {
+    String? id;
+    for (final f in state.flags) {
+      if (f.startsWith('pressure_now_')) {
+        id = f.substring('pressure_now_'.length);
+        break;
+      }
+    }
+    state.flags.removeWhere((f) => f.startsWith('pressure_now_'));
+    if (id == null || state.inPrison) return;
+    if (id.startsWith('family_') || id == 'family') {
+      final pid = id.startsWith('family_') ? id.substring('family_'.length) : null;
+      if (pid != null && state.flags.contains('sat_who_${state.year}_$pid')) return;
+      Person? thin;
+      final named = pid == null ? null : state.people[pid];
+      if (named != null && named.isAlive && named.bond < 28) {
+        thin = named;
+      } else {
+        final rest = state.people.values
+            .where((p) => p.isAlive && p.id != player.id && _isFamily(p) && p.bond < 28)
+            .toList();
+        if (rest.isNotEmpty) thin = rest.first;
+      }
+      if (thin != null) {
+        thin.bond = max(0, thin.bond - 6);
+        thin.loyaltyToFamily = max(0, thin.loyaltyToFamily - 8);
+        logs.add('${thin.firstName} drifted while you let the year pass.');
+      }
+      return;
+    }
+    switch (id) {
+      case 'crew':
+        if (state.crew.isEmpty) {
+          final r = hottestRival();
+          if (r != null) r.hostility = min(100, r.hostility + 8);
+          state.stats.money = max(0, state.stats.money - 90);
+          logs.add('No hands on the book. A house invoiced the empty year.');
+          _queueOnce('patrol_stop', yearsAhead: 1);
+        }
+      case 'heat':
+        if (state.stats.heat >= 55) {
+          logs.add('You left the heat on. Vale found the year.');
+          _queueOnce('detective_card', yearsAhead: 1);
+        }
+      case 'hold':
+        if (state.businesses.isEmpty && !state.territories.any((t) => t.controller == 'player')) {
+          state.stats.money = max(0, state.stats.money - 120);
+          final r = hottestRival();
+          if (r != null) r.hostility = min(100, r.hostility + 6);
+          logs.add('No front, no street. The year billed you for being small.');
+        }
+      case 'turf_heat':
+        if (state.territories.any((t) => t.controller == 'player' && t.heat >= 16)) {
+          logs.add('A street you ignored kept cooking.');
+        }
+    }
+  }
+
+  void _tickHeldStreets(List<String> logs) {
+    if (state.inPrison) return;
+    final guarded = _hasRole(['enforcer', 'muscle']);
+    for (final t in state.territories.where((t) => t.controller == 'player')) {
+      if (!guarded) {
+        t.heat = min(100, t.heat + 2);
+      } else {
+        t.heat = max(0, t.heat - 1);
+      }
+      if (t.heat >= 16) {
+        t.influence = max(0, t.influence - 8);
+        logs.add('${t.name} ran hot. Influence thinned.');
+        if (t.influence <= 0) {
+          final r = hottestRival();
+          if (r != null && rng.chance(40)) {
+            t.controller = r.id;
+            t.influence = 35;
+            if (!r.territories.contains(t.id)) r.territories.add(t.id);
+            r.hostility = min(100, r.hostility + 4);
+            logs.add('${t.name} slipped to ${r.name}. Cool it next time.');
+          }
+        }
+      }
     }
   }
 
@@ -2297,9 +3399,11 @@ class GameEngine {
 
   void unlock(String id) {
     if (state.achievements.contains(id)) return;
-    if (WorldContent.achievements().any((a) => a.id == id)) {
+    final def = WorldContent.achievements().cast<AchievementDef?>().firstWhere((a) => a!.id == id, orElse: () => null);
+    if (def != null) {
       state.achievements.add(id);
       state.notableThisLife.add(id);
+      lastUnlocks.add(def.title);
     }
   }
 
@@ -2312,6 +3416,16 @@ class GameEngine {
     if (state.territories.any((t) => t.id == 'docks' && t.controller == 'player')) {
       unlock('docks_king');
     }
+  }
+
+  void _checkGameOver(List<String> logs) {
+    if (state.phase == 'ending' || state.awaitingHeir) return;
+    if (state.flags.contains('chapter_prologue') || state.inPrison) return;
+    if (!_emptyCityBoard) return;
+    final neglected = quietStreak() >= 4 || yieldCount() >= 5;
+    if (!neglected) return;
+    logs.add('The city closed the file. Nobody sits the chair.');
+    _beginGameOver('forgotten');
   }
 
   void _checkEndings() {

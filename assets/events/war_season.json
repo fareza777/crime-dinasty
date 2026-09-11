@@ -19,11 +19,20 @@
         "outcomes": [
           {
             "id": "stand",
-            "weight": 100,
+            "weight": 70,
             "title": "A public spine",
             "body": "You do not flinch. The house files you as expensive. Heat climbs because you were visible.",
             "log": "Answered a war-season warning in person.",
             "stats": { "heat": 4, "reputation": 3, "nerve": 3 }
+          },
+          {
+            "id": "bruise",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "They counted your windows",
+            "body": "Standing made you a target. A brick found a pane that had your name on the lease.",
+            "log": "A war warning found a window.",
+            "stats": { "heat": 8, "health": -5, "reputation": 2 }
           }
         ]
       },
@@ -33,11 +42,19 @@
         "outcomes": [
           {
             "id": "pay",
-            "weight": 100,
+            "weight": 75,
             "title": "A purchased pause",
             "body": "Cash walks. The warning stays. You bought weather, not peace.",
             "log": "Paid tribute in a war threat year.",
             "stats": { "money": -220, "heat": -2, "reputation": -1 }
+          },
+          {
+            "id": "short",
+            "weight": 25,
+            "title": "They took the envelope and the week",
+            "body": "Tribute bought you an hour. The season still opened.",
+            "log": "Tribute in a war year came up short.",
+            "stats": { "money": -220, "heat": 3, "stress": 4 }
           }
         ]
       },
@@ -101,11 +118,20 @@
         "outcomes": [
           {
             "id": "buy",
-            "weight": 100,
+            "weight": 70,
             "title": "Cash for weather",
             "body": "Money is a kind of army. The street returns looking embarrassed.",
             "log": "Bought a street back in war season.",
             "stats": { "money": -360, "heat": 2, "reputation": 1 }
+          },
+          {
+            "id": "overpay",
+            "weight": 30,
+            "isHarsh": true,
+            "title": "They kept a corner anyway",
+            "body": "You paid. They smiled. One alley still isn't yours.",
+            "log": "Bought weather in war and still lost a corner.",
+            "stats": { "money": -360, "heat": 6, "reputation": -2 }
           }
         ]
       },
@@ -145,11 +171,19 @@
         "outcomes": [
           {
             "id": "truce",
-            "weight": 100,
+            "weight": 70,
             "title": "A closed season",
             "body": "You drink the coffee. Hostility thins. The rain sounds like an invoice you already paid.",
             "log": "Took a war-season truce.",
             "stats": { "heat": -6, "reputation": 3, "stress": -4 }
+          },
+          {
+            "id": "thin",
+            "weight": 30,
+            "title": "Coffee with a tooth in it",
+            "body": "They smiled. The season closed. Someone still owes someone a street.",
+            "log": "A war truce came with a leftover invoice.",
+            "stats": { "heat": -2, "stress": 3, "reputation": 1 }
           }
         ]
       },
@@ -159,11 +193,20 @@
         "outcomes": [
           {
             "id": "tooth",
-            "weight": 100,
+            "weight": 65,
             "title": "An unfinished war",
             "body": "They will come back. You will be ready, or you will be a story. The name stays sharp.",
             "log": "Left a tooth in a war truce.",
             "stats": { "heat": 3, "nerve": 3, "reputation": 2 }
+          },
+          {
+            "id": "bite",
+            "weight": 35,
+            "isHarsh": true,
+            "title": "They bit first",
+            "body": "Leaving a tooth meant they left two. Heat stays. The coffee goes cold.",
+            "log": "A leftover tooth bit back.",
+            "stats": { "heat": 8, "health": -4, "nerve": 2 }
           }
         ]
       }

@@ -22,7 +22,7 @@
         "outcomes": [
           {
             "id": "clean",
-            "weight": 100,
+            "weight": 72,
             "title": "A clean pickup",
             "body": "You leave through the kitchen before the attention turns your way.",
             "log": "Completed a backroom pickup.",
@@ -36,6 +36,21 @@
               "did_first_score"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "clean_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Completed a backroom pickup. It ran hot.",
+            "stats": {
+              "money": 200,
+              "heat": 10,
+              "reputation": 2,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -112,7 +127,7 @@
         "outcomes": [
           {
             "id": "clear",
-            "weight": 100,
+            "weight": 72,
             "title": "Stamped through",
             "body": "The shipment disappears into the gray morning. Your payment arrives through three careful hands.",
             "log": "Helped move a dock shipment.",
@@ -126,6 +141,21 @@
               "docks_interest"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "clear_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Helped move a dock shipment. It ran hot.",
+            "stats": {
+              "money": 600,
+              "heat": 12,
+              "reputation": 2,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -297,7 +327,7 @@
     "cooldownYears": 4,
     "minAge": 20,
     "maxAge": 60,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "introduce",
@@ -306,7 +336,7 @@
         "outcomes": [
           {
             "id": "signal",
-            "weight": 100,
+            "weight": 72,
             "title": "A signal sent",
             "body": "You connect two people who prefer not to meet. The exchange leaves no hero in its wake.",
             "log": "Connected a Vex cyber contact.",
@@ -323,6 +353,24 @@
             "rivalDelta": {
               "vex": -2
             }
+          },
+          {
+            "id": "signal_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Connected a Vex cyber contact. It ran hot.",
+            "stats": {
+              "money": 833,
+              "heat": 11,
+              "intelligence": 3,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "vex": -2
+            },
+            "injury": false
           }
         ]
       },
@@ -398,7 +446,7 @@
         "outcomes": [
           {
             "id": "map",
-            "weight": 100,
+            "weight": 72,
             "title": "A better picture",
             "body": "You learn enough to know the job would cost more than courage.",
             "log": "Scouted a freight yard.",
@@ -410,6 +458,20 @@
               "heist_planned"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "map_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Scouted a freight yard. It ran hot.",
+            "stats": {
+              "intelligence": 3,
+              "stress": 5,
+              "heat": 8
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -482,7 +544,7 @@
     "cooldownYears": 4,
     "minAge": 22,
     "maxAge": 65,
-    "art": "office",
+    "art": "club",
     "choices": [
       {
         "id": "sell",
@@ -491,7 +553,7 @@
         "outcomes": [
           {
             "id": "sold",
-            "weight": 100,
+            "weight": 72,
             "title": "Paid for silence",
             "body": "The owner pays to make the pages disappear. You learn the price of a secret.",
             "log": "Sold back a compromising ledger.",
@@ -504,6 +566,21 @@
               "known_on_street"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "sold_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Sold back a compromising ledger. It ran hot.",
+            "stats": {
+              "money": 1066,
+              "heat": 12,
+              "reputation": 1,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -581,7 +658,7 @@
         "outcomes": [
           {
             "id": "quiet",
-            "weight": 100,
+            "weight": 72,
             "title": "A quiet door",
             "body": "Your voice does what fists would have ruined. The manager notices.",
             "log": "Defused a club problem.",
@@ -595,6 +672,25 @@
             "rivalDelta": {
               "marrow": -1
             }
+          },
+          {
+            "id": "quiet_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Defused a club problem. It ran hot.",
+            "stats": {
+              "money": 233,
+              "charisma": 3,
+              "reputation": 2,
+              "heat": 8,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "rivalDelta": {
+              "marrow": -1
+            },
+            "injury": false
           }
         ]
       },
@@ -741,7 +837,7 @@
     "cooldownYears": 4,
     "minAge": 22,
     "maxAge": 70,
-    "art": "office",
+    "art": "ledger",
     "choices": [
       {
         "id": "deliver",
@@ -750,7 +846,7 @@
         "outcomes": [
           {
             "id": "fee",
-            "weight": 100,
+            "weight": 72,
             "title": "Westmere fee",
             "body": "The case changes hands in a clean lobby. The money is real, and so is the attention.",
             "log": "Delivered a sealed Westmere package.",
@@ -763,6 +859,21 @@
               "vex_contact"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "fee_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Delivered a sealed Westmere package. It ran hot.",
+            "stats": {
+              "money": 733,
+              "heat": 11,
+              "charisma": 1,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -839,7 +950,7 @@
         "outcomes": [
           {
             "id": "haul",
-            "weight": 100,
+            "weight": 72,
             "title": "Heavy pockets",
             "body": "The sale is modest, but it puts your name near people who prize hard work and hard edges.",
             "log": "Moved unclaimed Ironyard scrap.",
@@ -852,6 +963,21 @@
               "turf_ironyard"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "haul_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Moved unclaimed Ironyard scrap. It ran hot.",
+            "stats": {
+              "money": 300,
+              "heat": 11,
+              "reputation": 1,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -927,7 +1053,7 @@
         "outcomes": [
           {
             "id": "moved",
-            "weight": 100,
+            "weight": 72,
             "title": "Empty rooms",
             "body": "You leave the place bare before anyone can make it useful against you.",
             "log": "Moved out of a compromised safehouse.",
@@ -940,6 +1066,23 @@
             "removeFlags": [
               "snitch_risk"
             ]
+          },
+          {
+            "id": "moved_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Moved out of a compromised safehouse. It ran hot.",
+            "stats": {
+              "money": -720,
+              "heat": 4,
+              "intelligence": 2,
+              "stress": 4
+            },
+            "removeFlags": [
+              "snitch_risk"
+            ],
+            "injury": false
           }
         ]
       },
@@ -1025,7 +1168,7 @@
         "outcomes": [
           {
             "id": "margin",
-            "weight": 100,
+            "weight": 72,
             "title": "A narrow margin",
             "body": "You turn a small profit and leave before the market turns sour.",
             "log": "Made a night-market resale.",
@@ -1037,6 +1180,20 @@
               "thief"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "margin_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Made a night-market resale. It ran hot.",
+            "stats": {
+              "money": 250,
+              "heat": 10,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -1120,7 +1277,7 @@
         "outcomes": [
           {
             "id": "plan",
-            "weight": 100,
+            "weight": 72,
             "title": "Plans on the table",
             "body": "You agree to a meeting and the room grows suddenly serious.",
             "log": "Joined a major-job planning session.",
@@ -1132,6 +1289,20 @@
               "heist_planned"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "plan_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Joined a major-job planning session. It ran hot.",
+            "stats": {
+              "reputation": 4,
+              "stress": 6,
+              "heat": 8
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },

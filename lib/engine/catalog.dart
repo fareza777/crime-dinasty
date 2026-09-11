@@ -136,6 +136,16 @@ class WorldContent {
         _ => role,
       };
 
+  static String roleLoadout(String role) => switch (role) {
+        'muscle' => 'Hard jobs land cleaner.',
+        'driver' => 'Robbery and smuggle stay on the clock.',
+        'hacker' => 'Quiet ledger does not need extra nerve.',
+        'accountant' => 'Fronts pay quieter.',
+        'enforcer' => 'Held streets cool faster.',
+        'lookout' => 'Heat rises slower on the street.',
+        _ => '',
+      };
+
   static String districtName(String id) =>
       territories().cast<Map<String, String>?>().firstWhere((e) => e!['id'] == id, orElse: () => null)?['name'] ?? id;
 
@@ -256,22 +266,39 @@ class WorldContent {
   static String? npcMemory(Person p, Set<String> flags) {
     switch (p.id) {
       case 'p_mentor':
+        if (flags.contains('sat_ever_p_mentor')) {
+          if (flags.contains('will_burn_crowe')) return 'You sat. He still thinks the ferry name is rain.';
+          return 'You sat. The raincoat still finds you first.';
+        }
         if (flags.contains('will_burn_crowe')) return 'He still thinks the ferry name is safe with you.';
         if (flags.contains('crowe_cold')) return 'He stopped calling. The raincoat is a rumor this season.';
         if (flags.contains('crowe_secret')) return 'He gave you a name. You have not spent it.';
         if (flags.contains('mentor_crowe')) return 'The raincoat still finds you first.';
         return 'Silas Crowe watches the pier like it owes him rent.';
       case 'p_foil':
+        if (flags.contains('sat_ever_p_foil')) {
+          if (flags.contains('lied_to_vale')) return 'You sat. She kept the photograph anyway.';
+          return 'You sat. Vale files you under unfinished, in ink now.';
+        }
         if (flags.contains('vale_respect')) return 'Vale files you under unfinished, with a pencil.';
         if (flags.contains('lied_to_vale')) return 'She kept the photograph. The back has a case number.';
         if (flags.contains('vale_file')) return 'Detective Vale knows your diner. That is not nothing.';
         return 'Crown weather. She has not learned your face — yet.';
       case 'p_cass':
+        if (flags.contains('sat_ever_p_cass')) return 'You sat. The gold still measures the chair.';
         if (flags.contains('cass_notice')) return 'The gold card is still in the drawer.';
         return 'Aurelia\'s heir. Sharp, bored, and already measuring the chair.';
       case 'p_mira':
+        if (flags.contains('sat_ever_p_mira')) {
+          if (flags.contains('courted')) return 'You sat. The second drink is already a habit.';
+          return 'You sat. Harbor Lights still keeps your booth.';
+        }
         return 'Harbor Lights after midnight. She remembers who buys the second drink.';
       case 'p_ben':
+        if (flags.contains('sat_ever_p_ben')) {
+          if (flags.contains('courted')) return 'You sat. He is still waiting on a daylight surname.';
+          return 'You sat. Glassridge manners, still on the clock.';
+        }
         return 'Glassridge manners. He wants a daylight surname and will wait for yours.';
       default:
         return null;
@@ -279,6 +306,10 @@ class WorldContent {
   }
 
   static const endings = {
+    'forgotten': [
+      'Filed Under Weather',
+      'Ravenport did not fight you. It forgot you. No street, no front, too many quiet years. The chair stays empty. This is not a dynasty.',
+    ],
     'bloodline_ends': [
       'The Empty Chair',
       'No adult heir would take the name. Ravenport files the Harts under weather and rumor.',

@@ -18,7 +18,7 @@ class PixelIcon extends StatelessWidget {
       width: size,
       height: size,
       fit: BoxFit.cover,
-      filterQuality: FilterQuality.none,
+      filterQuality: FilterQuality.medium,
       errorBuilder: (_, _, _) => CustomPaint(
         size: Size.square(size),
         painter: _GoldMarkPainter(),
@@ -35,12 +35,14 @@ class SceneArt extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
     this.textured = false,
+    this.grade,
   });
   final String asset;
   final double height;
   final BoxFit fit;
   final Alignment alignment;
   final bool textured;
+  final ColorFilter? grade;
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +54,16 @@ class SceneArt extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              asset,
-              fit: fit,
-              alignment: alignment,
-              errorBuilder: (_, _, _) => CustomPaint(
-                painter: _RainFallbackPainter(),
-                child: const SizedBox.expand(),
+            ColorFiltered(
+              colorFilter: grade ?? const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+              child: Image.asset(
+                asset,
+                fit: fit,
+                alignment: alignment,
+                errorBuilder: (_, _, _) => CustomPaint(
+                  painter: _RainFallbackPainter(),
+                  child: const SizedBox.expand(),
+                ),
               ),
             ),
             if (textured && !Palette.light)
@@ -91,19 +96,28 @@ class SceneArt extends StatelessWidget {
 }
 
 class GoldFrame extends StatelessWidget {
-  const GoldFrame({super.key, required this.child, this.padding, this.image, this.accent = false});
+  const GoldFrame({
+    super.key,
+    required this.child,
+    this.padding,
+    this.image,
+    this.accent = false,
+    this.rim,
+  });
   final Widget child;
   final EdgeInsets? padding;
   final String? image;
   final bool accent;
+  final Color? rim;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Palette.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Palette.gold.withValues(alpha: accent ? 0.88 : 0.5), width: accent ? 1.7 : 1.3),
+        border: Border.all(color: (rim ?? Palette.gold).withValues(alpha: accent || rim != null ? 0.88 : 0.5), width: accent || rim != null ? 1.7 : 1.3),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: Palette.light ? 0.08 : 0.4),
@@ -170,11 +184,14 @@ class PrimaryButton extends StatelessWidget {
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: 'DMSans',
                     fontWeight: FontWeight.w700,
                     color: Palette.onGold,
-                    letterSpacing: 0.3,
+                    letterSpacing: 0.2,
+                    height: 1.2,
                   ),
                 ),
               ),
@@ -188,25 +205,38 @@ class PrimaryButton extends StatelessWidget {
 }
 
 class GhostButton extends StatelessWidget {
-  const GhostButton({super.key, required this.label, required this.onTap});
+  const GhostButton({super.key, required this.label, required this.onTap, this.expand = true});
   final String label;
   final VoidCallback? onTap;
+  final bool expand;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: Palette.cream,
-          side: BorderSide(color: Palette.line),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    final btn = OutlinedButton(
+      onPressed: onTap,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Palette.cream,
+        side: BorderSide(color: Palette.line),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(Art.btnGhost),
+            fit: BoxFit.cover,
+            opacity: Palette.light ? 0.14 : 0.32,
+          ),
         ),
-        child: Text(label),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
+    return expand ? SizedBox(width: double.infinity, child: btn) : btn;
   }
 }
 
@@ -283,23 +313,24 @@ class PixelPortrait extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget face = Image.asset(
+      Art.portraitFor(person, year: year ?? 1998),
+      width: size,
+      height: size,
+      fit: BoxFit.cover,
+      filterQuality: FilterQuality.medium,
+      errorBuilder: (_, _, _) => CustomPaint(
+        size: Size.square(size),
+        painter: _PortraitPainter(person.portraitSeed, dead, person.gender, person.relation),
+      ),
+    );
     return ClipRRect(
       borderRadius: BorderRadius.circular(4),
       child: ColorFiltered(
         colorFilter: dead
             ? const ColorFilter.mode(Color(0xAA0B1220), BlendMode.saturation)
             : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
-        child: Image.asset(
-          Art.portraitFor(person, year: year ?? 1998),
-          width: size,
-          height: size,
-          fit: BoxFit.cover,
-          filterQuality: FilterQuality.none,
-          errorBuilder: (_, _, _) => CustomPaint(
-            size: Size.square(size),
-            painter: _PortraitPainter(person.portraitSeed, dead, person.gender, person.relation),
-          ),
-        ),
+        child: face,
       ),
     );
   }
@@ -423,19 +454,26 @@ class ScreenTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      maxLines: 2,
-      softWrap: true,
-      overflow: TextOverflow.visible,
-      style: TextStyle(
-        fontFamily: 'Cinzel',
-        color: Palette.gold,
-        fontSize: size,
-        height: 1.2,
-        letterSpacing: 0,
-        fontWeight: FontWeight.w600,
+    return SizedBox(
+      width: double.infinity,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.visible,
+          style: TextStyle(
+            fontFamily: 'Cinzel',
+            color: Palette.gold,
+            fontSize: size,
+            height: 1.15,
+            letterSpacing: 0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
@@ -540,10 +578,11 @@ class GlanceChip extends StatelessWidget {
 }
 
 class MiniAction extends StatelessWidget {
-  const MiniAction({super.key, required this.label, required this.onTap, this.danger = false});
+  const MiniAction({super.key, required this.label, required this.onTap, this.danger = false, this.icon});
   final String label;
   final VoidCallback? onTap;
   final bool danger;
+  final String? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -560,7 +599,16 @@ class MiniAction extends StatelessWidget {
           visualDensity: VisualDensity.compact,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              PixelIcon(icon!, size: 14),
+              const SizedBox(width: 4),
+            ],
+            Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
+          ],
+        ),
       ),
     );
   }
@@ -610,7 +658,7 @@ class HeaderBanner extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SceneArt(asset, height: short ? 96 : 124, alignment: Alignment.center, textured: true),
+        SceneArt(asset, height: short ? 96 : 124, alignment: Alignment.center),
         const SizedBox(height: 10),
         GoldFrame(
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),

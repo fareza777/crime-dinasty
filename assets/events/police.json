@@ -22,7 +22,7 @@
         "outcomes": [
           {
             "id": "warning",
-            "weight": 100,
+            "weight": 72,
             "title": "A warning",
             "body": "The officer runs your name, finds nothing immediate, and sends you on.",
             "log": "Received a patrol warning.",
@@ -32,6 +32,20 @@
             },
             "addFlags": [],
             "removeFlags": []
+          },
+          {
+            "id": "warning_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Received a patrol warning. It ran hot.",
+            "stats": {
+              "heat": 7,
+              "charisma": 1,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -196,7 +210,7 @@
         "outcomes": [
           {
             "id": "prepare",
-            "weight": 100,
+            "weight": 72,
             "title": "Prepared response",
             "body": "You give your lawyer the papers and stop guessing alone.",
             "log": "Prepared a subpoena response.",
@@ -209,6 +223,21 @@
               "da_file"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "prepare_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Prepared a subpoena response. It ran hot.",
+            "stats": {
+              "money": -2160,
+              "intelligence": 2,
+              "heat": 8,
+              "stress": 4
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -287,7 +316,7 @@
         "outcomes": [
           {
             "id": "release",
-            "weight": 100,
+            "weight": 72,
             "title": "Released to wait",
             "body": "You leave the courthouse with conditions, costs, and a future date circled in red.",
             "log": "Entered a plea at arraignment.",
@@ -300,6 +329,20 @@
               "da_file"
             ],
             "removeFlags": []
+          },
+          {
+            "id": "release_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Entered a plea at arraignment. It ran hot.",
+            "stats": {
+              "money": -1800,
+              "stress": 9,
+              "heat": 11
+            },
+            "removeFlags": [],
+            "injury": false
           }
         ]
       },
@@ -582,7 +625,7 @@
         "outcomes": [
           {
             "id": "booked",
-            "weight": 100,
+            "weight": 72,
             "title": "Booked",
             "body": "You keep your composure while the machinery starts around you.",
             "log": "Was booked after a warrant.",
@@ -597,6 +640,21 @@
             "removeFlags": [],
             "arrest": true,
             "setPrisonYears": 3
+          },
+          {
+            "id": "booked_hot",
+            "weight": 28,
+            "title": "The year bites back",
+            "body": "You still move. The city charges extra. Heat, a little blood, a thinner take.",
+            "log": "Was booked after a warrant. It ran hot.",
+            "stats": {
+              "heat": 16,
+              "stress": 10
+            },
+            "removeFlags": [],
+            "arrest": true,
+            "setPrisonYears": 3,
+            "injury": false
           }
         ]
       },

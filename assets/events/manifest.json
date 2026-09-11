@@ -13,5 +13,6 @@
   "early_years.json",
   "midlife.json",
   "late_years.json",
-  "war_season.json"
+  "war_season.json",
+  "generation.json"
 ]
